@@ -28,6 +28,14 @@ const nextConfig: NextConfig = {
     serverSourceMaps: process.env.NODE_ENV === 'development',
     // Optimize preloading
     preloadEntriesOnStart: true,
+    // Enable React Compiler for better performance
+    reactCompiler: true,
+    // Enable static indicator for better debugging
+    staticIndicator: true,
+    // Optimize CSS
+    optimizeCss: true,
+    // Use light account for better performance
+    useLightAccount: true,
   },
 
   // Image optimization
@@ -137,21 +145,65 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Webpack configuration
+  // Webpack configuration with caching
   webpack: (config, { dev, isServer }) => {
+    // Enable persistent caching for faster builds
+    config.cache = {
+      type: 'filesystem',
+      buildDependencies: {
+        config: [__filename],
+      },
+      cacheDirectory: '.next/cache/webpack',
+      compression: 'gzip',
+      hashAlgorithm: 'md4',
+    };
+
     // Optimize for production
     if (!dev) {
-      config.cache = Object.freeze({
-        type: 'memory',
-      });
-      
       // Tree shaking optimization
       config.optimization = {
         ...config.optimization,
         usedExports: true,
         sideEffects: true,
+        minimize: true,
+        // Split chunks for better caching
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            // Vendor chunk for node_modules
+            vendor: {
+              name: 'vendor',
+              chunks: 'all',
+              test: /node_modules/,
+              priority: 20,
+            },
+            // Common chunk for shared code
+            common: {
+              name: 'common',
+              minChunks: 2,
+              chunks: 'all',
+              priority: 10,
+              reuseExistingChunk: true,
+              enforce: true,
+            },
+            // React chunk
+            react: {
+              test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+              name: 'react',
+              chunks: 'all',
+              priority: 30,
+            },
+          },
+        },
       };
     }
+
+    // Improve build performance
+    config.infrastructureLogging = {
+      level: 'error',
+    };
 
     // Important: return the modified config
     return config;
