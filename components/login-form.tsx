@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState, useFormStatus } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,55 +12,25 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signInAction } from "@/lib/auth/actions";
 import { authClient } from "@/lib/auth/auth-client";
+
+// Submit button component using useFormStatus (React 19.2)
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" className="w-full" disabled={pending}>
+      {pending ? "Signing in..." : "Login"}
+    </Button>
+  );
+}
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
-
-    try {
-      const { data, error: authError } = await authClient.signIn.email({
-        email,
-        password,
-        callbackURL: "/pte/dashboard",
-        fetchOptions: {
-          onError: (error) => {
-            console.error("Auth error:", error);
-            setError("Authentication failed. Please try again.");
-          },
-        },
-      });
-
-      if (authError) {
-        console.error("Sign in error:", authError);
-        setError(authError.message || "Invalid email or password");
-        setIsLoading(false);
-        return;
-      }
-
-      if (data) {
-        router.push("/pte/dashboard");
-        router.refresh();
-      }
-    } catch (err: any) {
-      console.error("Sign in error:", err);
-      setError(
-        err.message || "An unexpected error occurred. Please try again."
-      );
-      setIsLoading(false);
-    }
-  };
+  // Use useActionState hook (React 19.2) for form state management
+  const [state, formAction] = useActionState(signInAction, null);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -71,7 +40,6 @@ export function LoginForm({
       });
     } catch (err: any) {
       console.error("Google sign in error:", err);
-      setError(err.message || "Failed to sign in with Google");
     }
   };
 
@@ -83,7 +51,6 @@ export function LoginForm({
       });
     } catch (err: any) {
       console.error("Apple sign in error:", err);
-      setError(err.message || "Failed to sign in with Apple");
     }
   };
 
@@ -97,22 +64,24 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form action={formAction}>
             <div className="flex flex-col gap-6">
-              {error && (
+              {state?.error && (
                 <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
-                  {error}
+                  {state.error}
                 </div>
               )}
+
+              <input type="hidden" name="redirect" value="/pte/dashboard" />
 
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  defaultValue={state?.email || ""}
                   required
                 />
               </div>
@@ -129,16 +98,13 @@ export function LoginForm({
                 </div>
                 <Input
                   id="password"
+                  name="password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Signing in..." : "Login"}
-              </Button>
+              <SubmitButton />
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">

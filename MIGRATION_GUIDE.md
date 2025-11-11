@@ -127,8 +127,14 @@ pnpm db:migrate
 Required environment variables:
 
 ```env
-# Database
-POSTGRES_URL=your_postgres_url
+# Database (Primary)
+DATABASE_URL="postgresql://username:password@host:port/database?sslmode=require&channel_binding=require"
+
+# Optional: Uncomment for direct connection (non-pooled)
+# DATABASE_URL_UNPOOLED="postgresql://username:password@host:port/database?sslmode=require&channel_binding=require"
+
+# Fallback: POSTGRES_URL is also supported for compatibility
+# POSTGRES_URL=your_postgres_url
 
 # Better Auth
 AUTH_SECRET=your_secret_key

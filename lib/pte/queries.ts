@@ -1,11 +1,12 @@
 import { db } from '@/lib/db/drizzle';
-import { 
-  pteTests, 
-  pteQuestions, 
-  testAttempts, 
+import {
+  pteTests,
+  pteQuestions,
+  testAttempts,
   testAnswers,
   userSubscriptions,
-  users 
+  users,
+  practiceSessions
 } from '@/lib/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 
@@ -258,54 +259,244 @@ export async function getUserStats(userId: string) {
 
 // Get academic dashboard data
 export async function getAcademicDashboardData(userId: string, userTargetScore: number = 0) {
-  // Get user stats
-  const userStats = await getUserStats(userId);
-  
-  // Mock academic progress data
-  const academicProgress = [
-    { month: 'Jan', score: 50 },
-    { month: 'Feb', score: 55 },
-    { month: 'Mar', score: 62 },
-    { month: 'Apr', score: 68 },
-    { month: 'May', score: 73 },
-    { month: 'Jun', score: 78 },
+  try {
+    // Get user stats from completed test attempts
+    const userStats = await getUserStats(userId);
+
+    // Get user's test attempts for progress tracking
+    const userTestAttempts = await db
+      .select({
+        id: testAttempts.id,
+        startedAt: testAttempts.startedAt,
+        totalScore: testAttempts.totalScore,
+        readingScore: testAttempts.readingScore,
+        writingScore: testAttempts.writingScore,
+        listeningScore: testAttempts.listeningScore,
+        speakingScore: testAttempts.speakingScore,
+      })
+      .from(testAttempts)
+      .where(and(
+        eq(testAttempts.userId, userId),
+        eq(testAttempts.status, 'completed')
+      ))
+      .orderBy(desc(testAttempts.startedAt))
+      .limit(50); // Get last 50 attempts for progress calculation
+
+    // Calculate monthly progress from test attempts
+    const academicProgress = calculateMonthlyProgress(testAttempts);
+
+    // Calculate section performance from test attempts
+    const academicPerformance = calculateSectionPerformance(testAttempts);
+
+    // Get recent practice sessions for activity tracking
+    const recentPractice = await db
+      .select({
+        id: practiceSessions.id,
+        score: practiceSessions.score,
+        submittedAt: practiceSessions.submittedAt,
+        questionType: pteQuestions.questionType,
+        section: pteQuestions.section,
+      })
+      .from(practiceSessions)
+      .innerJoin(pteQuestions, eq(practiceSessions.questionId, pteQuestions.id))
+      .where(eq(practiceSessions.userId, userId))
+      .orderBy(desc(practiceSessions.submittedAt))
+      .limit(20);
+
+    // Calculate current overall score
+    const currentOverallScore = userStats.averageScore || 0;
+
+    // Calculate study streak and hours from practice sessions
+    const { streak, studyHours } = calculateStudyMetrics(recentPractice);
+
+    // Create academic goals based on real data
+    const academicGoals = [
+      {
+        id: 1,
+        title: `Reach Overall Score of ${userTargetScore || 65}`,
+        current: Math.round(currentOverallScore),
+        target: userTargetScore || 65,
+        status: currentOverallScore >= (userTargetScore || 65) ? 'completed' : 'in-progress'
+      },
+      {
+        id: 2,
+        title: 'Improve Listening Score to 80+',
+        current: Math.round(academicPerformance.find(p => p.section === 'Listening')?.score || 0),
+        target: 80,
+        status: (academicPerformance.find(p => p.section === 'Listening')?.score || 0) >= 80 ? 'completed' : 'in-progress'
+      },
+      {
+        id: 3,
+        title: 'Complete 50 Practice Sessions',
+        current: recentPractice.length,
+        target: 50,
+        status: recentPractice.length >= 50 ? 'completed' : 'in-progress'
+      },
+    ];
+
+    // Real stats data
+    const stats = {
+      overallScore: Math.round(currentOverallScore),
+      targetScore: userTargetScore || 65,
+      readingScore: Math.round(academicPerformance.find(p => p.section === 'Reading')?.score || 0),
+      writingScore: Math.round(academicPerformance.find(p => p.section === 'Writing')?.score || 0),
+      listeningScore: Math.round(academicPerformance.find(p => p.section === 'Listening')?.score || 0),
+      speakingScore: Math.round(academicPerformance.find(p => p.section === 'Speaking')?.score || 0),
+      testsCompleted: userStats.totalTestsTaken,
+      studyHours: Math.round(studyHours),
+      streak: streak,
+    };
+
+    return {
+      stats,
+      progress: academicProgress,
+      performance: academicPerformance,
+      goals: academicGoals,
+      recentActivity: recentPractice.slice(0, 5), // Return last 5 practice sessions
+    };
+  } catch (error) {
+    console.error('Error fetching academic dashboard data:', error);
+    // Return fallback data if database queries fail
+    return {
+      stats: {
+        overallScore: 0,
+        targetScore: userTargetScore || 65,
+        readingScore: 0,
+        writingScore: 0,
+        listeningScore: 0,
+        speakingScore: 0,
+        testsCompleted: 0,
+        studyHours: 0,
+        streak: 0,
+      },
+      progress: [{ month: 'No Data', score: 0 }],
+      performance: [
+        { section: 'Reading', score: 0 },
+        { section: 'Writing', score: 0 },
+        { section: 'Listening', score: 0 },
+        { section: 'Speaking', score: 0 },
+      ],
+      goals: [
+        {
+          id: 1,
+          title: `Reach Overall Score of ${userTargetScore || 65}`,
+          current: 0,
+          target: userTargetScore || 65,
+          status: 'in-progress'
+        },
+        {
+          id: 2,
+          title: 'Improve Listening Score to 80+',
+          current: 0,
+          target: 80,
+          status: 'in-progress'
+        },
+        {
+          id: 3,
+          title: 'Complete 50 Practice Sessions',
+          current: 0,
+          target: 50,
+          status: 'in-progress'
+        },
+      ],
+      recentActivity: [],
+    };
+  }
+}
+
+// Helper function to calculate monthly progress
+function calculateMonthlyProgress(attempts: any[]) {
+  const monthlyData: { [key: string]: { total: number, count: number } } = {};
+
+  attempts.forEach(attempt => {
+    const date = new Date(attempt.startedAt);
+    const monthKey = date.toLocaleString('default', { month: 'short', year: 'numeric' });
+
+    if (!monthlyData[monthKey]) {
+      monthlyData[monthKey] = { total: 0, count: 0 };
+    }
+
+    const score = parseFloat(attempt.totalScore || '0');
+    monthlyData[monthKey].total += score;
+    monthlyData[monthKey].count += 1;
+  });
+
+  // Convert to array and sort by date
+  const progress = Object.entries(monthlyData)
+    .map(([month, data]) => ({
+      month,
+      score: Math.round(data.total / data.count),
+    }))
+    .sort((a, b) => {
+      const dateA = new Date(a.month + ' 1, 2000');
+      const dateB = new Date(b.month + ' 1, 2000');
+      return dateA.getTime() - dateB.getTime();
+    })
+    .slice(-6); // Last 6 months
+
+  return progress.length > 0 ? progress : [
+    { month: 'No Data', score: 0 }
   ];
-  
-  // Mock academic performance data
-  const academicPerformance = [
-    { section: 'Reading', score: 78 },
-    { section: 'Writing', score: 72 },
-    { section: 'Listening', score: 85 },
-    { section: 'Speaking', score: 75 },
-  ];
-  
-  // Calculate current overall score if available from userStats, else default to 75
-  const currentOverallScore = userStats.averageScore || 75;
-  
-  // Mock academic goals data with user's target score
-  const academicGoals = [
-    { id: 1, title: `Reach Overall Score of ${userTargetScore || 75}`, current: currentOverallScore, target: userTargetScore || 75, status: currentOverallScore >= (userTargetScore || 75) ? 'completed' : 'in-progress' },
-    { id: 2, title: 'Improve Listening Score to 80+', current: 78, target: 80, status: 'in-progress' },
-    { id: 3, title: 'Complete PTE Academic Writing Course', current: 65, target: 100, status: 'in-progress' },
-  ];
-  
-  // Mock stats data with user's target score
-  const stats = {
-    overallScore: currentOverallScore,
-    targetScore: userTargetScore || 75,
-    readingScore: 78,
-    writingScore: 72,
-    listeningScore: 85,
-    speakingScore: 75,
-    testsCompleted: userStats.totalTestsTaken,
-    studyHours: 42,
-    streak: 7,
-  };
-  
-  return {
-    stats,
-    progress: academicProgress,
-    performance: academicPerformance,
-    goals: academicGoals,
-  };
+}
+
+// Helper function to calculate section performance
+function calculateSectionPerformance(attempts: any[]) {
+  const sections = ['Reading', 'Writing', 'Listening', 'Speaking'];
+  const sectionData: { [key: string]: { total: number, count: number } } = {};
+
+  sections.forEach(section => {
+    sectionData[section] = { total: 0, count: 0 };
+  });
+
+  attempts.forEach(attempt => {
+    sections.forEach(section => {
+      const scoreKey = `${section.toLowerCase()}Score`;
+      const score = parseFloat(attempt[scoreKey] || '0');
+      if (score > 0) {
+        sectionData[section].total += score;
+        sectionData[section].count += 1;
+      }
+    });
+  });
+
+  return sections.map(section => ({
+    section,
+    score: sectionData[section].count > 0 ? Math.round(sectionData[section].total / sectionData[section].count) : 0,
+  }));
+}
+
+// Helper function to calculate study metrics
+function calculateStudyMetrics(practiceSessions: any[]) {
+  let streak = 0;
+  let studyHours = 0;
+
+  if (practiceSessions.length > 0) {
+    // Calculate study hours (assuming 30 minutes per session)
+    studyHours = (practiceSessions.length * 30) / 60; // in hours
+
+    // Calculate streak (consecutive days with practice)
+    const dates = practiceSessions
+      .map(p => new Date(p.submittedAt).toDateString())
+      .filter((date, index, arr) => arr.indexOf(date) === index)
+      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+
+    let currentStreak = 0;
+    const today = new Date().toDateString();
+
+    for (let i = 0; i < dates.length; i++) {
+      const date = new Date(dates[i]);
+      const expectedDate = new Date();
+      expectedDate.setDate(expectedDate.getDate() - i);
+
+      if (date.toDateString() === expectedDate.toDateString()) {
+        currentStreak++;
+      } else {
+        break;
+      }
+    }
+
+    streak = currentStreak;
+  }
+
+  return { streak, studyHours };
 }

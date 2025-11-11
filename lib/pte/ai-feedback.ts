@@ -1,28 +1,30 @@
 import { AIFeedbackData, QuestionType, TestSection } from './types';
 
-// This is a mock AI feedback service
-// In production, integrate with OpenAI or similar AI service
-
 export async function generateAIFeedback(
   questionType: QuestionType,
   section: TestSection,
   userAnswer: string,
   correctAnswer?: string
 ): Promise<AIFeedbackData> {
-  // Simulate AI processing delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  // For writing tasks (essays, summaries)
+  // Check if OpenAI API key is available
+  if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your_openai_api_key') {
+    try {
+      // Use OpenAI for real AI feedback
+      return await generateAIFeedbackWithOpenAI(questionType, section, userAnswer, correctAnswer);
+    } catch (error) {
+      console.error('OpenAI API error, falling back to mock feedback:', error);
+    }
+  }
+
+  // Fallback to mock feedback
   if (section === 'WRITING') {
     return generateWritingFeedback(userAnswer, questionType);
   }
-  
-  // For speaking tasks
+
   if (section === 'SPEAKING') {
     return generateSpeakingFeedback(userAnswer, questionType);
   }
-  
-  // For other sections (basic scoring)
+
   return generateBasicFeedback(userAnswer, correctAnswer);
 }
 
@@ -157,40 +159,74 @@ function generateBasicFeedback(userAnswer: string, correctAnswer?: string): AIFe
 }
 
 // Function to integrate with OpenAI (for production use)
+// Note: Requires 'openai' package to be installed: pnpm add openai
 export async function generateAIFeedbackWithOpenAI(
-  prompt: string,
-  apiKey: string
+  questionType: QuestionType,
+  section: TestSection,
+  userAnswer: string,
+  correctAnswer?: string
 ): Promise<AIFeedbackData> {
-  // Example integration with OpenAI
-  // Uncomment and configure when ready to use
-  /*
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-4',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are an expert PTE exam scorer. Provide detailed feedback on test responses.',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-      temperature: 0.7,
-    }),
+  // Dynamic import to avoid build errors when package is not installed
+  // @ts-ignore - OpenAI package may not be installed in development
+  const { default: OpenAI } = await import('openai');
+
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
   });
-  
-  const data = await response.json();
-  const feedback = JSON.parse(data.choices[0].message.content);
-  return feedback;
-  */
-  
-  // Return mock feedback for now
-  return generateBasicFeedback(prompt);
+
+  const systemPrompt = `You are an expert PTE Academic exam scorer. Analyze the student's response and provide detailed, constructive feedback in JSON format.
+
+For ${section} section, specifically ${questionType} questions, evaluate the response based on PTE scoring criteria.
+
+Return a JSON object with this exact structure:
+{
+  "overallScore": number (0-90),
+  "pronunciation": { "score": number, "feedback": "string" } (only for SPEAKING),
+  "fluency": { "score": number, "feedback": "string" } (only for SPEAKING),
+  "content": { "score": number, "feedback": "string" } (for SPEAKING and WRITING),
+  "grammar": { "score": number, "feedback": "string" } (only for WRITING),
+  "vocabulary": { "score": number, "feedback": "string" } (only for WRITING),
+  "spelling": { "score": number, "feedback": "string" } (only for WRITING),
+  "suggestions": ["string array of improvement suggestions"],
+  "strengths": ["string array of strengths"],
+  "areasForImprovement": ["string array of areas to improve"]
+}
+
+Be specific, constructive, and follow PTE Academic scoring guidelines.`;
+
+  const userPrompt = `Question Type: ${questionType}
+Section: ${section}
+${correctAnswer ? `Correct Answer: ${correctAnswer}` : ''}
+Student's Answer: ${userAnswer}
+
+Please provide detailed feedback following PTE scoring criteria.`;
+
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'system',
+        content: systemPrompt,
+      },
+      {
+        role: 'user',
+        content: userPrompt,
+      },
+    ],
+    temperature: 0.3,
+    max_tokens: 1000,
+  });
+
+  const content = response.choices[0]?.message?.content;
+  if (!content) {
+    throw new Error('No response from OpenAI');
+  }
+
+  try {
+    const feedback = JSON.parse(content.trim());
+    return feedback as AIFeedbackData;
+  } catch (parseError) {
+    console.error('Failed to parse OpenAI response:', content);
+    throw new Error('Invalid JSON response from OpenAI');
+  }
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState, useState } from "react";
+import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,59 +13,28 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { signUpAction } from "@/lib/auth/actions";
 import { authClient } from "@/lib/auth/auth-client";
+
+// Submit button component using useFormStatus (React 19)
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending} className="w-full">
+      {pending ? "Creating account..." : "Create Account"}
+    </Button>
+  );
+}
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // Use useActionState for form state management
+  const [state, formAction] = useActionState(signUpAction, null);
+  // Local state for password confirmation (client-side validation)
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
-      return;
-    }
-
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const { data, error } = await authClient.signUp.email({
-        email,
-        password,
-        name,
-        callbackURL: "/pte/dashboard",
-      });
-
-      if (error) {
-        setError(error.message || "Failed to create account");
-        setIsLoading(false);
-        return;
-      }
-
-      if (data) {
-        router.push("/pte/dashboard");
-      }
-    } catch (err: any) {
-      setError(err.message || "An error occurred");
-      setIsLoading(false);
-    }
-  };
+  const [localError, setLocalError] = useState("");
 
   const handleGoogleSignUp = async () => {
     try {
@@ -74,7 +43,7 @@ export function SignupForm({
         callbackURL: "/pte/dashboard",
       });
     } catch (err: any) {
-      setError(err.message || "Failed to sign up with Google");
+      console.error("Google sign up error:", err);
     }
   };
 
@@ -85,7 +54,7 @@ export function SignupForm({
         callbackURL: "/pte/dashboard",
       });
     } catch (err: any) {
-      setError(err.message || "Failed to sign up with Apple");
+      console.error("Apple sign up error:", err);
     }
   };
 
@@ -93,7 +62,23 @@ export function SignupForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
+          <form
+            className="p-6 md:p-8"
+            action={async (formData) => {
+              setLocalError("");
+              const password = (formData.get("password") as string) || "";
+              // Client-side validation
+              if (password !== confirmPassword) {
+                setLocalError("Passwords do not match");
+                return;
+              }
+              if (password.length < 8) {
+                setLocalError("Password must be at least 8 characters long");
+                return;
+              }
+              await formAction(formData);
+            }}
+          >
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Create your account</h1>
@@ -102,21 +87,22 @@ export function SignupForm({
                 </p>
               </div>
 
-              {error && (
+              {(state?.error || localError) && (
                 <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
-                  {error}
+                  {localError || state?.error}
                 </div>
               )}
+
+              <input type="hidden" name="redirect" value="/pte/dashboard" />
 
               <Field>
                 <FieldLabel htmlFor="name">Name</FieldLabel>
                 <Input
                   id="name"
+                  name="name"
                   type="text"
                   placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
+                  defaultValue={state?.name || ""}
                 />
               </Field>
 
@@ -124,10 +110,10 @@ export function SignupForm({
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  defaultValue={state?.email || ""}
                   required
                 />
                 <FieldDescription>
@@ -142,9 +128,8 @@ export function SignupForm({
                     <FieldLabel htmlFor="password">Password</FieldLabel>
                     <Input
                       id="password"
+                      name="password"
                       type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
                       required
                     />
                   </Field>
@@ -167,9 +152,7 @@ export function SignupForm({
               </Field>
 
               <Field>
-                <Button type="submit" disabled={isLoading} className="w-full">
-                  {isLoading ? "Creating account..." : "Create Account"}
-                </Button>
+                <SubmitButton />
               </Field>
 
               <div className="relative">

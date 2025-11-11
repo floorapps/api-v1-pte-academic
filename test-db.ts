@@ -5,16 +5,19 @@ import { config } from 'dotenv';
 // Load from .env.local
 config({ path: '.env.local' });
 
-if (!process.env.POSTGRES_URL) {
-  console.error('POSTGRES_URL environment variable is not set in .env.local');
+// Use DATABASE_URL (standard) or fallback to POSTGRES_URL for compatibility
+const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+
+if (!connectionString) {
+  console.error('DATABASE_URL or POSTGRES_URL environment variable is not set in .env.local');
   process.exit(1);
 }
 
 console.log('Testing database connection...');
 
-const client = postgres(process.env.POSTGRES_URL, {
+const client = postgres(connectionString, {
   max: 1,
-  ssl: process.env.POSTGRES_URL.includes('sslmode=require') ? 'require' : false,
+  ssl: connectionString.includes('sslmode=require') ? 'require' : false,
 });
 const db = drizzle(client);
 

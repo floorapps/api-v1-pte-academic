@@ -26,12 +26,12 @@ interface AcademicSidebarItem {
 const sidebarItems: AcademicSidebarItem[] = [
   {
     title: 'Dashboard',
-    href: '/pte/academic/dashboard',
+    href: '/pte-academic/dashboard',
     icon: <LayoutDashboard className="h-5 w-5" />,
   },
   {
     title: 'Practice',
-    href: '/pte/academic/practice',
+    href: '/pte-academic/practice',
     icon: <BookOpen className="h-5 w-5" />,
   },
   {
@@ -56,17 +56,17 @@ const sidebarItems: AcademicSidebarItem[] = [
   },
   {
     title: 'Messages',
-    href: '/pte/academic/messages',
+    href: '/pte-academic/messages',
     icon: <MessageCircle className="h-5 w-5" />,
   },
   {
     title: 'Time Management',
-    href: '/pte/academic/time',
+    href: '/pte-academic/time',
     icon: <Clock className="h-5 w-5" />,
   },
   {
     title: 'Settings',
-    href: '/pte/academic/settings',
+    href: '/pte-academic/settings',
     icon: <Settings className="h-5 w-5" />,
   },
 ];
@@ -75,7 +75,7 @@ export function AcademicSidebar() {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === '/pte/academic/dashboard') {
+    if (href === '/pte-academic/dashboard') {
       return pathname === href;
     }
     return pathname?.startsWith(href);
@@ -84,7 +84,7 @@ export function AcademicSidebar() {
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-16 items-center border-b px-4">
-        <Link href="/pte/academic/dashboard" className="flex items-center gap-2 font-semibold">
+        <Link href="/pte-academic/dashboard" className="flex items-center gap-2 font-semibold">
           <GraduationCap className="h-6 w-6 text-blue-600" />
           <span className="text-lg">Academic</span>
         </Link>

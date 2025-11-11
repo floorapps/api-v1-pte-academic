@@ -17,6 +17,7 @@ import {
   IconHeadphones,
   IconMessage,
   IconChevronDown,
+  IconChartBar,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 
@@ -36,6 +37,7 @@ const navigation = [
   { name: 'Templates', href: '/pte/templates', icon: IconTemplate },
   { name: 'Study Center', href: '/pte/study-center', icon: IconSchool },
   { name: 'Smart Prep', href: '/pte/smart-prep', icon: IconSparkles },
+  { name: 'Score Breakdown', href: '/pte/score-breakdown', icon: IconChartBar },
   { name: 'AI Coach', href: '/pte/ai-coach', icon: IconRobot },
   { name: 'Vocab Books', href: '/pte/vocab-books', icon: IconBook2 },
   { name: 'Shadowing', href: '/pte/shadowing', icon: IconHeadphones },

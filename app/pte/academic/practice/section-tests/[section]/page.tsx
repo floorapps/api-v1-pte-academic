@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { AcademicPracticeHeader } from "@/components/pte/_components/practice/practice-header";
+import { AcademicPracticeHeader } from "@/components/pte/practice-header";
 
 export default function SectionPage({
   params,

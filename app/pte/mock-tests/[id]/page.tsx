@@ -3,13 +3,17 @@ import { generateMockTestData, MockTest } from '@/lib/pte/mock-test-data';
 import MockTestSimulator from '@/components/pte/mock-test-simulator';
 
 interface MockTestPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function MockTestPage({ params }: MockTestPageProps) {
-  const { id } = params;
+  return <MockTestContent params={params} />;
+}
+
+async function MockTestContent({ params }: MockTestPageProps) {
+  const { id } = await params;
   
   // Find the mock test by ID
   const mockTests = generateMockTestData();

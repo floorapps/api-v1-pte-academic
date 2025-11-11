@@ -1,19 +1,28 @@
-import { getUserProfile } from "@/lib/db/queries";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
-import { SWRConfig } from "swr";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Next.js SaaS Starter",
-  description: "Get started quickly with Next.js, Postgres, and Stripe.",
+  title: "PTE Learning LMS",
+  description: "PTE Academic preparation platform with AI-powered practice and scoring.",
 };
 
 export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
   maximumScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
 };
 
-const manrope = Manrope({ subsets: ["latin"] });
+const manrope = Manrope({ 
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-manrope",
+});
 
 export default function RootLayout({
   children,
@@ -23,20 +32,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className}`}
+      className={`${manrope.variable} bg-white dark:bg-gray-950 text-black dark:text-white`}
+      suppressHydrationWarning
     >
-      <body className="min-h-[100dvh] bg-gray-50">
-        <SWRConfig
-          value={{
-            fallback: {
-              // We do NOT await here
-              // Only components that read this data will suspend
-              "/api/user": getUserProfile(),
-            },
-          }}
+      <body className={`min-h-[100dvh] bg-gray-50 ${manrope.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
           {children}
-        </SWRConfig>
+        </ThemeProvider>
       </body>
     </html>
   );

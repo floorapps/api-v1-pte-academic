@@ -5,9 +5,14 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { toast } from 'sonner';
 import { updateProfile } from '@/lib/auth/profile-actions';
 import { useAuth } from '@/lib/auth/auth-client';
+
+// Simple toast implementation
+const toast = {
+  success: (message: string) => console.log('Success:', message),
+  error: (message: string) => console.error('Error:', message)
+};
 
 interface AcademicProfileProps {
   initialTargetScore?: number;

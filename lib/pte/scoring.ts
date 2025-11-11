@@ -1,3 +1,5 @@
+import { AIFeedbackData, TestSection } from './types';
+
 // lib/pte/scoring.ts
 export interface PTEScore {
   overall: number;
@@ -39,15 +41,15 @@ export interface MockTestScore extends PTEScore {
 export function calculateMockTestScore(responses: any[]): MockTestScore {
   // In a real implementation, this would process the actual responses
   // For now, I'll create realistic scores based on PTE Academic standards
-  
+
   const speakingScore = Math.floor(Math.random() * 20) + 60; // 60-80 range
   const writingScore = Math.floor(Math.random() * 20) + 60;
   const readingScore = Math.floor(Math.random() * 20) + 65;
   const listeningScore = Math.floor(Math.random() * 20) + 60;
-  
+
   // Calculate overall score as weighted average
   const overall = Math.round((speakingScore + writingScore + readingScore + listeningScore) / 4);
-  
+
   // Calculate enabling skills based on main skills
   const grammar = Math.min(90, Math.round((writingScore + speakingScore) / 2) + 5);
   const oralFluency = Math.min(90, speakingScore - 5);
@@ -55,7 +57,7 @@ export function calculateMockTestScore(responses: any[]): MockTestScore {
   const spelling = Math.min(90, Math.round((writingScore + listeningScore) / 2));
   const vocabulary = Math.min(90, Math.round((readingScore + writingScore) / 2));
   const writtenDiscourse = Math.min(90, writingScore - 5);
-  
+
   return {
     id: `mock-test-${Date.now()}`,
     testName: `PTE Mock Test #${Math.floor(Math.random() * 100) + 1}`,
@@ -81,6 +83,67 @@ export function calculateMockTestScore(responses: any[]): MockTestScore {
       reading: 1920, // 32 mins
       listening: 2400 // 40 mins
     }
+  };
+}
+
+/**
+ * Calculate scores from AI feedback data
+ */
+export function calculateScoreFromAIFeedback(
+  aiFeedback: AIFeedbackData,
+  section: TestSection
+): number {
+  switch (section) {
+    case TestSection.SPEAKING:
+      // For speaking, average pronunciation, fluency, and content scores
+      const speakingScores = [
+        aiFeedback.pronunciation?.score || 0,
+        aiFeedback.fluency?.score || 0,
+        aiFeedback.content?.score || 0
+      ].filter(score => score > 0);
+      return speakingScores.length > 0
+        ? Math.round(speakingScores.reduce((a, b) => a + b, 0) / speakingScores.length)
+        : aiFeedback.overallScore;
+
+    case TestSection.WRITING:
+      // For writing, average content, grammar, vocabulary, and spelling scores
+      const writingScores = [
+        aiFeedback.content?.score || 0,
+        aiFeedback.grammar?.score || 0,
+        aiFeedback.vocabulary?.score || 0,
+        aiFeedback.spelling?.score || 0
+      ].filter(score => score > 0);
+      return writingScores.length > 0
+        ? Math.round(writingScores.reduce((a, b) => a + b, 0) / writingScores.length)
+        : aiFeedback.overallScore;
+
+    default:
+      // For reading and listening, use overall score
+      return aiFeedback.overallScore;
+  }
+}
+
+/**
+ * Generate detailed feedback from AI feedback data
+ */
+export function generateDetailedFeedbackFromAI(aiFeedback: AIFeedbackData): {
+  score: number;
+  feedback: string;
+  strengths: string[];
+  weaknesses: string[];
+} {
+  return {
+    score: aiFeedback.overallScore,
+    feedback: [
+      aiFeedback.content?.feedback,
+      aiFeedback.grammar?.feedback,
+      aiFeedback.vocabulary?.feedback,
+      aiFeedback.spelling?.feedback,
+      aiFeedback.pronunciation?.feedback,
+      aiFeedback.fluency?.feedback
+    ].filter(Boolean).join(' ') || 'AI feedback analysis completed.',
+    strengths: aiFeedback.strengths,
+    weaknesses: aiFeedback.areasForImprovement
   };
 }
 

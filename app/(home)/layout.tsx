@@ -64,7 +64,7 @@ function UserMenu() {
           <Avatar className="cursor-pointer size-9">
             <AvatarImage alt={user.name || ''} />
             <AvatarFallback>
-              {user.email
+              {(user.email || user.name || 'U')
                 .split(' ')
                 .map((n) => n[0])
                 .join('')}

@@ -14,13 +14,12 @@ if (!process.env.POSTGRES_URL) {
   );
 }
 
-// Create a PostgreSQL client optimized for Neon
+// Create a PostgreSQL client with the connection string
 export const client = postgres(process.env.POSTGRES_URL, {
-  ssl: process.env.NODE_ENV === "production" ? "require" : "prefer",
-  max: 5, // Reduced for serverless environment
-  idle_timeout: 30,
-  connect_timeout: 5,
-  application_name: "pte-learning-app",
+  ssl: process.env.POSTGRES_URL.includes("sslmode=require") ? "require" : false,
+  max: 10,
+  idle_timeout: 20,
+  connect_timeout: 10,
 });
 
 export const db = drizzle(client, { schema });

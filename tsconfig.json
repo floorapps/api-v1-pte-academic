@@ -1,36 +1,76 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    // Target modern JavaScript for better optimization
+    "target": "ES2022",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    // Allow JavaScript files for better compatibility
     "allowJs": true,
+    // Skip type checking of declaration files for faster builds
     "skipLibCheck": true,
+    // Enable all strict type-checking options
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
+    // Module system
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    // JSX configuration for React
     "jsx": "react-jsx",
+    // Incremental compilation for faster builds
     "incremental": true,
+    // Base URL for absolute imports
     "baseUrl": ".",
+    // Path mapping for cleaner imports
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@/components/*": [
+        "./components/*"
+      ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
+      "@/app/*": [
+        "./app/*"
+      ],
+      "@/public/*": [
+        "./public/*"
+      ],
+      "@/styles/*": [
+        "./styles/*"
+      ]
+    },
+    // Additional strict checks for production readiness
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    // Next.js plugin
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./*"]
-    }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    ".next\\dev/types/**/*.ts",
-    ".next\\dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "dist",
+    "build"
+  ]
 }

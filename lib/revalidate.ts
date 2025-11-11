@@ -1,5 +1,6 @@
 'use server';
 
+import "server-only";
 import { revalidateTag, revalidatePath } from 'next/cache';
 import { CacheTags } from './cache';
 

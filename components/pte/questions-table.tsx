@@ -148,7 +148,7 @@ export default function QuestionsTable({ questions, category }: QuestionTablePro
                     <TableCell>
                       <div className="flex gap-2">
                         <Button size="sm" variant="outline" asChild>
-                          <Link href={`/academic/pte-practice-test/${question.category.toLowerCase()}/${question.subcategory.toLowerCase()}/question/${question.id}`}>
+                          <Link href={`/pte-academic/practice/${question.category.toLowerCase()}/${question.subcategory.toLowerCase()}/question/${question.id}`}>
                             <Play className="h-4 w-4 mr-1" />
                             Practice
                           </Link>
