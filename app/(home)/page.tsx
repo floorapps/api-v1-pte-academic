@@ -1,5 +1,7 @@
+import CurrentYear from "@/components/current-year";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { HomeHeader } from "@/components/home-header";
 import {
   ArrowRight,
   Sparkles,
@@ -16,12 +18,8 @@ import {
   TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
-import { getCurrentUser } from "@/lib/auth/server";
-import { redirect } from "next/navigation";
 
 export default async function HomePage() {
-  const user = await getCurrentUser();
-
   // If user is authenticated, redirect to dashboard
 
   const features = [
@@ -119,38 +117,56 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen">
+      <HomeHeader />
+
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
+      <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-950 dark:via-slate-900 dark:to-indigo-950/30">
+        {/* Animated grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+
+        {/* Floating orbs with enhanced animations */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div
+            className="absolute top-1/4 -right-48 w-96 h-96 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 dark:from-blue-500/20 dark:to-cyan-500/20 rounded-full blur-3xl animate-pulse"
+            style={{ animationDuration: "4s" }}
+          />
+          <div
+            className="absolute -bottom-32 -left-48 w-[600px] h-[600px] bg-gradient-to-tr from-purple-500/30 to-pink-500/30 dark:from-purple-500/20 dark:to-pink-500/20 rounded-full blur-3xl animate-pulse"
+            style={{ animationDuration: "6s", animationDelay: "1s" }}
+          />
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 dark:from-indigo-500/10 dark:to-purple-500/10 rounded-full blur-3xl animate-pulse"
+            style={{ animationDuration: "8s", animationDelay: "2s" }}
+          />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-8">
-            <Sparkles className="h-4 w-4" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl text-blue-700 dark:text-blue-400 rounded-full text-sm font-semibold mb-8 border border-blue-300/30 dark:border-blue-700/30 shadow-lg shadow-blue-500/10 dark:shadow-blue-500/5 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:scale-105">
+            <Sparkles className="h-4 w-4 animate-pulse" />
             AI-Powered PTE Preparation Platform
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-6xl md:text-8xl font-extrabold text-gray-900 dark:text-white mb-8 leading-[1.1] tracking-tight">
             Master PTE Academic with
-            <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="block mt-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
               AI-Powered Practice
             </span>
           </h1>
 
-          <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-            Practice all 22 PTE question types, get instant AI feedback, and
-            track your progress with detailed analytics. Achieve your target
-            score faster.
+          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
+            Practice all{" "}
+            <span className="text-blue-600 dark:text-blue-400 font-bold">
+              22 PTE question types
+            </span>
+            , get instant AI feedback, and track your progress with detailed
+            analytics. Achieve your target score faster.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
             <Button
               asChild
               size="lg"
-              className="text-lg px-8 py-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="text-lg px-10 py-7 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 shadow-2xl shadow-blue-500/50 dark:shadow-blue-500/30 hover:shadow-blue-500/60 transition-all duration-300 hover:scale-105 rounded-2xl font-bold"
             >
               <Link href="/sign-up">
                 Start Free Practice
@@ -161,25 +177,30 @@ export default async function HomePage() {
               asChild
               size="lg"
               variant="outline"
-              className="text-lg px-8 py-6"
+              className="text-lg px-10 py-7 border-2 border-gray-300 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl hover:bg-white dark:hover:bg-gray-900 transition-all duration-300 hover:scale-105 rounded-2xl font-semibold shadow-xl"
             >
               <Link href="/dashboard">View Demo</Link>
             </Button>
           </div>
 
-          {/* Stats */}
-          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
+          {/* Stats - Enhanced with glassmorphism */}
+          <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, idx) => {
               const Icon = stat.icon;
               return (
-                <div key={idx} className="text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-3">
-                    <Icon className="h-6 w-6 text-blue-600" />
+                <div
+                  key={idx}
+                  className="group relative text-center p-6 rounded-3xl bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                >
+                  <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <Icon className="h-7 w-7 text-white" />
                   </div>
-                  <div className="text-3xl font-bold text-gray-900">
+                  <div className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
+                  <div className="text-sm text-gray-700 dark:text-gray-300 mt-2 font-medium">
+                    {stat.label}
+                  </div>
                 </div>
               );
             })}
@@ -188,36 +209,59 @@ export default async function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+      <section
+        id="features"
+        className="relative py-32 bg-white dark:bg-gray-950"
+      >
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(59,130,246,0.05),transparent_50%)] dark:bg-[radial-gradient(circle_at_30%_50%,rgba(59,130,246,0.03),transparent_50%)]"></div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <div className="inline-block px-4 py-1.5 bg-blue-100/80 dark:bg-blue-900/30 rounded-full text-sm font-semibold text-blue-700 dark:text-blue-400 mb-6 border border-blue-200/50 dark:border-blue-800/30">
+              ✨ Powerful Features
+            </div>
+            <h2 className="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
               Everything You Need to Succeed
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
               Comprehensive tools and features designed to help you achieve your
               target PTE score
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, idx) => {
               const Icon = feature.icon;
               return (
                 <Card
                   key={idx}
-                  className="border-0 shadow-lg hover:shadow-xl transition-shadow"
+                  className="relative overflow-hidden border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-500/20 transition-all duration-500 hover:-translate-y-2 group"
                 >
-                  <CardContent className="pt-8 pb-8">
+                  <div
+                    className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      backgroundImage: `linear-gradient(135deg, ${feature.gradient
+                        .split(" ")[1]
+                        ?.replace("from-", "")
+                        ?.replace("-500", "-500/10")} 0%, ${feature.gradient
+                        .split(" ")[2]
+                        ?.replace("to-", "")
+                        ?.replace("-500", "-500/10")} 100%)`,
+                    }}
+                  ></div>
+                  <CardContent className="relative pt-10 pb-10 px-6">
                     <div
-                      className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${feature.gradient} mb-4`}
+                      className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.gradient} mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-xl`}
                     >
-                      <Icon className="h-6 w-6 text-white" />
+                      <Icon className="h-7 w-7 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-600">{feature.description}</p>
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                      {feature.description}
+                    </p>
                   </CardContent>
                 </Card>
               );
@@ -227,51 +271,75 @@ export default async function HomePage() {
       </section>
 
       {/* Question Types Section */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+      <section
+        id="question-types"
+        className="relative py-32 bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900/50 dark:to-blue-950/20"
+      >
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-blue-500/10 to-transparent rounded-full blur-3xl"></div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <div className="inline-block px-4 py-1.5 bg-purple-100/80 dark:bg-purple-900/30 rounded-full text-sm font-semibold text-purple-700 dark:text-purple-400 mb-6 border border-purple-200/50 dark:border-purple-800/30">
+              📚 Complete Coverage
+            </div>
+            <h2 className="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
               Practice All PTE Question Types
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
               Master every section with our comprehensive question bank
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {questionTypes.map((type, idx) => {
               const Icon = type.icon;
               const colors: Record<string, string> = {
-                Speaking: "bg-blue-100 text-blue-700",
-                Writing: "bg-green-100 text-green-700",
-                Reading: "bg-purple-100 text-purple-700",
-                Listening: "bg-orange-100 text-orange-700",
+                Speaking: "bg-gradient-to-br from-blue-500 to-cyan-500",
+                Writing: "bg-gradient-to-br from-green-500 to-emerald-500",
+                Reading: "bg-gradient-to-br from-purple-500 to-pink-500",
+                Listening: "bg-gradient-to-br from-orange-500 to-red-500",
+              };
+              const bgColors: Record<string, string> = {
+                Speaking:
+                  "from-blue-500/5 to-cyan-500/5 dark:from-blue-500/10 dark:to-cyan-500/10",
+                Writing:
+                  "from-green-500/5 to-emerald-500/5 dark:from-green-500/10 dark:to-emerald-500/10",
+                Reading:
+                  "from-purple-500/5 to-pink-500/5 dark:from-purple-500/10 dark:to-pink-500/10",
+                Listening:
+                  "from-orange-500/5 to-red-500/5 dark:from-orange-500/10 dark:to-red-500/10",
               };
 
               return (
                 <Card
                   key={idx}
-                  className="hover:shadow-lg transition-shadow cursor-pointer"
+                  className={`group relative overflow-hidden hover:shadow-2xl dark:hover:shadow-2xl transition-all duration-500 cursor-pointer hover:-translate-y-1 border-0 bg-gradient-to-br ${
+                    bgColors[type.category]
+                  }`}
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="relative p-7">
                     <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-4">
+                      <div className="flex items-start gap-4 flex-1">
                         <div
-                          className={`p-2 rounded-lg ${colors[type.category]}`}
+                          className={`p-3 rounded-xl ${
+                            colors[type.category]
+                          } shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}
                         >
-                          <Icon className="h-5 w-5" />
+                          <Icon className="h-6 w-6 text-white" />
                         </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900 mb-1">
+                        <div className="flex-1">
+                          <h3 className="font-bold text-gray-900 dark:text-white mb-2 text-lg">
                             {type.name}
                           </h3>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
                             {type.category}
                           </p>
                         </div>
                       </div>
-                      <span className="text-sm font-medium text-gray-600">
-                        {type.count} Qs
+                      <span className="px-3 py-1 text-sm font-bold text-gray-700 dark:text-gray-300 bg-white/80 dark:bg-gray-800/80 rounded-full border border-gray-200/50 dark:border-gray-700/50">
+                        {type.count}
                       </span>
                     </div>
                   </CardContent>
@@ -280,8 +348,13 @@ export default async function HomePage() {
             })}
           </div>
 
-          <div className="text-center mt-12">
-            <Button asChild size="lg" variant="outline">
+          <div className="text-center mt-16">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="px-10 py-7 text-lg rounded-2xl border-2 font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
               <Link href="/academic/pte-practice-test">
                 View All Question Types
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -292,24 +365,42 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-white/[0.05]" />
+      <section className="relative py-32 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 dark:from-blue-900 dark:via-purple-900 dark:to-pink-900 overflow-hidden">
+        {/* Animated background patterns */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+          <div
+            className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl animate-pulse"
+            style={{ animationDuration: "10s" }}
+          ></div>
+          <div
+            className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl animate-pulse"
+            style={{ animationDuration: "12s", animationDelay: "2s" }}
+          ></div>
+        </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Achieve Your Target Score?
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-block px-4 py-1.5 bg-white/20 backdrop-blur-xl rounded-full text-sm font-semibold text-white mb-8 border border-white/30">
+            🚀 Ready to Excel?
+          </div>
+          <h2 className="text-5xl md:text-7xl font-extrabold text-white mb-8 leading-tight">
+            Ready to Achieve Your
+            <br />
+            <span className="bg-gradient-to-r from-yellow-200 via-pink-200 to-blue-200 bg-clip-text text-transparent">
+              Target Score?
+            </span>
           </h2>
-          <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
             Join thousands of students who have improved their PTE scores with
             our AI-powered platform
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center mb-12">
             <Button
               asChild
               size="lg"
               variant="secondary"
-              className="text-lg px-8 py-6"
+              className="text-lg px-12 py-7 bg-white text-blue-600 hover:bg-gray-100 font-bold rounded-2xl shadow-2xl hover:shadow-white/20 hover:scale-105 transition-all duration-300"
             >
               <Link href="/sign-up">
                 Get Started Free
@@ -320,31 +411,31 @@ export default async function HomePage() {
               asChild
               size="lg"
               variant="outline"
-              className="text-lg px-8 py-6 bg-white/10 text-white border-white/20 hover:bg-white/20"
+              className="text-lg px-12 py-7 bg-white/10 backdrop-blur-xl text-white border-2 border-white/30 hover:bg-white/20 font-bold rounded-2xl hover:scale-105 transition-all duration-300"
             >
               <Link href="/dashboard">Try Demo</Link>
             </Button>
           </div>
 
-          <div className="mt-12 flex flex-wrap justify-center gap-8 text-white/90">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5" />
-              <span>No credit card required</span>
+          <div className="mt-16 flex flex-wrap justify-center gap-10 text-white/95">
+            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-xl px-6 py-3 rounded-2xl border border-white/20">
+              <CheckCircle2 className="h-6 w-6" />
+              <span className="font-semibold">No credit card required</span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5" />
-              <span>Unlimited practice</span>
+            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-xl px-6 py-3 rounded-2xl border border-white/20">
+              <CheckCircle2 className="h-6 w-6" />
+              <span className="font-semibold">Unlimited practice</span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5" />
-              <span>Instant AI feedback</span>
+            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-xl px-6 py-3 rounded-2xl border border-white/20">
+              <CheckCircle2 className="h-6 w-6" />
+              <span className="font-semibold">Instant AI feedback</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300">
+      <footer className="bg-gray-900 dark:bg-black text-gray-300 dark:text-gray-400 border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             {/* Brand */}
@@ -461,8 +552,7 @@ export default async function HomePage() {
           <div className="pt-8 border-t border-gray-800">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <p className="text-sm text-gray-400">
-                © {new Date().getFullYear()} Pedagogist&apos;s PTE. All rights
-                reserved.
+                © <CurrentYear /> Pedagogist&apos;s PTE. All rights reserved.
               </p>
               <div className="flex gap-6 mt-4 md:mt-0">
                 <a

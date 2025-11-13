@@ -1,44 +1,13 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // React Strict Mode for better development experience
-  reactStrictMode: true,
-  
-  // Experimental features for Next.js 16
-  experimental: {
-    // Optimize package imports to reduce bundle size
-    optimizePackageImports: [
-      'lucide-react',
-      'zustand',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-label',
-      '@radix-ui/react-progress',
-      '@radix-ui/react-separator',
-      '@radix-ui/react-slot',
-      '@radix-ui/react-toggle',
-      '@radix-ui/react-toggle-group',
-      '@tabler/icons-react',
-      'recharts',
-    ],
-    // Memory optimizations
-    webpackMemoryOptimizations: true,
-    webpackBuildWorker: true,
-    // Disable server source maps in production for smaller builds
-    serverSourceMaps: process.env.NODE_ENV === 'development',
-    // Optimize preloading
-    preloadEntriesOnStart: true,
-    // Enable React Compiler for better performance
-    reactCompiler: true,
-    // Enable static indicator for better debugging
-    staticIndicator: true,
-    // Optimize CSS
-    optimizeCss: true,
-    // Use light account for better performance
-    useLightAccount: true,
-  },
+  // Enable Next.js 16 Cache Components (opt-in caching model)
+  cacheComponents: true,
 
-  // Image optimization
+  // Enable React Compiler for automatic memoization
+  reactCompiler: true,
+
+  // Allow remote icons/assets used by PTE data
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

@@ -32,10 +32,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} bg-white dark:bg-gray-950 text-black dark:text-white`}
+      className={`${manrope.variable}`}
       suppressHydrationWarning
     >
-      <body className={`min-h-[100dvh] bg-gray-50 ${manrope.className} antialiased`}>
+      <body className={`min-h-[100dvh] ${manrope.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
