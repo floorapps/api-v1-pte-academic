@@ -74,7 +74,7 @@ async function callGeminiJSON({
     }),
     timeoutMs
   )
-  const resp = await result.response
+  const resp = await (result as any).response
   const text =
     resp?.text?.() ?? resp?.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
   return { text: text || '', model }
@@ -106,7 +106,7 @@ async function callGeminiText({
     }),
     timeoutMs
   )
-  const resp = await result.response
+  const resp = await (result as any).response
   const text =
     resp?.text?.() ?? resp?.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
   return { text: text || '', model }

@@ -78,10 +78,6 @@ export async function GET(
         question.createdAt instanceof Date
           ? question.createdAt.toISOString()
           : question.createdAt,
-      updatedAt:
-        question.updatedAt instanceof Date
-          ? question.updatedAt.toISOString()
-          : question.updatedAt,
     }
 
     const res = NextResponse.json(

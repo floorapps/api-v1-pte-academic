@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="bg-background text-foreground border-t">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           <div>
             <Link href="/" className="flex items-center gap-2">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
@@ -44,18 +44,18 @@ export default function Footer() {
             <h3 className="mb-3 text-sm font-semibold">Resources</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/pte/templates" className="text-muted-foreground hover:text-foreground">
-                  Templates
+                <Link href="/blog" className="text-muted-foreground hover:text-foreground">
+                  Blog
                 </Link>
               </li>
               <li>
-                <Link href="/pte/study-center" className="text-muted-foreground hover:text-foreground">
-                  Study Center
+                <Link href="/pricing" className="text-muted-foreground hover:text-foreground">
+                  Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/pte/support" className="text-muted-foreground hover:text-foreground">
-                  Support
+                <Link href="/contact" className="text-muted-foreground hover:text-foreground">
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -65,11 +65,6 @@ export default function Footer() {
             <h3 className="mb-3 text-sm font-semibold">Company</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/pte/community" className="text-muted-foreground hover:text-foreground">
-                  Community
-                </Link>
-              </li>
-              <li>
                 <Link href="/sign-in" className="text-muted-foreground hover:text-foreground">
                   Sign In
                 </Link>
@@ -77,6 +72,42 @@ export default function Footer() {
               <li>
                 <Link href="/sign-up" className="text-muted-foreground hover:text-foreground">
                   Get Started
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          <nav aria-label="Legal">
+            <h3 className="mb-3 text-sm font-semibold">Legal</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/legal/privacy" className="text-muted-foreground hover:text-foreground">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal/terms" className="text-muted-foreground hover:text-foreground">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal/cookies" className="text-muted-foreground hover:text-foreground">
+                  Cookie Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal/refund" className="text-muted-foreground hover:text-foreground">
+                  Refund Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal/gdpr" className="text-muted-foreground hover:text-foreground">
+                  GDPR
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal/accessibility" className="text-muted-foreground hover:text-foreground">
+                  Accessibility
                 </Link>
               </li>
             </ul>

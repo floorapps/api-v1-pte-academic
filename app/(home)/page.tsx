@@ -2,6 +2,7 @@ import { HeroSection } from '@/components/hero-section-demo-1'
 import Features from '@/components/home/Features'
 import HowItWorks from '@/components/home/HowItWorks'
 import Stats from '@/components/home/Stats'
+import TrustSection from '@/components/home/TrustSection'
 import Testimonials from '@/components/home/Testimonials'
 import PricingPreview from '@/components/home/PricingPreview'
 import FAQ from '@/components/home/FAQ'
@@ -15,6 +16,7 @@ export default function HomePage() {
       <Features />
       <HowItWorks />
       <Stats />
+      <TrustSection />
       <Testimonials />
       <PricingPreview />
       <FAQ />

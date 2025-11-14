@@ -1,5 +1,12 @@
+'use client'
+
 import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 type QA = {
   q: string
@@ -42,24 +49,26 @@ export default function FAQ() {
     >
       <div className="mx-auto max-w-2xl text-center">
         <h2 id="faq-heading" className="text-3xl font-bold tracking-tight sm:text-4xl">
-          Frequently asked questions
+          Frequently Asked Questions
         </h2>
         <p className="text-muted-foreground mt-3 text-base sm:text-lg">
           Quick answers about practice, scoring, and plans.
         </p>
       </div>
 
-      <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-6 sm:mt-16">
-        {FAQS.map((item) => (
-          <Card key={item.q}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base sm:text-lg">{item.q}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              {item.a}
-            </CardContent>
-          </Card>
-        ))}
+      <div className="mx-auto mt-10 max-w-3xl sm:mt-16">
+        <Accordion type="single" collapsible className="w-full">
+          {FAQS.map((item, index) => (
+            <AccordionItem key={item.q} value={`item-${index}`}>
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold">
+                {item.q}
+              </AccordionTrigger>
+              <AccordionContent className="text-sm text-muted-foreground sm:text-base">
+                {item.a}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </section>
   )

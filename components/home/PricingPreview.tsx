@@ -87,7 +87,7 @@ export default function PricingPreview() {
                 {tier.features.map((f) => (
                   <li key={f} className="text-sm">• {f}</li>
                 ))}
-              </ul&gt>
+              </ul>
               <Button asChild size="lg" className={tier.highlight ? 'bg-primary text-primary-foreground' : ''} aria-label="Go to pricing">
                 <Link href="/pricing">View full pricing</Link>
               </Button>

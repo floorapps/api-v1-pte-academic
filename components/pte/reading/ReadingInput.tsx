@@ -56,7 +56,8 @@ export default function ReadingInput({
               <Checkbox
                 id={`option-${index}`}
                 checked={selectedOptions.includes(option)}
-                onCheckedChange={(checked) => {
+                onChange={(e) => {
+                  const checked = e.target.checked
                   let newSelected = [...selectedOptions]
                   if (checked) {
                     newSelected.push(option)

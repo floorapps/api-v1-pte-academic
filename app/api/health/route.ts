@@ -4,8 +4,6 @@ import { GeminiProvider } from '@/lib/ai/providers/gemini'
 import { OpenAIProvider } from '@/lib/ai/providers/openai'
 import { VercelAIProvider } from '@/lib/ai/providers/vercel'
 
-export const runtime = 'nodejs'
-
 export async function GET() {
   const startedAt = Date.now()
 

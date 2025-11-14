@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Progress } from '@/components/ui/progress'
 import { format as formatMs } from '@/lib/pte/timing'
 
@@ -52,7 +52,6 @@ export default function CountdownTimer({
   }, [durationMs, endTsServer, startTsServer])
 
   const [now, setNow] = useState<number>(() => Date.now())
-  const [expired, setExpired] = useState<boolean>(false)
 
   const rafRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const expiredRef = useRef(false)
@@ -95,7 +94,6 @@ export default function CountdownTimer({
   useEffect(() => {
     if (!expiredRef.current && remainingMs <= 0) {
       expiredRef.current = true
-      setExpired(true)
       try {
         onExpire?.()
       } catch (e) {
@@ -173,14 +171,4 @@ export default function CountdownTimer({
       ) : null}
     </div>
   )
-}
-
-// Local helper alias to keep formatting consistent
-function formatMs(ms: number): string {
-  return formatMsLib(ms)
-}
-
-// Re-export next to avoid circular re-import naming confusion
-function formatMsLib(ms: number): string {
-  return formatMs(ms)
 }

@@ -2,6 +2,8 @@ import 'server-only'
 import type { ProviderRawScore } from '@/lib/pte/scoring-normalize'
 import { TestSection } from '@/lib/pte/types'
 
+export type { ProviderRawScore }
+
 export type HealthStatus = {
   provider: 'openai' | 'gemini' | 'vercel'
   ok: boolean

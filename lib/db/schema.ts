@@ -690,6 +690,206 @@ export const userScheduledExamDates = pgTable(
   })
 )
 
+// ========================================
+// Conversation Tables (OpenAI Realtime API)
+// ========================================
+
+// Enum for conversation session types
+export const conversationSessionTypeEnum = pgEnum('conversation_session_type', [
+  'speaking_practice',
+  'mock_interview',
+  'pronunciation_coach',
+  'fluency_training',
+  'customer_support',
+])
+
+// Enum for conversation status
+export const conversationStatusEnum = pgEnum('conversation_status', [
+  'active',
+  'completed',
+  'abandoned',
+  'error',
+])
+
+// Enum for conversation turn roles
+export const conversationRoleEnum = pgEnum('conversation_role', [
+  'user',
+  'assistant',
+  'system',
+])
+
+// Conversation Sessions Table
+export const conversationSessions = pgTable(
+  'conversation_sessions',
+  {
+    id: uuid('id')
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    sessionType: conversationSessionTypeEnum('session_type')
+      .notNull()
+      .default('speaking_practice'),
+    status: conversationStatusEnum('status').notNull().default('active'),
+    startedAt: timestamp('started_at').defaultNow().notNull(),
+    endedAt: timestamp('ended_at'),
+    totalTurns: integer('total_turns').default(0).notNull(),
+    totalDurationMs: integer('total_duration_ms').default(0),
+    aiProvider: text('ai_provider').default('openai'),
+    modelUsed: text('model_used').default('gpt-4o-realtime-preview'),
+    tokenUsage: jsonb('token_usage').$type<{
+      promptTokens?: number
+      completionTokens?: number
+      totalTokens?: number
+    }>(),
+    metadata: jsonb('metadata').$type<{
+      averageResponseTimeMs?: number
+      interruptionCount?: number
+      conversationScore?: number
+      topics?: string[]
+      [key: string]: any
+    }>(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('idx_conversation_sessions_user_id').on(table.userId),
+    statusIdx: index('idx_conversation_sessions_status').on(table.status),
+    sessionTypeIdx: index('idx_conversation_sessions_type').on(
+      table.sessionType
+    ),
+    createdAtIdx: index('idx_conversation_sessions_created_at').on(
+      table.createdAt
+    ),
+  })
+)
+
+// Conversation Turns Table (individual messages)
+export const conversationTurns = pgTable(
+  'conversation_turns',
+  {
+    id: uuid('id')
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    sessionId: uuid('session_id')
+      .notNull()
+      .references(() => conversationSessions.id, { onDelete: 'cascade' }),
+    turnIndex: integer('turn_index').notNull(),
+    role: conversationRoleEnum('role').notNull(),
+    audioUrl: text('audio_url'),
+    transcript: text('transcript'),
+    scores: jsonb('scores').$type<{
+      pronunciation?: number
+      fluency?: number
+      content?: number
+      grammarScore?: number
+      vocabularyScore?: number
+      total?: number
+      feedback?: string
+      [key: string]: any
+    }>(),
+    durationMs: integer('duration_ms'),
+    silenceDurationMs: integer('silence_duration_ms'),
+    wordsPerMinute: decimal('words_per_minute', { precision: 6, scale: 2 }),
+    pauseCount: integer('pause_count'),
+    fillerWordCount: integer('filler_word_count'),
+    metadata: jsonb('metadata').$type<{
+      audioFormat?: string
+      sampleRate?: number
+      interrupted?: boolean
+      responseTimeMs?: number
+      [key: string]: any
+    }>(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    sessionIdIdx: index('idx_conversation_turns_session_id').on(table.sessionId),
+    turnIndexIdx: index('idx_conversation_turns_turn_index').on(
+      table.turnIndex
+    ),
+    roleIdx: index('idx_conversation_turns_role').on(table.role),
+    createdAtIdx: index('idx_conversation_turns_created_at').on(
+      table.createdAt
+    ),
+  })
+)
+
+// Link conversation sessions to speaking/writing attempts for scoring
+export const conversationAttemptLinks = pgTable(
+  'conversation_attempt_links',
+  {
+    id: uuid('id')
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    sessionId: uuid('session_id')
+      .notNull()
+      .references(() => conversationSessions.id, { onDelete: 'cascade' }),
+    attemptId: uuid('attempt_id').notNull(), // Can reference speakingAttempts or writingAttempts
+    attemptType: text('attempt_type').notNull(), // 'speaking' | 'writing'
+    linkType: text('link_type').default('generated_from'), // 'generated_from' | 'scored_as' | 'related_to'
+    metadata: jsonb('metadata'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    sessionIdIdx: index('idx_conversation_links_session_id').on(
+      table.sessionId
+    ),
+    attemptIdIdx: index('idx_conversation_links_attempt_id').on(
+      table.attemptId
+    ),
+    attemptTypeIdx: index('idx_conversation_links_attempt_type').on(
+      table.attemptType
+    ),
+  })
+)
+
+// AI Credit Usage Tracking
+export const aiUsageTypeEnum = pgEnum('ai_usage_type', [
+  'transcription',
+  'scoring',
+  'feedback',
+  'realtime_voice',
+  'text_generation',
+  'other',
+])
+
+export const aiCreditUsage = pgTable(
+  'ai_credit_usage',
+  {
+    id: uuid('id')
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    usageType: aiUsageTypeEnum('usage_type').notNull(),
+    provider: text('provider').notNull(), // 'openai' | 'gemini' | 'vercel' | etc.
+    model: text('model'), // e.g., 'gpt-4o', 'gemini-1.5-pro', etc.
+    inputTokens: integer('input_tokens').default(0),
+    outputTokens: integer('output_tokens').default(0),
+    totalTokens: integer('total_tokens').default(0),
+    audioSeconds: decimal('audio_seconds', { precision: 10, scale: 2 }), // For Realtime/Whisper
+    cost: decimal('cost', { precision: 10, scale: 6 }), // Estimated cost in USD
+    sessionId: uuid('session_id'), // Optional: link to conversation session
+    attemptId: uuid('attempt_id'), // Optional: link to attempt (speaking/writing/etc.)
+    attemptType: text('attempt_type'), // 'speaking' | 'writing' | 'reading' | 'listening'
+    metadata: jsonb('metadata'), // Additional tracking data
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('idx_ai_usage_user_id').on(table.userId),
+    typeIdx: index('idx_ai_usage_type').on(table.usageType),
+    providerIdx: index('idx_ai_usage_provider').on(table.provider),
+    createdAtIdx: index('idx_ai_usage_created_at').on(table.createdAt),
+    sessionIdIdx: index('idx_ai_usage_session_id').on(table.sessionId),
+    attemptIdIdx: index('idx_ai_usage_attempt_id').on(table.attemptId),
+  })
+)
+
 // Relations
 // New relations for Speaking system
 export const speakingQuestionsRelations = relations(
@@ -809,6 +1009,52 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
 }))
 
 export const verificationsRelations = relations(verifications, () => ({}))
+
+export const conversationSessionsRelations = relations(
+  conversationSessions,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [conversationSessions.userId],
+      references: [users.id],
+    }),
+    turns: many(conversationTurns),
+    attemptLinks: many(conversationAttemptLinks),
+  })
+)
+
+export const conversationTurnsRelations = relations(
+  conversationTurns,
+  ({ one }) => ({
+    session: one(conversationSessions, {
+      fields: [conversationTurns.sessionId],
+      references: [conversationSessions.id],
+    }),
+  })
+)
+
+export const conversationAttemptLinksRelations = relations(
+  conversationAttemptLinks,
+  ({ one }) => ({
+    session: one(conversationSessions, {
+      fields: [conversationAttemptLinks.sessionId],
+      references: [conversationSessions.id],
+    }),
+  })
+)
+
+export const aiCreditUsageRelations = relations(
+  aiCreditUsage,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [aiCreditUsage.userId],
+      references: [users.id],
+    }),
+    session: one(conversationSessions, {
+      fields: [aiCreditUsage.sessionId],
+      references: [conversationSessions.id],
+    }),
+  })
+)
 
 export const pteTestsRelations = relations(pteTests, ({ many }) => ({
   questions: many(pteQuestions),
@@ -1042,3 +1288,17 @@ export type NewListeningAttempt = typeof listeningAttempts.$inferInsert
 export type UserScheduledExamDate = typeof userScheduledExamDates.$inferSelect
 export type NewUserScheduledExamDate =
   typeof userScheduledExamDates.$inferInsert
+
+export type ConversationSession = typeof conversationSessions.$inferSelect
+export type NewConversationSession = typeof conversationSessions.$inferInsert
+
+export type ConversationTurn = typeof conversationTurns.$inferSelect
+export type NewConversationTurn = typeof conversationTurns.$inferInsert
+
+export type ConversationAttemptLink =
+  typeof conversationAttemptLinks.$inferSelect
+export type NewConversationAttemptLink =
+  typeof conversationAttemptLinks.$inferInsert
+
+export type AICreditUsage = typeof aiCreditUsage.$inferSelect
+export type NewAICreditUsage = typeof aiCreditUsage.$inferInsert

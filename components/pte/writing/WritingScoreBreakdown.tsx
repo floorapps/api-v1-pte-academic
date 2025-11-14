@@ -149,10 +149,10 @@ export default function WritingScoreBreakdown({ scores }: Props) {
               <div className="text-muted-foreground text-xs">Task Response</div>
               <div className="text-lg font-medium">
                 {typeof scores.taskResponse === 'number'
-                  ? scores.taskResponse
-                  : scores.taskResponse === 1
+                  ? scores.taskResponse === 1
                     ? 'Yes'
-                    : '—'}
+                    : scores.taskResponse
+                  : '—'}
               </div>
             </div>
           </div>

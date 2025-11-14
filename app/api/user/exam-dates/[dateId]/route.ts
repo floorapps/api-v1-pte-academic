@@ -6,7 +6,7 @@ import { userScheduledExamDates } from '@/lib/db/schema'
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { dateId: string } }
+  { params }: { params: Promise<{ dateId: string }> }
 ) {
   try {
     const session = await getSession()
@@ -14,7 +14,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { dateId } = params
+    const { dateId } = await params
 
     // Ensure user can only delete their own exam dates
     const examDate = await db

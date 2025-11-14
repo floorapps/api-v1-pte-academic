@@ -73,7 +73,7 @@ function getPriorityLabel(
   targetScore?: number,
   daysUntilExam?: number
 ): { label: string; variant: 'default' | 'secondary' | 'destructive' } {
-  const recommendedDifficulty = getRecommendedDifficulty(targetScore)
+  const recommendedDifficulty = getRecommendedDifficulty(targetScore ?? undefined)
   const diffValue = getDifficultyValue(difficulty)
   const recValue = getDifficultyValue(recommendedDifficulty)
 
@@ -113,7 +113,7 @@ export function FilteredQuestionsTable({
     .map((row) => {
       const priority = getPriorityLabel(
         row.difficulty || 'Medium',
-        targetScore,
+        targetScore ?? undefined,
         daysUntilExam || undefined
       )
       return { ...row, priority }
@@ -140,7 +140,7 @@ export function FilteredQuestionsTable({
     }
   }
 
-  const recommendedDifficulty = getRecommendedDifficulty(targetScore)
+  const recommendedDifficulty = getRecommendedDifficulty(targetScore ?? undefined)
 
   return (
     <div className="space-y-4 rounded-md border bg-white">

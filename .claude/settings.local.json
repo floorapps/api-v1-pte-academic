@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(taskkill:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(pnpm run build:*)",
+      "Bash(node \"C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npx-cli.js\" @elevenlabs/cli@latest components add voice-button --yes)",
+      "Bash(node \"C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npx-cli.js\" @next/codemod@canary middleware-to-proxy .)",
+      "Bash(npm install:*)",
+      "Bash(node \"C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npx-cli.js\" @elevenlabs/cli@latest components add conversation-bar --yes)",
+      "Bash(powershell -Command:*)",
+      "Bash(pnpm db:generate:*)",
+      "Bash(pnpm db:migrate:*)"
     ],
     "deny": [],
     "ask": []

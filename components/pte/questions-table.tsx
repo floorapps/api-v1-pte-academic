@@ -23,8 +23,8 @@ interface QuestionRow {
 
 interface QuestionsTableProps {
   rows: QuestionRow[]
-  section: 'speaking' | 'reading' | 'writing' | 'listening'
-  questionType: string
+  section?: 'speaking' | 'reading' | 'writing' | 'listening'
+  questionType?: string
 }
 
 function capitalize(s?: string | null): string {
@@ -99,16 +99,18 @@ export default function QuestionsTable({
                       <code className="block rounded bg-orange-100 p-2 text-xs text-orange-900">
                         POST /api/{section}/seed
                       </code>
-                      <Button
-                        onClick={handleSeedClick}
-                        size="sm"
-                        variant="outline"
-                        className="w-full"
-                      >
-                        Seed{' '}
-                        {section.charAt(0).toUpperCase() + section.slice(1)}{' '}
-                        Questions
-                      </Button>
+                      {section && (
+                        <Button
+                          onClick={handleSeedClick}
+                          size="sm"
+                          variant="outline"
+                          className="w-full"
+                        >
+                          Seed{' '}
+                          {section.charAt(0).toUpperCase() + section.slice(1)}{' '}
+                          Questions
+                        </Button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -127,12 +129,16 @@ export default function QuestionsTable({
                     {id.length > 10 ? `${id.slice(0, 8)}...` : id}
                   </TableCell>
                   <TableCell className="font-medium">
-                    <Link
-                      href={`/pte/academic/practice/${section}/${questionType}/question/${id}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {title.length > 120 ? `${title.slice(0, 120)}...` : title}
-                    </Link>
+                    {section && questionType ? (
+                      <Link
+                        href={`/pte/academic/practice/${section}/${questionType}/question/${id}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {title.length > 120 ? `${title.slice(0, 120)}...` : title}
+                      </Link>
+                    ) : (
+                      <span>{title.length > 120 ? `${title.slice(0, 120)}...` : title}</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     <Badge variant={difficultyVariant(diff)}>{diff}</Badge>

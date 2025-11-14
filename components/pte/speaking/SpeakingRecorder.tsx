@@ -3,6 +3,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import { VoiceButton } from '@/components/ui/voice-button'
+import { LiveWaveform } from '@/components/ui/live-waveform'
+import { MicSelector } from '@/components/ui/mic-selector'
 import type { SpeakingTimings, SpeakingType } from '@/lib/pte/types'
 
 export type RecorderState =
@@ -81,6 +84,10 @@ export default function SpeakingRecorder({
   const [error, setError] = useState<string | null>(null)
   const [prepRemainingMs, setPrepRemainingMs] = useState(prepMs)
   const [recordElapsedMs, setRecordElapsedMs] = useState(0)
+  const [audioLevel, setAudioLevel] = useState(0)
+  const [selectedMicId, setSelectedMicId] = useState<string>('')
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const analyserRef = useRef<AnalyserNode | null>(null)
 
   // Derived progress values (0..100)
   const prepProgress = useMemo(() => {
@@ -116,6 +123,13 @@ export default function SpeakingRecorder({
   }
 
   const cleanupStream = () => {
+    if (audioContextRef.current) {
+      try {
+        audioContextRef.current.close()
+      } catch {}
+      audioContextRef.current = null
+      analyserRef.current = null
+    }
     if (mediaStreamRef.current) {
       for (const track of mediaStreamRef.current.getTracks()) {
         try {
@@ -124,6 +138,7 @@ export default function SpeakingRecorder({
       }
       mediaStreamRef.current = null
     }
+    setAudioLevel(0)
   }
 
   const resetAll = useCallback(() => {
@@ -189,9 +204,37 @@ export default function SpeakingRecorder({
     try {
       setError(null)
 
-      // Request microphone
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      // Request microphone with specific device if selected
+      const constraints: MediaStreamConstraints = {
+        audio: selectedMicId ? { deviceId: { exact: selectedMicId } } : true
+      }
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
       mediaStreamRef.current = stream
+
+      // Setup audio level monitoring
+      try {
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+        const analyser = audioContext.createAnalyser()
+        const source = audioContext.createMediaStreamSource(stream)
+        source.connect(analyser)
+        analyser.fftSize = 256
+        const dataArray = new Uint8Array(analyser.frequencyBinCount)
+
+        audioContextRef.current = audioContext
+        analyserRef.current = analyser
+
+        const updateLevel = () => {
+          if (analyserRef.current && recorderRef.current?.state === 'recording') {
+            analyserRef.current.getByteFrequencyData(dataArray)
+            const average = dataArray.reduce((a, b) => a + b) / dataArray.length
+            setAudioLevel(average / 255)
+            requestAnimationFrame(updateLevel)
+          }
+        }
+        requestAnimationFrame(updateLevel)
+      } catch (e) {
+        console.warn('Audio level monitoring not available:', e)
+      }
 
       const rec: MediaRecorder = new (window as any).MediaRecorder(stream, {
         mimeType: MIME,
@@ -257,7 +300,7 @@ export default function SpeakingRecorder({
       }
       cleanupStream()
     }
-  }, [finalizeRecording, recordMs, setPhase])
+  }, [finalizeRecording, recordMs, setPhase, selectedMicId])
 
   const begin = useCallback(async () => {
     setError(null)
@@ -348,69 +391,104 @@ export default function SpeakingRecorder({
   const isRedoDisabled =
     state === 'recording' || state === 'prepping' || state === 'idle'
 
-  return (
-    <div className="w-full space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col">
-          <span className="text-muted-foreground text-sm">
-            Mode: {type.replaceAll('_', ' ')}
-          </span>
-          {state === 'prepping' ? (
-            <span aria-live="polite" className="text-sm font-medium">
-              Preparation: {Math.ceil(prepRemainingMs / 1000)}s
-            </span>
-          ) : state === 'recording' ? (
-            <span
-              aria-live="polite"
-              className="text-sm font-medium text-red-600"
-            >
-              Recording... {Math.ceil((recordMs - recordElapsedMs) / 1000)}s
-              left
-            </span>
-          ) : state === 'finished' ? (
-            <span className="text-sm text-emerald-600">
-              Recorded. You can submit or redo.
-            </span>
-          ) : state === 'denied' ? (
-            <span className="text-sm text-red-600">
-              Microphone permission denied.
-            </span>
-          ) : state === 'unsupported' ? (
-            <span className="text-sm text-red-600">
-              Recording not supported in this browser.
-            </span>
-          ) : state === 'error' ? (
-            <span className="text-sm text-red-600">Recording error.</span>
-          ) : (
-            <span className="text-sm">Ready.</span>
-          )}
-        </div>
+  const getVoiceButtonState = (): "idle" | "recording" | "processing" | "success" | "error" => {
+    if (state === 'recording') return 'recording'
+    if (state === 'prepping') return 'processing'
+    if (state === 'finished') return 'success'
+    if (state === 'error' || state === 'denied' || state === 'unsupported') return 'error'
+    return 'idle'
+  }
 
-        <div className="flex gap-2">
-          <Button
-            aria-label="Start recording"
-            onClick={begin}
-            disabled={isStartDisabled}
+  const handleVoiceButtonPress = useCallback(() => {
+    if (state === 'idle') {
+      begin()
+    } else if (state === 'recording') {
+      stop()
+    }
+  }, [state, begin, stop])
+
+  // Keyboard shortcut for Space key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && !e.repeat) {
+        e.preventDefault()
+        handleVoiceButtonPress()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleVoiceButtonPress])
+
+  return (
+    <div className="w-full space-y-6">
+      {/* Microphone Selector */}
+      <div className="flex justify-center">
+        <MicSelector onDeviceChange={setSelectedMicId} />
+      </div>
+
+      {/* Status and Mode */}
+      <div className="flex flex-col items-center text-center space-y-2">
+        <span className="text-muted-foreground text-sm">
+          Mode: {type.replaceAll('_', ' ')}
+        </span>
+        {state === 'prepping' ? (
+          <span aria-live="polite" className="text-sm font-medium">
+            Preparation: {Math.ceil(prepRemainingMs / 1000)}s
+          </span>
+        ) : state === 'recording' ? (
+          <span
+            aria-live="polite"
+            className="text-sm font-medium text-red-600"
           >
-            Start
-          </Button>
-          <Button
-            aria-label="Stop recording"
-            onClick={stop}
-            disabled={isStopDisabled}
-            variant="destructive"
-          >
-            Stop
-          </Button>
+            Recording... {Math.ceil((recordMs - recordElapsedMs) / 1000)}s
+            left
+          </span>
+        ) : state === 'finished' ? (
+          <span className="text-sm text-emerald-600">
+            Recorded. You can submit or redo.
+          </span>
+        ) : state === 'denied' ? (
+          <span className="text-sm text-red-600">
+            Microphone permission denied.
+          </span>
+        ) : state === 'unsupported' ? (
+          <span className="text-sm text-red-600">
+            Recording not supported in this browser.
+          </span>
+        ) : state === 'error' ? (
+          <span className="text-sm text-red-600">Recording error.</span>
+        ) : (
+          <span className="text-sm">Ready to record.</span>
+        )}
+      </div>
+
+      {/* Live Waveform */}
+      <LiveWaveform
+        isActive={state === 'recording'}
+        audioLevel={audioLevel}
+        barCount={40}
+      />
+
+      {/* Voice Control Button */}
+      <div className="flex flex-col items-center gap-3">
+        <VoiceButton
+          state={getVoiceButtonState()}
+          onPress={handleVoiceButtonPress}
+          label={state === 'recording' ? 'Stop Recording' : 'Start Recording'}
+          trailing="Space"
+          className="min-w-[200px]"
+        />
+
+        {state === 'finished' && (
           <Button
             aria-label="Redo recording"
             onClick={redo}
-            disabled={isRedoDisabled}
             variant="outline"
+            size="sm"
           >
-            Redo
+            Redo Recording
           </Button>
-        </div>
+        )}
       </div>
 
       {/* Progress */}

@@ -62,7 +62,7 @@ export default async function QuestionTypePage(props: {
         <AcademicPracticeHeader section={section} showFilters={true} />
 
         <div className="mt-6">
-          <QuestionsTable questions={questions} category={section} />
+          <QuestionsTable rows={questions} section={section as 'speaking' | 'writing' | 'reading' | 'listening'} questionType={questionType} />
         </div>
       </div>
     </div>

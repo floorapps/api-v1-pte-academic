@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { ThemeSwitcher } from '@/components/ui/theme-switcher'
 import { signOutAction } from '@/lib/auth/actions'
 import { User } from '@/lib/db/schema'
 
@@ -88,17 +89,29 @@ function UserMenu() {
 
 function Header() {
   return (
-    <header className="border-b border-gray-200 bg-white">
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
             <span className="text-lg font-bold text-white">P</span>
           </div>
-          <span className="ml-2 text-xl font-bold text-gray-900">
+          <span className="ml-2 text-xl font-bold">
             Pedagogist&apos;s PTE
           </span>
         </Link>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-6 mr-4">
+            <Link href="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Blog
+            </Link>
+            <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Pricing
+            </Link>
+            <Link href="/contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Contact
+            </Link>
+          </nav>
+          <ThemeSwitcher />
           <Suspense fallback={<div className="h-9" />}>
             <UserMenu />
           </Suspense>

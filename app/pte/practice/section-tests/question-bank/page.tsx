@@ -60,7 +60,7 @@ export default function QuestionBankPage() {
         </div>
       </div>
 
-      <QuestionsTable questions={questions} />
+      <QuestionsTable rows={questions} />
     </div>
   )
 }

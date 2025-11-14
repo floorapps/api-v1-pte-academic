@@ -159,8 +159,8 @@ export async function POST(request: Request) {
         transcript,
         scores: scoresJson as any,
         durationMs,
-        wordsPerMinute: wpm,
-        fillerRate: fillerRate,
+        wordsPerMinute: wpm.toString(),
+        fillerRate: fillerRate.toString(),
         timings: (timings as any) || {},
       })
       .returning()

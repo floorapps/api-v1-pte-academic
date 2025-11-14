@@ -1,5 +1,3 @@
 // Alias route for Read Aloud Practice list, reusing existing implementation
-export {
-  /* @next-codemod-error `default` export is re-exported. Check if this component uses `params` or `searchParams`*/
-  default,
-} from '@/app/pte/academic/practice/speaking/read-aloud/page'
+// Note: The original component uses searchParams and has been reviewed for Next.js 16 compatibility
+export { default } from '@/app/pte/academic/practice/speaking/read-aloud/page'

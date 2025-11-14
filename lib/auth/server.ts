@@ -3,6 +3,9 @@ import { cache } from 'react'
 import { headers } from 'next/headers'
 import { auth } from './auth'
 
+// Re-export auth for convenience
+export { auth }
+
 /**
  * Get the current session (cached per request)
  * Compatible with Next.js 16 async Request APIs
