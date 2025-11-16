@@ -1,0 +1,148 @@
+[
+  {
+    "title": "Listening Summarize Spoken Text — Climate Policy",
+    "type": "summarize_spoken_text",
+    "promptText": "Listen to the audio and write a summary in 50-70 words.",
+    "promptMediaUrl": null,
+    "transcript": "The transition to renewable energy requires coordinated policy frameworks that balance environmental goals with economic realities. Governments must provide incentives for clean energy investment while managing the phase-out of fossil fuel industries and supporting affected workers. Carbon pricing mechanisms, renewable energy standards, and grid modernization are essential components. International cooperation is crucial as climate change transcends national borders. Success depends on engaging multiple stakeholders including industry, communities, and civil society in the transition process.",
+    "difficulty": "Hard",
+    "tags": ["nov2025", "listening", "summarize_spoken_text", "climate", "policy"],
+    "correctAnswers": ["Climate policy must balance environmental and economic goals through coordinated frameworks including carbon pricing, renewable standards, and grid modernization while supporting affected workers and engaging stakeholders, with international cooperation essential for addressing this transboundary challenge."],
+    "answerKey": {
+      "minWords": 50,
+      "maxWords": 70,
+      "scoringCriteria": {
+        "content": "0-2: Covers main policy elements and stakeholder engagement",
+        "form": "0-2: Between 50-70 words",
+        "grammar": "0-2: Correct sentence structure",
+        "vocabulary": "0-2: Appropriate word choice"
+      }
+    }
+  },
+  {
+    "title": "Listening Multiple Choice Single — Artificial Intelligence",
+    "type": "multiple_choice_single",
+    "promptText": "Listen to the recording and answer the question.",
+    "promptMediaUrl": "null",
+    "transcript": "Artificial intelligence systems are increasingly making decisions that affect people's lives, from loan applications to medical diagnoses. This raises important questions about accountability and transparency. When an AI system makes a mistake or produces a biased outcome, who is responsible? The developers who created the algorithm? The organizations deploying it? Or the data scientists who trained it? Moreover, many AI systems operate as 'black boxes,' making decisions through complex processes that even their creators cannot fully explain. This opacity poses challenges for regulatory oversight and individual rights to understand decisions affecting them. Developing frameworks for AI accountability requires collaboration between technologists, ethicists, policymakers, and affected communities to ensure these powerful tools serve society fairly and responsibly.\n\nWhat is the main concern discussed about AI systems?",
+    "difficulty": "Medium",
+    "tags": ["nov2025", "listening", "multiple_choice_single", "technology", "ai"],
+    "options": [
+      "A) AI systems are too expensive to implement",
+      "B) Questions of accountability and transparency when AI makes decisions affecting people",
+      "C) AI systems cannot make medical diagnoses",
+      "D) There are too many developers creating AI"
+    ],
+    "correctAnswers": ["B"]
+  },
+  {
+    "title": "Listening Fill in Blanks — Quantum Computing",
+    "type": "fill_in_blanks",
+    "promptText": "Listen to the recording and fill in the missing words.",
+    "promptMediaUrl": null,
+    "transcript": "Quantum computing represents a revolutionary approach to information processing that exploits the principles of quantum mechanics. Unlike classical computers that use bits representing either zero or one, quantum computers use quantum bits or qubits that can exist in multiple states simultaneously through a phenomenon called superposition. This allows quantum computers to perform certain calculations exponentially faster than classical computers.",
+    "difficulty": "Hard",
+    "tags": ["nov2025", "listening", "fill_in_blanks", "technology", "science"],
+    "options": ["revolutionary", "principles", "representing", "simultaneously", "exponentially"],
+    "correctAnswers": ["revolutionary", "principles", "representing", "simultaneously", "exponentially"]
+  },
+  {
+    "title": "Listening Highlight Correct Summary — Ocean Acidification",
+    "type": "highlight_correct_summary",
+    "promptText": "Listen to the recording and select the paragraph that best summarizes the main points.",
+    "promptMediaUrl": null,
+    "transcript": "The ocean's chemistry is changing at an unprecedented rate due to increased carbon dioxide absorption from the atmosphere. When CO2 dissolves in seawater, it forms carbonic acid, lowering the ocean's pH level in a process known as ocean acidification. Marine organisms that build calcium carbonate shells and skeletons find it increasingly difficult to form and maintain their protective structures in more acidic waters. This affects entire marine food webs, as many of these organisms form the base of oceanic ecosystems. Scientists warn that without significant reductions in carbon emissions, ocean acidification could fundamentally alter marine ecosystems within this century.",
+    "difficulty": "Medium",
+    "tags": ["nov2025", "listening", "highlight_correct_summary", "environment", "ocean"],
+    "options": [
+      "A) Ocean acidification is caused by CO2 absorption, making it harder for marine organisms to build shells and threatening entire ecosystems unless emissions are reduced.",
+      "B) The ocean is becoming more acidic because of pollution from factories, which is harming all fish species equally.",
+      "C) Scientists are studying ocean chemistry to understand why some organisms can survive in acidic conditions.",
+      "D) Marine ecosystems are adapting to changing ocean conditions through natural selection processes."
+    ],
+    "correctAnswers": ["A"]
+  },
+  {
+    "title": "Listening Select Missing Word — Urban Planning",
+    "type": "select_missing_word",
+    "promptText": "Listen to the recording and select the missing word that completes the recording.",
+    "promptMediaUrl": null,
+    "transcript": "Walkable neighborhoods with mixed-use development promote healthier lifestyles and stronger communities. When residential areas are integrated with shops, offices, and public spaces, people can accomplish daily tasks without relying on cars. This reduces traffic congestion, improves air quality, and creates more opportunities for social interaction. Research shows that residents of walkable neighborhoods report higher satisfaction, better physical health, and stronger sense of community [BLANK].",
+    "difficulty": "Easy",
+    "tags": ["nov2025", "listening", "select_missing_word", "urban"],
+    "options": ["belonging", "identity", "purpose", "achievement"],
+    "correctAnswers": ["belonging"]
+  },
+  {
+    "title": "Listening Highlight Incorrect Words — Neuroplasticity",
+    "type": "highlight_incorrect_words",
+    "promptText": "The transcript below has some words that differ from what the speaker said. Identify and select the words that are incorrect.",
+    "promptMediaUrl": null,
+    "transcript": "Neuroplasticity refers to the mind's ability to reorganize itself by forming new neural connections throughout life. Research has shown that the brain remains remarkably flexible even in adulthood. Learning new abilities, practicing musical instruments, or recovering from brain damage all trigger physical changes in brain structure. This has important implications for rehabilitation and understanding mental decline.",
+    "difficulty": "Medium",
+    "tags": ["nov2025", "listening", "highlight_incorrect_words", "science", "brain"],
+    "correctAnswers": ["mind", "flexible", "abilities", "damage", "mental"],
+    "options": {
+      "incorrect": ["mind", "flexible", "abilities", "damage", "mental"],
+      "correct": ["brain", "adaptable", "skills", "injuries", "cognitive"]
+    }
+  },
+  {
+    "title": "Listening Write from Dictation — Renewable Energy",
+    "type": "write_from_dictation",
+    "promptText": "Listen to the sentence and type it exactly as you hear it.",
+    "promptMediaUrl": null,
+    "transcript": "Solar panels convert sunlight directly into electricity through photovoltaic cells.",
+    "difficulty": "Easy",
+    "tags": ["nov2025", "listening", "write_from_dictation", "energy", "technology"],
+    "correctAnswers": ["Solar panels convert sunlight directly into electricity through photovoltaic cells."]
+  },
+  {
+    "title": "Listening Multiple Choice Multiple — Digital Literacy",
+    "type": "multiple_choice_multiple",
+    "promptText": "Listen to the recording and answer the question by selecting all correct responses.",
+    "promptMediaUrl": null,
+    "transcript": "Digital literacy extends far beyond basic computer skills. It encompasses the ability to evaluate online information critically, understanding the difference between reliable sources and misinformation. Digital literacy includes protecting personal privacy and security online, recognizing phishing attempts and other cyber threats. It involves effective communication through digital platforms while maintaining appropriate digital citizenship. Perhaps most importantly, digital literacy means understanding how algorithms shape the information we see and being able to seek diverse perspectives rather than remaining in echo chambers. As technology evolves, digital literacy must be viewed as an ongoing learning process rather than a fixed skill set.",
+    "difficulty": "Hard",
+    "tags": ["nov2025", "listening", "multiple_choice_multiple", "technology", "education"],
+    "options": [
+      "A) Evaluating online information and distinguishing reliable sources from misinformation",
+      "B) Only learning to type quickly and use word processing software",
+      "C) Protecting personal privacy and recognizing cyber threats",
+      "D) Understanding how algorithms shape information and seeking diverse perspectives",
+      "E) Avoiding all social media platforms entirely"
+    ],
+    "correctAnswers": ["A", "C", "D"]
+  },
+  {
+    "title": "Listening Summarize Spoken Text — Biodiversity",
+    "type": "summarize_spoken_text",
+    "promptText": "Listen to the audio and write a summary in 50-70 words.",
+    "promptMediaUrl": null,
+    "transcript": "Biodiversity loss is occurring at an alarming rate, driven by habitat destruction, climate change, pollution, and invasive species. This decline threatens ecosystem services that humans depend on, including pollination, water purification, and climate regulation. Protected areas and wildlife corridors can help maintain biodiversity by preserving habitats and allowing genetic exchange between populations. However, conservation efforts must go beyond protected areas to address underlying drivers of biodiversity loss, including unsustainable consumption patterns and economic systems that fail to value nature's contributions. Indigenous communities often serve as effective stewards of biodiversity, and their traditional knowledge and land management practices should be recognized and supported in conservation strategies.",
+    "difficulty": "Hard",
+    "tags": ["nov2025", "listening", "summarize_spoken_text", "environment", "conservation"],
+    "correctAnswers": ["Biodiversity loss from habitat destruction and other factors threatens ecosystem services, requiring conservation through protected areas, addressing unsustainable consumption, and recognizing indigenous communities as effective stewards whose traditional knowledge should inform conservation strategies."],
+    "answerKey": {
+      "minWords": 50,
+      "maxWords": 70,
+      "scoringCriteria": {
+        "content": "0-2: Covers biodiversity threats, conservation approaches, and indigenous role",
+        "form": "0-2: Between 50-70 words",
+        "grammar": "0-2: Correct sentence structure",
+        "vocabulary": "0-2: Appropriate word choice"
+      }
+    }
+  },
+  {
+    "title": "Listening Fill in Blanks — Financial Technology",
+    "type": "fill_in_blanks",
+    "promptText": "Listen to the recording and fill in the missing words.",
+    "promptMediaUrl": null,
+    "transcript": "Financial technology, or fintech, is transforming how people access and manage money. Mobile banking apps enable users to deposit checks, transfer funds, and pay bills without visiting physical branches. Peer-to-peer payment platforms facilitate instant money transfers between individuals. Robo-advisors provide automated investment management based on algorithms and user preferences. Blockchain technology promises secure, transparent transactions without traditional intermediaries. While fintech offers convenience and accessibility, it also raises concerns about data privacy, cybersecurity, and financial inclusion for those without digital access.",
+    "difficulty": "Medium",
+    "tags": ["nov2025", "listening", "fill_in_blanks", "finance", "technology"],
+    "options": ["transforming", "deposit", "facilitate", "automated", "transparent"],
+    "correctAnswers": ["transforming", "deposit", "facilitate", "automated", "transparent"]
+  }
+]

@@ -1,0 +1,172 @@
+[
+  {
+    "title": "Write Essay — Remote Work Impact",
+    "type": "write_essay",
+    "promptText": "The shift to remote work has transformed traditional employment models. Some argue it increases productivity and work-life balance, while others believe it reduces collaboration and organizational culture. Discuss both views and give your opinion. Support your answer with examples from your knowledge or experience.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "write_essay", "workplace", "technology"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  },
+  {
+    "title": "Write Essay — Social Media Influence",
+    "type": "write_essay",
+    "promptText": "Social media platforms have become central to modern communication. While they connect people globally and enable information sharing, concerns exist about privacy, misinformation, and mental health effects. Discuss the advantages and disadvantages of social media. Use specific reasons and examples to support your answer.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "write_essay", "technology", "society"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  },
+  {
+    "title": "Write Essay — Environmental Responsibility",
+    "type": "write_essay",
+    "promptText": "Climate change poses significant challenges for future generations. Some believe governments should take primary responsibility for environmental protection, while others argue individual actions are equally important. Discuss both perspectives and provide your opinion with relevant examples.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "write_essay", "environment", "policy"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  },
+  {
+    "title": "Write Essay — Education Technology",
+    "type": "write_essay",
+    "promptText": "Online education has expanded rapidly, especially after recent global events. Some educators praise its accessibility and flexibility, while others worry about reduced student engagement and learning outcomes. Evaluate the effectiveness of online versus traditional classroom education. Support your position with examples.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "write_essay", "education", "technology"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  },
+  {
+    "title": "Write Essay — Urbanization Challenges",
+    "type": "write_essay",
+    "promptText": "Rapid urbanization brings both opportunities and challenges for cities worldwide. Increased population density can drive economic growth but also strains infrastructure, housing, and public services. Discuss the main challenges of urbanization and suggest potential solutions. Provide specific examples to support your argument.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "write_essay", "urban", "development"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  },
+  {
+    "title": "Write Essay — Artificial Intelligence Impact",
+    "type": "write_essay",
+    "promptText": "Artificial intelligence is increasingly integrated into various sectors including healthcare, finance, and transportation. While AI offers efficiency and innovation, it raises concerns about job displacement and ethical implications. Discuss both the benefits and potential risks of AI advancement. Support your response with relevant examples.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "write_essay", "technology", "ai", "ethics"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  },
+  {
+    "title": "Write Essay — Health and Lifestyle",
+    "type": "write_essay",
+    "promptText": "Modern lifestyles have led to increased rates of chronic diseases such as obesity, diabetes, and heart disease. Some argue that government intervention through regulation is necessary, while others believe personal responsibility should guide health choices. Discuss both views and give your opinion, supporting your answer with examples.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "write_essay", "health", "lifestyle", "policy"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  },
+  {
+    "title": "Write Essay — Global Tourism",
+    "type": "write_essay",
+    "promptText": "International tourism has become one of the world's largest industries, contributing significantly to economic development. However, it can also harm local cultures and environments. Discuss the positive and negative impacts of tourism on local communities. Use specific examples to support your points.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "write_essay", "tourism", "culture", "economics"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  },
+  {
+    "title": "Write Essay — Scientific Research Funding",
+    "type": "write_essay",
+    "promptText": "Government funding for scientific research is often debated, particularly when deciding between basic research and applied research with immediate practical applications. Some argue that fundamental science deserves priority, while others prioritize research with direct societal benefits. Discuss both perspectives and provide your opinion with supporting examples.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "write_essay", "science", "research", "policy"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  },
+  {
+    "title": "Write Essay — Cultural Preservation",
+    "type": "write_essay",
+    "promptText": "Globalization has led to increased cultural exchange but also threatens traditional cultures and languages. While some view this as inevitable progress, others emphasize the importance of preserving cultural diversity. Discuss the challenges of maintaining cultural identity in a globalized world. Support your answer with specific examples from your knowledge or experience.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "write_essay", "culture", "globalization", "identity"],
+    "answerKey": {
+      "minWords": 200,
+      "maxWords": 300,
+      "scoringCriteria": {
+        "content": "0-6: Relevance, supporting data, examples, explanations",
+        "development": "0-6: Logical organization and idea development",
+        "linguisticRange": "0-6: Vocabulary and language complexity"
+      }
+    }
+  }
+]

@@ -1,21 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { Session } from "@/lib/auth/auth";
 import { db } from "@/lib/db/drizzle";
 import { userScheduledExamDates } from "@/lib/db/schema";
-import { getSession } from "@/lib/auth/session";
+import { getCurrentUser } from "@/lib/auth/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const examDates = await db
       .select()
       .from(userScheduledExamDates)
-      .where(eq(userScheduledExamDates.userId, session.user.id))
+      .where(eq(userScheduledExamDates.userId, user.id))
       .orderBy(userScheduledExamDates.examDate);
 
     return NextResponse.json({ examDates });
@@ -30,8 +29,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -57,13 +56,13 @@ export async function POST(request: NextRequest) {
       await db
         .update(userScheduledExamDates)
         .set({ isPrimary: false })
-        .where(eq(userScheduledExamDates.userId, session.user.id));
+        .where(eq(userScheduledExamDates.userId, user.id));
     }
 
     const newExamDate = await db
       .insert(userScheduledExamDates)
       .values({
-        userId: session.user.id,
+        userId: user.id,
         examDate: date,
         examName: examName || "PTE Academic",
         isPrimary: isPrimary ?? true,

@@ -9,22 +9,15 @@ import {
   fetchListingQuestions,
   getCurrentMonthName,
 } from '@/lib/pte/listing-helpers'
+import { questionListingCache } from '@/lib/parsers'
 
-interface SearchParams {
-  page?: string
-  pageSize?: string
-  difficulty?: string
-}
+async function QuestionsSections() {
+  const { page, pageSize, difficulty } = questionListingCache.all()
 
-async function QuestionsSections({
-  searchParams,
-}: {
-  searchParams?: SearchParams
-}) {
   const data = await fetchListingQuestions(
     'reading',
     'multiple_choice_single',
-    searchParams
+    { page: page?.toString(), pageSize: pageSize?.toString(), difficulty }
   )
   const { all, weekly, monthly } = categorizeQuestions(data.items)
   const currentMonth = getCurrentMonthName()
@@ -69,17 +62,16 @@ async function QuestionsSections({
 export default async function MultipleChoiceSinglePracticePage({
   searchParams,
 }: {
-  searchParams: Promise<SearchParams>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const resolvedSearchParams = await searchParams
+  questionListingCache.parse(await searchParams)
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        <AcademicPracticeHeader section="reading" showFilters={true} />
-        <React.Suspense fallback={<QuestionsTableSkeleton />}>
-          <QuestionsSections searchParams={resolvedSearchParams} />
-        </React.Suspense>
-      </div>
-    </div>
+    <>
+      <AcademicPracticeHeader section="reading" showFilters={true} />
+      <React.Suspense fallback={<QuestionsTableSkeleton />}>
+        <QuestionsSections />
+      </React.Suspense>
+    </>
   )
 }

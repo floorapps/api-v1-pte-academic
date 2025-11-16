@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import {
   IconBook,
@@ -17,11 +18,6 @@ import {
   IconWaveSine,
 } from '@tabler/icons-react'
 import useSWR from 'swr'
-import { ExamDateScheduler } from '@/components/pte/dashboard/exam-date-scheduler'
-import { PracticeProgressWidget } from '@/components/pte/dashboard/practice-progress-widget'
-import { TargetScoreWidget } from '@/components/pte/dashboard/target-score-widget'
-import { ExamCountdown } from '@/components/pte/exam-countdown'
-import { StudyReportChart } from '@/components/pte/study-report-chart'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -32,6 +28,58 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { User as UserType } from '@/lib/db/schema'
+
+// Dynamic imports for heavy components (code splitting)
+// These components load only when needed, reducing initial bundle size
+const ExamDateScheduler = dynamic(
+  () =>
+    import('@/components/pte/dashboard/exam-date-scheduler').then(
+      (mod) => mod.ExamDateScheduler
+    ),
+  {
+    loading: () => (
+      <Card>
+        <CardHeader>
+          <CardTitle>Exam Date</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-24 animate-pulse rounded bg-gray-200" />
+        </CardContent>
+      </Card>
+    ),
+  }
+)
+
+const PracticeProgressWidget = dynamic(
+  () =>
+    import('@/components/pte/dashboard/practice-progress-widget').then(
+      (mod) => mod.PracticeProgressWidget
+    ),
+  {
+    loading: () => (
+      <div className="h-64 animate-pulse rounded-lg bg-gray-200" />
+    ),
+  }
+)
+
+const TargetScoreWidget = dynamic(
+  () =>
+    import('@/components/pte/dashboard/target-score-widget').then(
+      (mod) => mod.TargetScoreWidget
+    ),
+  {
+    loading: () => (
+      <Card>
+        <CardHeader>
+          <CardTitle>Target Score</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-32 animate-pulse rounded bg-gray-200" />
+        </CardContent>
+      </Card>
+    ),
+  }
+)
 
 type UIUser = UserType & {
   examDate?: string | Date | null

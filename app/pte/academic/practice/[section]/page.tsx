@@ -30,7 +30,7 @@ export default async function SectionLandingPage(props: {
   const items = initialCategories.filter((c) => c.parent === parentId)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <AcademicPracticeHeader section={sectionParam} showFilters={false} />
 
@@ -42,10 +42,10 @@ export default async function SectionLandingPage(props: {
                 : `/pte/academic/practice/${sectionParam}/${q.code}`
             return (
               <Link key={q.id} href={href} className="block">
-                <Card className="cursor-pointer transition-shadow hover:shadow-lg">
+                <Card className="cursor-pointer transition-shadow hover:shadow-lg dark:border-gray-800 dark:bg-gray-900">
                   <CardContent className="p-5">
                     <div className="flex items-start gap-4">
-                      <div className="shrink-0 rounded-lg bg-gray-50 p-2">
+                      <div className="shrink-0 rounded-lg bg-gray-50 p-2 dark:bg-gray-800">
                         <Image
                           src={q.icon}
                           alt={q.title}
@@ -56,9 +56,9 @@ export default async function SectionLandingPage(props: {
                       </div>
                       <div className="flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="text-base font-semibold">{q.title}</h3>
+                          <h3 className="text-base font-semibold dark:text-gray-100">{q.title}</h3>
                           {q.scoring_type === 'ai' && (
-                            <Badge className="bg-yellow-500 text-xs text-yellow-900">
+                            <Badge className="bg-yellow-500 text-xs text-yellow-900 dark:bg-yellow-600 dark:text-yellow-100">
                               AI
                             </Badge>
                           )}
@@ -68,10 +68,10 @@ export default async function SectionLandingPage(props: {
                             </Badge>
                           )}
                         </div>
-                        <p className="mt-1 line-clamp-2 text-sm text-gray-600">
+                        <p className="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
                           {q.description}
                         </p>
-                        <div className="mt-3 text-xs text-gray-500">
+                        <div className="mt-3 text-xs text-gray-500 dark:text-gray-500">
                           {q.question_count} questions
                         </div>
                       </div>

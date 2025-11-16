@@ -138,7 +138,7 @@ export default function PricingPage() {
                       href={
                         tier === SubscriptionTier.FREE
                           ? '/sign-up'
-                          : '/checkout'
+                          : `/checkout/${tier}`
                       }
                     >
                       {tier === SubscriptionTier.FREE

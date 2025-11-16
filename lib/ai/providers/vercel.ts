@@ -129,7 +129,7 @@ export class VercelAIProvider implements AIProvider {
         maxOutputTokens: 500,
       }),
       input.timeoutMs ?? getDefaultTimeout()
-    )
+    ) as { text: string }
 
     const content = res?.text ?? ''
     const parsed = safeParseSpeakingJSON(content)
@@ -184,7 +184,7 @@ export class VercelAIProvider implements AIProvider {
         maxOutputTokens: 600,
       }),
       input.timeoutMs ?? getDefaultTimeout()
-    )
+    ) as { text: string }
 
     const content = res?.text ?? ''
     const parsed = safeParseWritingJSON(content)
@@ -241,7 +241,7 @@ export class VercelAIProvider implements AIProvider {
         maxOutputTokens: 320,
       }),
       input.timeoutMs ?? getDefaultTimeout()
-    )
+    ) as { text: string }
 
     const content = res?.text ?? ''
     let rationale = ''
@@ -289,7 +289,7 @@ export class VercelAIProvider implements AIProvider {
         maxOutputTokens: 320,
       }),
       input.timeoutMs ?? getDefaultTimeout()
-    )
+    ) as { text: string }
 
     const content = res?.text ?? ''
     let rationale = ''

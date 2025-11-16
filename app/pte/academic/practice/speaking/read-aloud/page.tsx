@@ -1,33 +1,31 @@
-import * as React from 'react'
-import { AcademicPracticeHeader } from '@/components/pte/practice-header'
+import * as React from "react";
+import { AcademicPracticeHeader } from "@/components/pte/practice-header";
 import QuestionsTable, {
   QuestionsTableSkeleton,
-} from '@/components/pte/questions-table'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+} from "@/components/pte/questions-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   categorizeQuestions,
   fetchListingQuestions,
   getCurrentMonthName,
-} from '@/lib/pte/listing-helpers'
-
-interface SearchParams {
-  page?: string
-  pageSize?: string
-  difficulty?: string
-}
+} from "@/lib/pte/listing-helpers";
 
 async function ReadAloudSections({
   searchParams,
 }: {
-  searchParams?: SearchParams
+  searchParams: Record<string, string | string[] | undefined>
 }) {
-  const data = await fetchListingQuestions(
-    'speaking',
-    'read_aloud',
-    searchParams
-  )
-  const { all, weekly, monthly } = categorizeQuestions(data.items)
-  const currentMonth = getCurrentMonthName()
+  const page = Number(searchParams.page) || 1
+  const pageSize = Number(searchParams.pageSize) || 20
+  const difficulty = (searchParams.difficulty as string) || 'All'
+
+  const data = await fetchListingQuestions("speaking", "read_aloud", {
+    page: page?.toString(),
+    pageSize: pageSize?.toString(),
+    difficulty,
+  });
+  const { all, weekly, monthly } = categorizeQuestions(data.items);
+  const currentMonth = getCurrentMonthName();
 
   return (
     <div className="mt-6">
@@ -63,23 +61,22 @@ async function ReadAloudSections({
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
 
 export default async function ReadAloudPracticePage({
   searchParams,
 }: {
-  searchParams: Promise<SearchParams>
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const resolvedSearchParams = await searchParams
+  const params = await searchParams
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        <AcademicPracticeHeader section="speaking" showFilters={true} />
-        <React.Suspense fallback={<QuestionsTableSkeleton />}>
-          <ReadAloudSections searchParams={resolvedSearchParams} />
-        </React.Suspense>
-      </div>
-    </div>
-  )
+    <>
+      <AcademicPracticeHeader section="speaking" showFilters={true} />
+      <React.Suspense fallback={<QuestionsTableSkeleton />}>
+        <ReadAloudSections searchParams={params} />
+      </React.Suspense>
+    </>
+  );
 }

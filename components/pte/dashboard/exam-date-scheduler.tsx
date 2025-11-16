@@ -43,6 +43,11 @@ export function ExamDateScheduler({ onUpdate }: ExamDateSchedulerProps) {
   const fetchExamDates = async () => {
     try {
       const response = await fetch('/api/user/exam-dates')
+      if (response.status === 401) {
+        setError('Please sign in to schedule exam dates')
+        setIsLoading(false)
+        return
+      }
       const data = await response.json()
       if (data.examDates) {
         setExamDates(data.examDates)

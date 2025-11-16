@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   // Enable React Compiler for automatic memoization
   reactCompiler: true,
 
+  // Enable source maps for error tracking in production
+  productionBrowserSourceMaps: true,
+
   // Allow remote icons/assets used by PTE data
   images: {
     remotePatterns: [
@@ -25,6 +28,19 @@ const nextConfig: NextConfig = {
   experimental: {
     // Faster dev restarts for large apps
     turbopackFileSystemCacheForDev: true,
+  },
+
+  // Custom webpack config for Rollbar
+  webpack: (config, { isServer, webpack }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      }
+    }
+    return config
   },
 }
 

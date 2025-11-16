@@ -1,0 +1,82 @@
+[
+  {
+    "title": "Read Aloud — Artificial Intelligence Ethics",
+    "type": "read_aloud",
+    "promptText": "The development of artificial intelligence systems raises important ethical questions about accountability, transparency, and potential bias in automated decision-making processes that affect millions of people worldwide.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "read_aloud", "technology", "ethics"]
+  },
+  {
+    "title": "Read Aloud — Global Trade Patterns",
+    "type": "read_aloud",
+    "promptText": "International trade agreements have transformed economic relationships between nations, enabling the movement of goods, services, and capital across borders while raising concerns about labor standards and environmental protection.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "read_aloud", "economics", "globalization"]
+  },
+  {
+    "title": "Read Aloud — Neuroscience Research",
+    "type": "read_aloud",
+    "promptText": "Recent advances in neuroimaging technology have allowed researchers to observe brain activity in unprecedented detail, revealing complex patterns of neural connectivity that underlie cognitive functions and emotional responses.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "read_aloud", "science", "brain"]
+  },
+  {
+    "title": "Read Aloud — Sustainable Agriculture",
+    "type": "read_aloud",
+    "promptText": "Regenerative farming practices focus on rebuilding soil health, increasing biodiversity, and sequestering carbon, offering a promising approach to address both food security and climate change simultaneously.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "read_aloud", "environment", "agriculture"]
+  },
+  {
+    "title": "Read Aloud — Educational Technology",
+    "type": "read_aloud",
+    "promptText": "Digital learning platforms have expanded access to education globally, though research suggests that effective implementation requires careful consideration of pedagogy, student engagement, and equitable access to technology.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "read_aloud", "education", "technology"]
+  },
+  {
+    "title": "Read Aloud — Biodiversity Conservation",
+    "type": "read_aloud",
+    "promptText": "Protected areas and wildlife corridors play a crucial role in maintaining biodiversity by providing habitats for endangered species and allowing genetic exchange between isolated populations.",
+    "promptMediaUrl": null,
+    "difficulty": "Easy",
+    "tags": ["nov2025", "read_aloud", "environment", "conservation"]
+  },
+  {
+    "title": "Read Aloud — Financial Technology",
+    "type": "read_aloud",
+    "promptText": "Blockchain technology and digital currencies are reshaping financial systems, offering new possibilities for secure transactions, decentralized finance, and cross-border payments without traditional intermediaries.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "read_aloud", "finance", "technology"]
+  },
+  {
+    "title": "Read Aloud — Public Health Infrastructure",
+    "type": "read_aloud",
+    "promptText": "Strong healthcare systems require adequate funding, trained personnel, and reliable supply chains to deliver preventive care, respond to emergencies, and address health disparities within communities.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "read_aloud", "health", "infrastructure"]
+  },
+  {
+    "title": "Read Aloud — Space Exploration",
+    "type": "read_aloud",
+    "promptText": "Robotic missions to Mars and beyond have revealed valuable data about planetary formation, the potential for past life, and resources that could support future human exploration of the solar system.",
+    "promptMediaUrl": null,
+    "difficulty": "Easy",
+    "tags": ["nov2025", "read_aloud", "science", "space"]
+  },
+  {
+    "title": "Read Aloud — Workplace Innovation",
+    "type": "read_aloud",
+    "promptText": "The transition to hybrid work models has prompted organizations to rethink office design, collaboration tools, and performance metrics, balancing flexibility with organizational culture and productivity goals.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "read_aloud", "business", "workplace"]
+  }
+]

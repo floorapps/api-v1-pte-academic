@@ -3,7 +3,7 @@
     "title": "Describe Image — Line Chart 1",
     "type": "describe_image",
     "promptText": "Describe the main trends shown in the chart.",
-    "promptMediaUrl": "/images/academic/academic.png",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2002%281%29.jpg",
     "difficulty": "Medium",
     "tags": ["seed", "image_description", "chart"]
   },
@@ -11,7 +11,7 @@
     "title": "Describe Image — Bar Chart 2",
     "type": "describe_image",
     "promptText": "Summarize key differences between the categories.",
-    "promptMediaUrl": "https://images.unsplash.com/photo-1551281044-8d8e89b5ee76?w=1200&auto=format&fit=crop",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2002%282%29.jpg",
     "difficulty": "Easy",
     "tags": ["seed", "image_description", "chart"]
   },
@@ -19,7 +19,7 @@
     "title": "Describe Image — Pie Chart 3",
     "type": "describe_image",
     "promptText": "Explain the dominant segments and their proportions.",
-    "promptMediaUrl": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&auto=format&fit=crop",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2002%283%29.jpg",
     "difficulty": "Medium",
     "tags": ["seed", "image_description", "chart"]
   },
@@ -27,7 +27,7 @@
     "title": "Describe Image — Map 4",
     "type": "describe_image",
     "promptText": "Comment on regional differences highlighted on the map.",
-    "promptMediaUrl": "/images/academic/academic.png",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2016%20%283%29.jpg",
     "difficulty": "Hard",
     "tags": ["seed", "image_description", "map"]
   },
@@ -35,7 +35,7 @@
     "title": "Describe Image — Process Diagram 5",
     "type": "describe_image",
     "promptText": "Outline the steps in the process and their relationships.",
-    "promptMediaUrl": "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=1200&auto=format&fit=crop",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2002%281%29.jpg",
     "difficulty": "Medium",
     "tags": ["seed", "image_description", "process"]
   },
@@ -43,7 +43,7 @@
     "title": "Describe Image — Table 6",
     "type": "describe_image",
     "promptText": "Identify the highest and lowest values and compare categories.",
-    "promptMediaUrl": "/images/academic/academic.png",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2002%282%29.jpg",
     "difficulty": "Easy",
     "tags": ["seed", "image_description", "table"]
   },
@@ -51,7 +51,7 @@
     "title": "Describe Image — Scatter Plot 7",
     "type": "describe_image",
     "promptText": "Discuss any correlations or outliers present in the data.",
-    "promptMediaUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&fit=crop",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2002%283%29.jpg",
     "difficulty": "Medium",
     "tags": ["seed", "image_description", "scatter"]
   },
@@ -59,7 +59,7 @@
     "title": "Describe Image — Timeline 8",
     "type": "describe_image",
     "promptText": "Describe how the subject changes over time and key milestones.",
-    "promptMediaUrl": "/images/academic/academic.png",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2016%20%283%29.jpg",
     "difficulty": "Hard",
     "tags": ["seed", "image_description", "timeline"]
   },
@@ -67,7 +67,7 @@
     "title": "Describe Image — Infographic 9",
     "type": "describe_image",
     "promptText": "Summarize the main message and supporting statistics.",
-    "promptMediaUrl": "https://images.unsplash.com/photo-1556761175-129418cb2dfe?w=1200&auto=format&fit=crop",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2002%281%29.jpg",
     "difficulty": "Easy",
     "tags": ["seed", "image_description", "infographic"]
   },
@@ -75,7 +75,7 @@
     "title": "Describe Image — Line Chart 10",
     "type": "describe_image",
     "promptText": "Explain the overall trend and any significant fluctuations.",
-    "promptMediaUrl": "/images/academic/academic.png",
+    "promptMediaUrl": "https://fafbaldgqejycwem.public.blob.vercel-storage.com/pedagogists_descride_images/img%2002%282%29.jpg",
     "difficulty": "Medium",
     "tags": ["seed", "image_description", "chart"]
   }

@@ -96,7 +96,7 @@ export class OpenAIProvider implements AIProvider {
       includeRationale: input.includeRationale,
     })
 
-    const resp = await withTimeout(
+    const resp = (await withTimeout(
       client.chat.completions.create({
         model: DEFAULT_MODEL_SPEAKING,
         messages: [
@@ -107,7 +107,7 @@ export class OpenAIProvider implements AIProvider {
         max_tokens: 400,
       }),
       input.timeoutMs ?? getDefaultTimeout()
-    )
+    )) as any
 
     const content = resp?.choices?.[0]?.message?.content ?? '{}'
     const parsed = safeParseSpeakingJSON(content)
@@ -151,7 +151,7 @@ export class OpenAIProvider implements AIProvider {
       includeRationale: input.includeRationale,
     })
 
-    const resp = await withTimeout(
+    const resp = (await withTimeout(
       client.chat.completions.create({
         model: DEFAULT_MODEL_WRITING,
         messages: [
@@ -162,7 +162,7 @@ export class OpenAIProvider implements AIProvider {
         max_tokens: 500,
       }),
       input.timeoutMs ?? getDefaultTimeout()
-    )
+    )) as any
 
     const content = resp?.choices?.[0]?.message?.content ?? '{}'
     const parsed = safeParseWritingJSON(content)
@@ -209,7 +209,7 @@ export class OpenAIProvider implements AIProvider {
       userSelected: input.userSelected ?? [],
     })
 
-    const resp = await withTimeout(
+    const resp = (await withTimeout(
       client.chat.completions.create({
         model: DEFAULT_MODEL_EXPLANATION,
         messages: [
@@ -220,7 +220,7 @@ export class OpenAIProvider implements AIProvider {
         max_tokens: 250,
       }),
       input.timeoutMs ?? getDefaultTimeout()
-    )
+    )) as any
 
     const content = resp?.choices?.[0]?.message?.content ?? '{}'
     let rationale = ''
@@ -257,7 +257,7 @@ export class OpenAIProvider implements AIProvider {
       userText: input.userText,
     })
 
-    const resp = await withTimeout(
+    const resp = (await withTimeout(
       client.chat.completions.create({
         model: DEFAULT_MODEL_EXPLANATION,
         messages: [
@@ -268,7 +268,7 @@ export class OpenAIProvider implements AIProvider {
         max_tokens: 250,
       }),
       input.timeoutMs ?? getDefaultTimeout()
-    )
+    )) as any
 
     const content = resp?.choices?.[0]?.message?.content ?? '{}'
     let rationale = ''

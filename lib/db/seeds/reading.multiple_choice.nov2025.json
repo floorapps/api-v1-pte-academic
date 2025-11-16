@@ -1,0 +1,176 @@
+[
+  {
+    "title": "Reading Multiple Choice Single — Water Pollution",
+    "type": "multiple_choice_single",
+    "promptText": "Water, the elixir of life, is under siege. Despite covering most of our planet, clean, uncontaminated water is becoming increasingly scarce. Industrial waste, laden with toxic chemicals and heavy metals, finds its way into rivers and oceans, creating vast 'dead zones' devoid of oxygen and marine life, forcing fish seemingly mundane activities like car washing and littering contribute to the problem, washing pollutants into storm drains and ultimately into waterways. The sources of this contamination are numerous and varied. The consequences of water pollution are far-reaching and devastating. Contaminated water not only endangers aquatic ecosystems, but also poses a direct threat to human health. Diseases like cholera, typhoid and hepatitis spread through polluted water, impacting vulnerable communities disproportionately. The economic impact is also significant, with lost tourism, decreased fish stocks, and rising healthcare costs taking a toll on local economies. However, amidst this seemingly bleak picture, glimmers of hope emerge. Innovative technologies are offering solutions, from natural filtration systems to advanced wastewater treatment plants. Industries that adopt cleaner production methods and responsible waste management practices. Individuals need to embrace conscious water use and minimize their environmental footprint. By joining forces, we can turn the tide of water pollution. Our responsibility extends beyond safeguarding the beauty of our seas and rivers; it's about protecting the very foundation of life on earth and ensuring a healthy planet for generations to come. Ultimately, the fight against water pollution is not just an environmental issue but a moral imperative, requiring everyone to act with accountability and vision.\n\nIdentify whether the following statements accurately describe the impact of water pollution as discussed in the passage.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "reading", "multiple_choice_single", "environment"],
+    "options": [
+      "A) Diseases like cholera spread through polluted water, harming vulnerable communities.",
+      "B) Contamination water threatens both aquatic ecosystems and human health.",
+      "C) Natural filtration systems and advanced wastewater treatment plants are offering solutions.",
+      "D) Water pollution mainly comes from toxic waste, agricultural runoff, carrying fertilizers and daily activities.",
+      "E) Water pollution undermines both ecosystem health and requires concerted efforts to reverse."
+    ],
+    "answerKey": ["A", "B", "E"]
+  },
+  {
+    "title": "Reading Multiple Choice Multiple — Global Internet",
+    "type": "multiple_choice_multiple",
+    "promptText": "A growing number of individuals are accessing news through the internet, and mobile phones. During the World Conference of Science Journalists in London last week, Philip Hills, director of the Knight Science Journalism Program at MIT, examined the situation of internet and mobile phone usage: \"There are approximately 1.5 billion internet users and around 2 to 2.5 billion internet users and mobile phone users.\" There's a conversation about the disparity between North America and Africa, highlighting that while North America has certain advancements, Africa lacks them, making it seem like we're on different planets. Currently, Internet usage in Africa is at 5.6 percent and 17 percent in Asia, but these figures are changing quickly. Africa's growth rate is currently 12 times, while Asia's is nearly six times. Thus, the most significant growth is occurring in regions where we have less coverage.\n\nIdentify whether the following statements accurately describe the impact of water pollution as discussed in the passage.",
+    "promptMediaUrl": null,
+    "difficulty": "Easy",
+    "tags": ["nov2025", "reading", "multiple_choice_multiple", "technology"],
+    "options": [
+      "Internet, global, subscribers, penetration",
+      "Internet, volatile, subscribers, range",
+      "Internet, global, lenders, range",
+      "Content, global, subscribers, -----"
+    ],
+    "answerKey": ["Internet, global, subscribers, penetration"]
+  },
+  {
+    "title": "Reading Fill in Blanks — Behavioral Science",
+    "type": "fill_in_blanks",
+    "promptText": "Researchers have observed that small changes in choice architecture can [BLANK1] people toward healthier decisions without [BLANK2] freedom of choice. This approach, known as 'nudging,' has been successfully [BLANK3] in various contexts, from encouraging retirement savings to promoting organ donation. The key is to make the desired option the default or most [BLANK4] choice, while still allowing individuals to opt for alternatives.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "reading", "fill_in_blanks", "science"],
+    "options": {
+      "BLANK1": ["nudge", "force", "push", "direct"],
+      "BLANK2": ["restricting", "limiting", "removing", "reducing"],
+      "BLANK3": ["implemented", "used", "applied", "deployed"],
+      "BLANK4": ["convenient", "obvious", "accessible", "straightforward"]
+    },
+    "answerKey": {
+      "BLANK1": "nudge",
+      "BLANK2": "restricting",
+      "BLANK3": "implemented",
+      "BLANK4": "convenient"
+    }
+  },
+  {
+    "title": "Reading Reorder Paragraphs — Climate Adaptation",
+    "type": "reorder_paragraphs",
+    "promptText": "Reorder the following paragraphs to form a coherent text about climate adaptation strategies.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "reading", "reorder_paragraphs", "climate"],
+    "options": [
+      "A) Adaptation strategies, such as floodplain restoration and heat-resilient infrastructure, can mitigate climate risks while delivering co-benefits to communities.",
+      "B) For instance, urban tree planting not only reduces heat island effects but also improves air quality and enhances mental well-being.",
+      "C) These nature-based solutions are increasingly recognized as cost-effective compared to traditional gray infrastructure.",
+      "D) However, successful implementation requires coordinated planning across government agencies, private sector engagement, and community participation.",
+      "E) As climate impacts intensify, cities worldwide are prioritizing adaptation alongside mitigation efforts."
+    ],
+    "answerKey": ["E", "A", "B", "C", "D"]
+  },
+  {
+    "title": "Reading RW Fill in Blanks — Digital Privacy",
+    "type": "reading_writing_fill_blanks",
+    "promptText": "As digital services [BLANK1], organizations must implement transparent data policies and robust security practices to maintain public trust. Users increasingly expect companies to [BLANK2] their personal information from unauthorized access and misuse. Recent data breaches have [BLANK3] the importance of strong cybersecurity measures and prompted regulatory responses like GDPR and CCPA. Organizations that fail to [BLANK4] these standards risk not only legal penalties but also reputational damage.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "reading", "reading_writing_fill_blanks", "technology"],
+    "options": {
+      "BLANK1": ["expand", "grow", "increase", "proliferate"],
+      "BLANK2": ["protect", "secure", "safeguard", "defend"],
+      "BLANK3": ["highlighted", "emphasized", "demonstrated", "shown"],
+      "BLANK4": ["meet", "satisfy", "fulfill", "achieve"]
+    },
+    "answerKey": {
+      "BLANK1": "expand",
+      "BLANK2": "protect",
+      "BLANK3": "highlighted",
+      "BLANK4": "meet"
+    }
+  },
+  {
+    "title": "Reading Multiple Choice Single — Renewable Energy",
+    "type": "multiple_choice_single",
+    "promptText": "Wind and solar energy have become more cost-effective over the past decade, driving a significant shift in how electricity is generated and distributed across modern grids. The levelized cost of electricity from renewable sources has fallen dramatically, in some regions becoming cheaper than fossil fuel alternatives. This economic transformation has been accompanied by technological advances in energy storage, smart grid management, and grid-scale batteries that address the intermittency challenges of renewable sources. Governments and corporations are increasingly committing to renewable energy targets, recognizing both environmental imperatives and economic opportunities. However, transitioning to renewable-dominant grids requires substantial infrastructure investment, regulatory reforms, and solutions for ensuring grid stability during periods of low renewable generation.\n\nWhat is the main point of this passage?",
+    "promptMediaUrl": null,
+    "difficulty": "Easy",
+    "tags": ["nov2025", "reading", "multiple_choice_single", "energy"],
+    "options": [
+      "A) Renewable energy is more expensive than fossil fuels",
+      "B) Wind and solar energy have become economically competitive and are transforming electricity systems",
+      "C) Energy storage technology is the only barrier to renewable energy adoption",
+      "D) Governments oppose renewable energy due to infrastructure costs"
+    ],
+    "answerKey": ["B"]
+  },
+  {
+    "title": "Reading Fill in Blanks — Marine Ecosystems",
+    "type": "fill_in_blanks",
+    "promptText": "Coral reefs support a vast array of marine life, yet they are increasingly [BLANK1] by rising ocean temperatures, acidification, and human activity near coastal regions. These ecosystems provide [BLANK2] services including coastal protection, fisheries support, and tourism revenue. The [BLANK3] of coral reefs would have catastrophic consequences for millions of people who depend on them for food and [BLANK4]. Conservation efforts focus on reducing local stressors, establishing marine protected areas, and developing coral restoration techniques.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "reading", "fill_in_blanks", "environment"],
+    "options": {
+      "BLANK1": ["threatened", "endangered", "harmed", "damaged"],
+      "BLANK2": ["essential", "critical", "vital", "important"],
+      "BLANK3": ["loss", "destruction", "degradation", "collapse"],
+      "BLANK4": ["livelihoods", "income", "employment", "sustenance"]
+    },
+    "answerKey": {
+      "BLANK1": "threatened",
+      "BLANK2": "essential",
+      "BLANK3": "loss",
+      "BLANK4": "livelihoods"
+    }
+  },
+  {
+    "title": "Reading Reorder Paragraphs — Neuroplasticity",
+    "type": "reorder_paragraphs",
+    "promptText": "Reorder the following paragraphs to form a coherent text about neuroplasticity.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "reading", "reorder_paragraphs", "science"],
+    "options": [
+      "A) This plasticity occurs at multiple levels, from cellular changes involving individual neurons to large-scale cortical remapping.",
+      "B) The implications are profound for education, rehabilitation, and understanding cognitive decline.",
+      "C) Neuroplasticity, the brain's ability to reorganize itself by forming new neural connections throughout life, has revolutionized our understanding of brain function.",
+      "D) When people learn new skills or recover from brain injuries, their brains physically change in response to these experiences.",
+      "E) Stroke patients can sometimes recover lost functions as other brain regions compensate for damaged areas."
+    ],
+    "answerKey": ["C", "A", "D", "E", "B"]
+  },
+  {
+    "title": "Reading Multiple Choice Multiple — Urban Mobility",
+    "type": "multiple_choice_multiple",
+    "promptText": "Cities investing in reliable public transportation often see multiple benefits that extend beyond transportation itself. Reduced congestion leads to shorter commute times and lower stress levels for residents. Improved air quality results from fewer private vehicles on the roads, decreasing emissions of pollutants and greenhouse gases. Greater access to employment opportunities emerges as public transit connects workers to job centers across the metropolitan area. Economic development follows transit investment, with businesses and housing clustering around transit stations. Social equity improves as affordable transportation options enable low-income residents to access jobs, education, and services.\n\nAccording to the passage, which of the following are benefits of investing in public transportation? (Select all that apply)",
+    "promptMediaUrl": null,
+    "difficulty": "Easy",
+    "tags": ["nov2025", "reading", "multiple_choice_multiple", "urban"],
+    "options": [
+      "A) Reduced congestion and improved air quality",
+      "B) Increased private vehicle ownership",
+      "C) Greater access to employment opportunities",
+      "D) Economic development around transit stations",
+      "E) Higher housing costs throughout the city"
+    ],
+    "answerKey": ["A", "C", "D"]
+  },
+  {
+    "title": "Reading RW Fill in Blanks — Learning Strategies",
+    "type": "reading_writing_fill_blanks",
+    "promptText": "Active recall and spaced repetition are evidence-based strategies [BLANK1] to improve long-term retention compared to passive review techniques. Active recall involves [BLANK2] retrieving information from memory rather than simply rereading material. Spaced repetition [BLANK3] reviewing information at increasing intervals over time. Research demonstrates that these techniques produce more [BLANK4] learning outcomes than cramming or continuous study sessions.",
+    "promptMediaUrl": null,
+    "difficulty": "Easy",
+    "tags": ["nov2025", "reading", "reading_writing_fill_blanks", "education"],
+    "options": {
+      "BLANK1": ["shown", "proven", "demonstrated", "found"],
+      "BLANK2": ["actively", "deliberately", "consciously", "purposefully"],
+      "BLANK3": ["involves", "requires", "entails", "means"],
+      "BLANK4": ["durable", "lasting", "permanent", "sustained"]
+    },
+    "answerKey": {
+      "BLANK1": "shown",
+      "BLANK2": "actively",
+      "BLANK3": "involves",
+      "BLANK4": "durable"
+    }
+  }
+]

@@ -1,0 +1,202 @@
+[
+  {
+    "title": "Summarize Written Text — Quantum Computing",
+    "type": "summarize_written_text",
+    "promptText": "Quantum computing represents a revolutionary approach to information processing that exploits the principles of quantum mechanics. Unlike classical computers that use bits representing either 0 or 1, quantum computers use quantum bits or qubits that can exist in multiple states simultaneously through a phenomenon called superposition. This allows quantum computers to perform certain calculations exponentially faster than classical computers. Additionally, quantum entanglement enables qubits to be correlated in ways that have no classical counterpart, further enhancing computational power. While still in early stages of development, quantum computers show promise for solving complex problems in cryptography, drug discovery, financial modeling, and climate simulation that are practically impossible for classical computers to handle efficiently.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "summarize_written_text", "technology", "science"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Covers main ideas about quantum computing principles and applications",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "Quantum computing uses qubits and principles like superposition and entanglement to perform calculations exponentially faster than classical computers, showing promise for complex applications in cryptography, drug discovery, and climate simulation."
+    }
+  },
+  {
+    "title": "Summarize Written Text — Ocean Acidification",
+    "type": "summarize_written_text",
+    "promptText": "The ocean's chemistry is changing at an unprecedented rate due to increased carbon dioxide absorption from the atmosphere. When CO2 dissolves in seawater, it forms carbonic acid, lowering the ocean's pH level in a process known as ocean acidification. This phenomenon has accelerated significantly since the industrial revolution, with the ocean becoming approximately 30% more acidic. The impacts are far-reaching and concerning. Marine organisms that build calcium carbonate shells and skeletons, such as corals, mollusks, and certain plankton species, find it increasingly difficult to form and maintain their protective structures in more acidic waters. This affects entire marine food webs, as many of these organisms form the base of oceanic ecosystems. Furthermore, acidification can impair the sensory systems of fish, affecting their ability to detect predators and find suitable habitats. Scientists warn that without significant reductions in carbon emissions, ocean acidification could fundamentally alter marine ecosystems within this century.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "summarize_written_text", "environment", "ocean"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Captures main points about ocean acidification causes and impacts",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "Increased atmospheric CO2 absorption is causing ocean acidification, which threatens marine organisms that build calcium carbonate structures and disrupts entire ecosystems, potentially fundamentally altering marine life without significant emission reductions."
+    }
+  },
+  {
+    "title": "Summarize Written Text — Neuroplasticity",
+    "type": "summarize_written_text",
+    "promptText": "Neuroplasticity, the brain's ability to reorganize itself by forming new neural connections throughout life, has revolutionized our understanding of brain function and recovery. Contrary to the once-dominant belief that the adult brain is fixed and unchangeable, research has demonstrated that the brain remains remarkably adaptable. This plasticity occurs at multiple levels, from cellular changes involving individual neurons to large-scale cortical remapping. When people learn new skills, practice musical instruments, or recover from brain injuries, their brains physically change in response to these experiences. The implications are profound for education, rehabilitation, and understanding cognitive decline. Stroke patients, for example, can sometimes recover lost functions as other brain regions compensate for damaged areas. Similarly, intensive cognitive training can improve memory and attention in older adults, potentially delaying age-related cognitive decline.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "summarize_written_text", "science", "brain", "health"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Covers neuroplasticity definition and implications for learning and recovery",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "Neuroplasticity, the brain's ability to reorganize and form new neural connections throughout life, has significant implications for learning, stroke recovery, and potentially delaying cognitive decline through targeted training and rehabilitation."
+    }
+  },
+  {
+    "title": "Summarize Written Text — Circular Economy",
+    "type": "summarize_written_text",
+    "promptText": "The circular economy represents a fundamental shift from the traditional linear economic model of 'take-make-dispose' to a regenerative system where resources are kept in use for as long as possible. This approach aims to design out waste and pollution, keep products and materials in use, and regenerate natural systems. In practice, circular economy principles involve strategies such as designing products for durability and disassembly, implementing take-back programs, refurbishing and remanufacturing goods, and creating closed-loop recycling systems. Companies adopting circular models can reduce costs, minimize environmental impact, and create new revenue streams through innovative business models like product-as-a-service. Governments worldwide are increasingly supporting this transition through policies that encourage extended producer responsibility, eco-design requirements, and markets for secondary materials. The circular economy not only addresses environmental challenges but also offers economic opportunities and increased resource security.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "summarize_written_text", "economics", "sustainability"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Explains circular economy concept and benefits",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "The circular economy shifts from a linear 'take-make-dispose' model to a regenerative system that designs out waste, keeps materials in use through strategies like refurbishing and closed-loop recycling, offering both environmental and economic benefits."
+    }
+  },
+  {
+    "title": "Summarize Written Text — Sleep and Memory",
+    "type": "summarize_written_text",
+    "promptText": "Sleep plays a crucial role in memory consolidation, the process by which temporary memories are transformed into long-lasting ones. During sleep, particularly during slow-wave and REM sleep stages, the brain replays and reorganizes the day's experiences, strengthening important neural connections while pruning less relevant ones. Research using neuroimaging techniques has shown that brain regions active during learning are reactivated during sleep, suggesting that memories are being processed and integrated into existing knowledge networks. Sleep deprivation, even for a single night, significantly impairs this consolidation process, affecting both declarative memory (facts and events) and procedural memory (skills and habits). Furthermore, adequate sleep before learning prepares the brain to form new memories efficiently, while sleep after learning helps solidify those memories. These findings have important implications for education, highlighting the importance of sufficient sleep for academic performance and long-term knowledge retention.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "summarize_written_text", "health", "science", "brain"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Covers sleep's role in memory consolidation and impacts of sleep deprivation",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "Sleep, particularly slow-wave and REM stages, is essential for memory consolidation as the brain replays and reorganizes experiences, with sleep deprivation significantly impairing this process and affecting both learning and long-term retention."
+    }
+  },
+  {
+    "title": "Summarize Written Text — Urban Heat Islands",
+    "type": "summarize_written_text",
+    "promptText": "Urban heat islands occur when cities experience significantly higher temperatures than surrounding rural areas due to human activities and infrastructure. Dark surfaces like asphalt and concrete absorb and retain heat, while the lack of vegetation reduces cooling through evapotranspiration. Buildings and vehicles generate additional heat, and tall structures can trap warm air at street level. These elevated temperatures have serious consequences for city residents, including increased energy consumption for cooling, elevated emissions of air pollutants, heat-related illness and mortality, and impaired water quality. The urban heat island effect disproportionately impacts vulnerable populations, particularly low-income communities with limited access to air conditioning and green spaces. Mitigation strategies include increasing urban tree canopy, installing cool or green roofs, using reflective materials for pavements and buildings, and designing cities to enhance air circulation. Implementing these solutions can reduce urban temperatures by several degrees, improving public health and reducing energy demands.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "summarize_written_text", "urban", "environment", "climate"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Explains urban heat islands, their impacts, and mitigation strategies",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "Urban heat islands caused by heat-absorbing infrastructure and lack of vegetation result in higher city temperatures, disproportionately affecting vulnerable populations, but can be mitigated through strategies like increasing tree canopy and using reflective materials."
+    }
+  },
+  {
+    "title": "Summarize Written Text — Antibiotic Resistance",
+    "type": "summarize_written_text",
+    "promptText": "Antibiotic resistance has emerged as one of the most pressing public health challenges of the 21st century, threatening to undermine decades of medical progress. Bacteria naturally evolve resistance through genetic mutations and horizontal gene transfer, but the widespread misuse and overuse of antibiotics in human medicine, agriculture, and animal husbandry have dramatically accelerated this process. When antibiotics are used inappropriately—such as for viral infections, in subtherapeutic doses, or without completing prescribed courses—resistant bacteria have selective advantages and proliferate. The consequences are dire: infections that were once easily treatable now require more expensive, toxic antibiotics or have become virtually untreatable. Common procedures like surgeries and chemotherapy, which rely on effective antibiotics to prevent infections, become increasingly risky. The World Health Organization warns that without urgent action, we could enter a post-antibiotic era where minor infections and routine operations could once again become life-threatening. Addressing this crisis requires coordinated global efforts including antibiotic stewardship programs, development of new antimicrobial drugs, improved infection prevention, and reducing agricultural antibiotic use.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "summarize_written_text", "health", "medicine", "science"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Covers antibiotic resistance causes, consequences, and needed solutions",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "Antibiotic resistance, accelerated by widespread misuse in medicine and agriculture, threatens to make common infections untreatable and routine procedures dangerous, requiring urgent global action including stewardship programs and development of new drugs."
+    }
+  },
+  {
+    "title": "Summarize Written Text — Digital Divide",
+    "type": "summarize_written_text",
+    "promptText": "The digital divide refers to the gap between individuals, households, businesses, and geographic areas at different socioeconomic levels regarding their opportunities to access information and communication technologies and their use of the Internet for various activities. This divide manifests in multiple dimensions: access to devices and connectivity, digital literacy and skills, and the ability to use technology effectively for economic and social advancement. While internet penetration has increased globally, significant disparities persist both between and within countries. Rural and remote areas often lack adequate infrastructure, while low-income households may be unable to afford devices or data plans. Beyond physical access, many people lack the skills needed to navigate digital platforms, evaluate online information critically, or leverage technology for education and employment opportunities. The COVID-19 pandemic starkly highlighted these inequalities as remote work and online learning became necessities. Bridging the digital divide requires comprehensive approaches including infrastructure investment, affordable access programs, digital literacy education, and content available in multiple languages and formats.",
+    "promptMediaUrl": null,
+    "difficulty": "Medium",
+    "tags": ["nov2025", "summarize_written_text", "technology", "society", "education"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Defines digital divide and identifies key dimensions and solutions",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "The digital divide encompasses disparities in technology access, digital literacy, and effective use across socioeconomic levels, requiring comprehensive solutions including infrastructure investment, affordable access programs, and digital literacy education to ensure equitable opportunities."
+    }
+  },
+  {
+    "title": "Summarize Written Text — Microplastics Pollution",
+    "type": "summarize_written_text",
+    "promptText": "Microplastics, plastic particles smaller than five millimeters, have become ubiquitous environmental pollutants found in oceans, freshwater systems, soil, air, and even remote regions like Arctic ice and deep-sea sediments. These particles originate from various sources including the breakdown of larger plastic debris, synthetic textile fibers released during washing, tire wear particles, and microbeads intentionally added to personal care products. Marine organisms from plankton to whales ingest microplastics, which can cause physical harm, reduce feeding efficiency, and introduce toxic chemicals into food webs. Recent studies have detected microplastics in human blood, lungs, and placenta, raising concerns about potential health effects, though the full extent of human health impacts remains under investigation. Microplastics can also act as vectors for harmful bacteria and pollutants. Addressing microplastic pollution requires multiple strategies: reducing plastic production and consumption, improving waste management and recycling systems, developing biodegradable alternatives, filtering microfibers from wastewater, and establishing regulations to limit microplastic-releasing products.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "summarize_written_text", "environment", "pollution", "health"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Covers microplastics sources, environmental and health impacts, and solutions",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "Microplastics from various sources have become ubiquitous environmental pollutants affecting marine life and potentially human health, requiring comprehensive strategies including reducing plastic consumption, improving waste management, and developing biodegradable alternatives."
+    }
+  },
+  {
+    "title": "Summarize Written Text — Gene Editing Ethics",
+    "type": "summarize_written_text",
+    "promptText": "CRISPR-Cas9 and other gene-editing technologies have revolutionized biological research and medicine, offering unprecedented precision in modifying DNA sequences. These tools hold tremendous promise for treating genetic diseases, developing disease-resistant crops, and advancing scientific understanding of gene function. However, they also raise profound ethical questions, particularly regarding germline editing that affects future generations. The 2018 announcement of gene-edited babies in China sparked international controversy and highlighted the need for robust governance frameworks. Key ethical concerns include safety and unintended consequences, equity in access to genetic therapies, potential for enhancement beyond disease treatment, and the moral status of human embryos. While therapeutic applications for severe genetic conditions receive broad support, preventive or enhancement modifications remain controversial. Different cultures and countries hold varying perspectives on acceptable uses of gene editing. International scientific organizations have called for broad societal dialogue and transparent governance before proceeding with heritable genetic modifications, emphasizing the need to balance innovation with responsible oversight and public engagement in decision-making.",
+    "promptMediaUrl": null,
+    "difficulty": "Hard",
+    "tags": ["nov2025", "summarize_written_text", "science", "ethics", "medicine"],
+    "answerKey": {
+      "minWords": 5,
+      "maxWords": 75,
+      "idealWords": "25-35",
+      "scoringCriteria": {
+        "content": "0-4: Covers gene editing potential and ethical concerns",
+        "form": "0-2: Single sentence between 5-75 words",
+        "grammar": "0-2: Correct sentence structure and grammar",
+        "vocabulary": "0-2: Appropriate word choice and accuracy"
+      },
+      "sampleAnswer": "While CRISPR and gene-editing technologies offer promising medical applications, they raise ethical concerns about germline modifications, safety, equity, and enhancement uses, necessitating international governance frameworks and broad societal dialogue before proceeding with heritable changes."
+    }
+  }
+]

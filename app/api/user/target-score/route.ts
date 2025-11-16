@@ -1,21 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { eq } from 'drizzle-orm'
-import { Session } from '@/lib/auth/auth'
-import { getSession } from '@/lib/auth/session'
+import { getCurrentUser } from '@/lib/auth/server'
 import { db } from '@/lib/db/drizzle'
 import { userProfiles } from '@/lib/db/schema'
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getSession()
-    if (!session) {
+    const user = await getCurrentUser()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const profile = await db
       .select()
       .from(userProfiles)
-      .where(eq(userProfiles.userId, session.user.id))
+      .where(eq(userProfiles.userId, user.id))
       .limit(1)
 
     if (!profile.length) {
@@ -34,8 +33,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getSession()
-    if (!session) {
+    const user = await getCurrentUser()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -56,17 +55,17 @@ export async function POST(request: NextRequest) {
     const existingProfile = await db
       .select()
       .from(userProfiles)
-      .where(eq(userProfiles.userId, session.user.id))
+      .where(eq(userProfiles.userId, user.id))
       .limit(1)
 
     if (existingProfile.length) {
       await db
         .update(userProfiles)
         .set({ targetScore })
-        .where(eq(userProfiles.userId, session.user.id))
+        .where(eq(userProfiles.userId, user.id))
     } else {
       await db.insert(userProfiles).values({
-        userId: session.user.id,
+        userId: user.id,
         targetScore,
       })
     }

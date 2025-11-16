@@ -86,15 +86,17 @@ export function format(durationMs: number): string {
   return `${mm}:${ss}`
 }
 
-// Defaults (Authentic PTE Baseline)
+// Defaults (Authentic PTE Baseline - Updated November 2025)
+// November 2025 Update: Test duration reduced to 2 hours (120 minutes)
+// Section timings: Speaking & Writing: 54-67 mins, Reading: 29-30 mins, Listening: 30-43 mins
 const SPEAKING_DEFAULTS: Record<SpeakingType, SpeakingTiming> = {
   read_aloud: { prepMs: ms.s(35), answerMs: ms.s(40) },
-  repeat_sentence: { prepMs: ms.s(1), answerMs: ms.s(15) }, // post-audio prep=1s
+  repeat_sentence: { prepMs: ms.s(1), answerMs: ms.s(15) }, // post-audio prep=1s, NOW includes beep sound (June 2025 update)
   describe_image: { prepMs: ms.s(25), answerMs: ms.s(40) },
   retell_lecture: { prepMs: ms.s(10), answerMs: ms.s(40) },
   answer_short_question: { prepMs: ms.s(3), answerMs: ms.s(10) },
-  respond_to_a_situation: { prepMs: ms.s(15), answerMs: ms.s(40) },
-  summarize_group_discussion: { prepMs: ms.s(10), answerMs: ms.s(120) }, // extended, can be tuned
+  respond_to_a_situation: { prepMs: ms.s(10), answerMs: ms.s(40) }, // NEW August 2025: Real-world scenario response
+  summarize_group_discussion: { prepMs: ms.s(10), answerMs: ms.s(120) }, // NEW August 2025: 2-4 speaker discussion summary
 }
 
 const WRITING_DEFAULTS: Record<WritingType, WritingTiming> = {
@@ -102,15 +104,17 @@ const WRITING_DEFAULTS: Record<WritingType, WritingTiming> = {
   write_essay: { answerMs: ms.m(20) },
 }
 
-// Section defaults
-const READING_SECTION_DEFAULT: SectionTiming = { sectionMs: ms.m(29) }
+// Section defaults (November 2025 Update)
+// Reading: 29-30 minutes (reduced from previous format)
+const READING_SECTION_DEFAULT: SectionTiming = { sectionMs: ms.m(30) }
 
 // Listening: item + section defaults
+// Listening: 30-43 minutes (November 2025 Update)
 const LISTENING_ITEM_DEFAULTS: Partial<Record<ListeningType, ItemTiming>> = {
   summarize_spoken_text: { answerMs: ms.m(10) },
 }
 
-const LISTENING_SECTION_DEFAULT: SectionTiming = { sectionMs: ms.m(40) }
+const LISTENING_SECTION_DEFAULT: SectionTiming = { sectionMs: ms.m(43) }
 
 // Top-level config object enabling overrides by env JSON
 const DEFAULT_CONFIG = {

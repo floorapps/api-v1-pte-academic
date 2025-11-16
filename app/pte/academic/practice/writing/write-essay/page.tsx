@@ -14,6 +14,7 @@ interface SearchParams {
   page?: string
   pageSize?: string
   difficulty?: string
+  [key: string]: string | string[] | undefined
 }
 
 async function QuestionsSections({
@@ -24,7 +25,7 @@ async function QuestionsSections({
   const data = await fetchListingQuestions(
     'writing',
     'write_essay',
-    searchParams
+    searchParams || {}
   )
   const { all, weekly, monthly } = categorizeQuestions(data.items)
   const currentMonth = getCurrentMonthName()
@@ -73,13 +74,11 @@ export default async function WriteEssayPage({
 }) {
   const resolvedSearchParams = await searchParams
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        <AcademicPracticeHeader section="writing" showFilters={true} />
-        <React.Suspense fallback={<QuestionsTableSkeleton />}>
-          <QuestionsSections searchParams={resolvedSearchParams} />
-        </React.Suspense>
-      </div>
-    </div>
+    <>
+      <AcademicPracticeHeader section="writing" showFilters={true} />
+      <React.Suspense fallback={<QuestionsTableSkeleton />}>
+        <QuestionsSections searchParams={resolvedSearchParams} />
+      </React.Suspense>
+    </>
   )
 }

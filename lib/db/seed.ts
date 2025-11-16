@@ -12,6 +12,7 @@ import {
   readingQuestions,
   speakingAttempts,
   speakingQuestions,
+  userProfiles,
   users,
   writingAttempts,
   writingQuestions,
@@ -188,6 +189,7 @@ export async function seedSpeakingQuestions(
     'lib/db/seeds/speaking.answer_short_question.json',
     'lib/db/seeds/speaking.summarize_group_discussion.json',
     'lib/db/seeds/speaking.respond_to_a_situation.json',
+    'lib/db/seeds/speaking.read_aloud.nov2025.json',
   ]
 
   for (const file of speakingSeedFiles) {
@@ -200,42 +202,42 @@ export async function seedSpeakingQuestions(
   let inserted = 0
   const insertedByType: Record<string, number> = {}
 
-  for (const rec of items) {
-    const type = rec.type
-    const title = rec.title.trim()
-    const promptText = rec.promptText ?? null
-    const promptMediaUrl = normalizeMediaUrl(rec.promptMediaUrl ?? null)
-    const difficulty = normalizeDifficulty(rec.difficulty)
-    const tags = Array.isArray(rec.tags) ? rec.tags : []
+  // OPTIMIZED: Batch check for existing questions first
+  const existingQuestions = await _db
+    .select({ type: speakingQuestions.type, title: speakingQuestions.title })
+    .from(speakingQuestions)
 
-    // Idempotent upsert by (type, title) - no unique constraint, so pre-check
-    const existing = await _db
-      .select({ id: speakingQuestions.id })
-      .from(speakingQuestions)
-      .where(
-        and(
-          eq(speakingQuestions.type, type),
-          eq(speakingQuestions.title, title)
-        )
-      )
-      .limit(1)
+  const existingKeys = new Set(
+    existingQuestions.map((q) => `${q.type}:${q.title}`)
+  )
 
-    if (existing.length > 0) {
-      continue
-    }
-
-    await _db.insert(speakingQuestions).values({
-      type,
-      title,
-      promptText,
-      promptMediaUrl,
-      difficulty,
-      tags,
+  // Filter out existing questions
+  const newQuestions = items
+    .filter((rec) => !existingKeys.has(`${rec.type}:${rec.title.trim()}`))
+    .map((rec) => ({
+      type: rec.type,
+      title: rec.title.trim(),
+      promptText: rec.promptText ?? null,
+      promptMediaUrl: normalizeMediaUrl(rec.promptMediaUrl ?? null),
+      difficulty: normalizeDifficulty(rec.difficulty),
+      tags: Array.isArray(rec.tags) ? rec.tags : [],
       isActive: true,
-    })
+    }))
 
-    inserted++
-    insertedByType[type] = (insertedByType[type] ?? 0) + 1
+  // OPTIMIZED: Batch insert all new questions at once
+  if (newQuestions.length > 0) {
+    // PostgreSQL can handle large batches, but we'll chunk for safety
+    const BATCH_SIZE = 100
+    for (let i = 0; i < newQuestions.length; i += BATCH_SIZE) {
+      const batch = newQuestions.slice(i, i + BATCH_SIZE)
+      await _db.insert(speakingQuestions).values(batch)
+
+      // Track insertions by type
+      batch.forEach((q) => {
+        insertedByType[q.type] = (insertedByType[q.type] ?? 0) + 1
+      })
+    }
+    inserted = newQuestions.length
   }
 
   return {
@@ -253,45 +255,57 @@ export async function seedReadingQuestions(
   opts: BaseSeedOptions = {}
 ) {
   const { limitPerType } = opts
-  const file = 'lib/db/seeds/reading.minimal.json'
-  const arr = (await readJsonFile<ReadingSeedRecord[]>(file)) ?? []
-  const items = groupByType(arr, limitPerType)
+
+  // Load multiple reading seed files
+  const seeds: Array<ReadingSeedRecord> = []
+  const readingSeedFiles = [
+    'lib/db/seeds/reading.minimal.json',
+    'lib/db/seeds/reading.multiple_choice.nov2025.json',
+  ]
+
+  for (const file of readingSeedFiles) {
+    const arr = (await readJsonFile<ReadingSeedRecord[]>(file)) ?? []
+    seeds.push(...arr)
+  }
+
+  const items = groupByType(seeds, limitPerType)
 
   let inserted = 0
   const insertedByType: Record<string, number> = {}
 
-  for (const rec of items) {
-    const type = rec.type
-    const title = rec.title.trim()
-    const promptText = rec.promptText
-    const difficulty = normalizeDifficulty(rec.difficulty)
-    const tags = Array.isArray(rec.tags) ? rec.tags : []
-    const options = rec.options ?? null
-    const answerKey = rec.answerKey ?? null
+  // OPTIMIZED: Batch check existing
+  const existingQuestions = await _db
+    .select({ type: readingQuestions.type, title: readingQuestions.title })
+    .from(readingQuestions)
 
-    const existing = await _db
-      .select({ id: readingQuestions.id })
-      .from(readingQuestions)
-      .where(
-        and(eq(readingQuestions.type, type), eq(readingQuestions.title, title))
-      )
-      .limit(1)
+  const existingKeys = new Set(
+    existingQuestions.map((q) => `${q.type}:${q.title}`)
+  )
 
-    if (existing.length > 0) continue
-
-    await _db.insert(readingQuestions).values({
-      type,
-      title,
-      promptText,
-      options,
-      answerKey,
-      difficulty,
-      tags,
+  const newQuestions = items
+    .filter((rec) => !existingKeys.has(`${rec.type}:${rec.title.trim()}`))
+    .map((rec) => ({
+      type: rec.type,
+      title: rec.title.trim(),
+      promptText: rec.promptText,
+      options: rec.options ?? null,
+      answerKey: rec.answerKey ?? null,
+      difficulty: normalizeDifficulty(rec.difficulty),
+      tags: Array.isArray(rec.tags) ? rec.tags : [],
       isActive: true,
-    })
+    }))
 
-    inserted++
-    insertedByType[type] = (insertedByType[type] ?? 0) + 1
+  // OPTIMIZED: Batch insert
+  if (newQuestions.length > 0) {
+    const BATCH_SIZE = 100
+    for (let i = 0; i < newQuestions.length; i += BATCH_SIZE) {
+      const batch = newQuestions.slice(i, i + BATCH_SIZE)
+      await _db.insert(readingQuestions).values(batch)
+      batch.forEach((q) => {
+        insertedByType[q.type] = (insertedByType[q.type] ?? 0) + 1
+      })
+    }
+    inserted = newQuestions.length
   }
 
   return {
@@ -316,6 +330,8 @@ export async function seedWritingQuestions(
   const writingSeedFiles = [
     'lib/db/seeds/writing.summarize_written_text.json',
     'lib/db/seeds/writing.write_essay.json',
+    'lib/db/seeds/writing.write_essay.nov2025.json',
+    'lib/db/seeds/writing.summarize_written_text.nov2025.json',
   ]
 
   for (const file of writingSeedFiles) {
@@ -328,38 +344,39 @@ export async function seedWritingQuestions(
   let inserted = 0
   const insertedByType: Record<string, number> = {}
 
-  for (const rec of items) {
-    const type = rec.type
-    const title = rec.title.trim()
-    const promptText = rec.promptText
-    const difficulty = normalizeDifficulty(rec.difficulty)
-    const tags = Array.isArray(rec.tags) ? rec.tags : []
-    const options = rec.options ?? null
-    const answerKey = rec.answerKey ?? null
+  // OPTIMIZED: Batch check existing
+  const existingQuestions = await _db
+    .select({ type: writingQuestions.type, title: writingQuestions.title })
+    .from(writingQuestions)
 
-    const existing = await _db
-      .select({ id: writingQuestions.id })
-      .from(writingQuestions)
-      .where(
-        and(eq(writingQuestions.type, type), eq(writingQuestions.title, title))
-      )
-      .limit(1)
+  const existingKeys = new Set(
+    existingQuestions.map((q) => `${q.type}:${q.title}`)
+  )
 
-    if (existing.length > 0) continue
-
-    await _db.insert(writingQuestions).values({
-      type,
-      title,
-      promptText,
-      options,
-      answerKey,
-      difficulty,
-      tags,
+  const newQuestions = items
+    .filter((rec) => !existingKeys.has(`${rec.type}:${rec.title.trim()}`))
+    .map((rec) => ({
+      type: rec.type,
+      title: rec.title.trim(),
+      promptText: rec.promptText,
+      options: rec.options ?? null,
+      answerKey: rec.answerKey ?? null,
+      difficulty: normalizeDifficulty(rec.difficulty),
+      tags: Array.isArray(rec.tags) ? rec.tags : [],
       isActive: true,
-    })
+    }))
 
-    inserted++
-    insertedByType[type] = (insertedByType[type] ?? 0) + 1
+  // OPTIMIZED: Batch insert
+  if (newQuestions.length > 0) {
+    const BATCH_SIZE = 100
+    for (let i = 0; i < newQuestions.length; i += BATCH_SIZE) {
+      const batch = newQuestions.slice(i, i + BATCH_SIZE)
+      await _db.insert(writingQuestions).values(batch)
+      batch.forEach((q) => {
+        insertedByType[q.type] = (insertedByType[q.type] ?? 0) + 1
+      })
+    }
+    inserted = newQuestions.length
   }
 
   return {
@@ -377,52 +394,59 @@ export async function seedListeningQuestions(
   opts: BaseSeedOptions = {}
 ) {
   const { limitPerType } = opts
-  const file = 'lib/db/seeds/listening.minimal.json'
-  const arr = (await readJsonFile<ListeningSeedRecord[]>(file)) ?? []
-  const items = groupByType(arr, limitPerType)
+
+  // Load multiple listening seed files
+  const seeds: Array<ListeningSeedRecord> = []
+  const listeningSeedFiles = [
+    'lib/db/seeds/listening.minimal.json',
+    'lib/db/seeds/listening.nov2025.json',
+  ]
+
+  for (const file of listeningSeedFiles) {
+    const arr = (await readJsonFile<ListeningSeedRecord[]>(file)) ?? []
+    seeds.push(...arr)
+  }
+
+  const items = groupByType(seeds, limitPerType)
 
   let inserted = 0
   const insertedByType: Record<string, number> = {}
 
-  for (const rec of items) {
-    const type = rec.type
-    const title = rec.title.trim()
-    const promptText = rec.promptText ?? null
-    const promptMediaUrl = normalizeMediaUrl(rec.promptMediaUrl ?? null)
-    const transcript = rec.transcript ?? null
-    const difficulty = normalizeDifficulty(rec.difficulty)
-    const tags = Array.isArray(rec.tags) ? rec.tags : []
-    const options = rec.options ?? null
-    const correctAnswers = rec.correctAnswers
+  // OPTIMIZED: Batch check existing
+  const existingQuestions = await _db
+    .select({ type: listeningQuestions.type, title: listeningQuestions.title })
+    .from(listeningQuestions)
 
-    const existing = await _db
-      .select({ id: listeningQuestions.id })
-      .from(listeningQuestions)
-      .where(
-        and(
-          eq(listeningQuestions.type, type as any),
-          eq(listeningQuestions.title, title)
-        )
-      )
-      .limit(1)
+  const existingKeys = new Set(
+    existingQuestions.map((q) => `${q.type}:${q.title}`)
+  )
 
-    if (existing.length > 0) continue
-
-    await _db.insert(listeningQuestions).values({
-      type: type as any,
-      title,
-      promptText,
-      promptMediaUrl,
-      transcript,
-      options,
-      correctAnswers,
-      difficulty,
-      tags,
+  const newQuestions = items
+    .filter((rec) => !existingKeys.has(`${rec.type}:${rec.title.trim()}`))
+    .map((rec) => ({
+      type: rec.type as any,
+      title: rec.title.trim(),
+      promptText: rec.promptText ?? null,
+      promptMediaUrl: normalizeMediaUrl(rec.promptMediaUrl ?? null),
+      transcript: rec.transcript ?? null,
+      options: rec.options ?? null,
+      correctAnswers: rec.correctAnswers,
+      difficulty: normalizeDifficulty(rec.difficulty),
+      tags: Array.isArray(rec.tags) ? rec.tags : [],
       isActive: true,
-    })
+    }))
 
-    inserted++
-    insertedByType[type] = (insertedByType[type] ?? 0) + 1
+  // OPTIMIZED: Batch insert
+  if (newQuestions.length > 0) {
+    const BATCH_SIZE = 100
+    for (let i = 0; i < newQuestions.length; i += BATCH_SIZE) {
+      const batch = newQuestions.slice(i, i + BATCH_SIZE)
+      await _db.insert(listeningQuestions).values(batch)
+      batch.forEach((q) => {
+        insertedByType[q.type] = (insertedByType[q.type] ?? 0) + 1
+      })
+    }
+    inserted = newQuestions.length
   }
 
   return {
@@ -530,6 +554,15 @@ async function runLegacySeed() {
       password: hashedPassword,
     })
     console.log('User account with password created.')
+
+    // Create user profile with target score
+    await db.insert(userProfiles).values({
+      userId: user.id,
+      targetScore: 79,
+      examDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
+      studyGoal: 'Achieve PTE Academic score of 79+ for immigration purposes',
+    })
+    console.log('User profile with target score created.')
   } else {
     console.log('User already exists, checking for account.')
     const userAccount = (
@@ -551,6 +584,25 @@ async function runLegacySeed() {
       console.log('User account with password created for existing user.')
     } else {
       console.log('User account already exists.')
+    }
+
+    // Check and create user profile if needed
+    const existingProfile = await db
+      .select()
+      .from(userProfiles)
+      .where(eq(userProfiles.userId, user.id))
+      .limit(1)
+
+    if (existingProfile.length === 0) {
+      await db.insert(userProfiles).values({
+        userId: user.id,
+        targetScore: 79,
+        examDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
+        studyGoal: 'Achieve PTE Academic score of 79+ for immigration purposes',
+      })
+      console.log('User profile with target score created for existing user.')
+    } else {
+      console.log('User profile already exists.')
     }
   }
 }

@@ -13,7 +13,7 @@ if (!DATABASE_URL) {
 }
 
 export default {
-  schema: './lib/db/schema.ts',
+  schema: ['./lib/db/schema.ts', './lib/db/schema-mock-tests.ts'],
   out: './lib/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {

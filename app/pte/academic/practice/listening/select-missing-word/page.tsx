@@ -10,21 +10,19 @@ import {
   getCurrentMonthName,
 } from '@/lib/pte/listing-helpers'
 
-interface SearchParams {
-  page?: string
-  pageSize?: string
-  difficulty?: string
-}
-
 async function QuestionsSections({
   searchParams,
 }: {
-  searchParams?: SearchParams
+  searchParams: Record<string, string | string[] | undefined>
 }) {
+  const page = Number(searchParams.page) || 1
+  const pageSize = Number(searchParams.pageSize) || 20
+  const difficulty = (searchParams.difficulty as string) || 'All'
+
   const data = await fetchListingQuestions(
     'listening',
     'select_missing_word',
-    searchParams
+    { page: page?.toString(), pageSize: pageSize?.toString(), difficulty }
   )
   const { all, weekly, monthly } = categorizeQuestions(data.items)
   const currentMonth = getCurrentMonthName()
@@ -69,17 +67,16 @@ async function QuestionsSections({
 export default async function SelectMissingWordPracticePage({
   searchParams,
 }: {
-  searchParams: Promise<SearchParams>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const resolvedSearchParams = await searchParams
+  const params = await searchParams
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        <AcademicPracticeHeader section="listening" showFilters={true} />
-        <React.Suspense fallback={<QuestionsTableSkeleton />}>
-          <QuestionsSections searchParams={resolvedSearchParams} />
-        </React.Suspense>
-      </div>
-    </div>
+    <>
+      <AcademicPracticeHeader section="listening" showFilters={true} />
+      <React.Suspense fallback={<QuestionsTableSkeleton />}>
+        <QuestionsSections searchParams={params} />
+      </React.Suspense>
+    </>
   )
 }

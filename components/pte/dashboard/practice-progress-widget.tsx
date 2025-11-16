@@ -34,7 +34,7 @@ interface SkillBreakdown {
 }
 
 export function PracticeProgressWidget() {
-  const { data: progress, isLoading } = useSWR<ProgressData>(
+  const { data: progress, isLoading, error } = useSWR<ProgressData>(
     '/api/user',
     fetcher
   )
@@ -53,6 +53,12 @@ export function PracticeProgressWidget() {
   }
 
   const data = progress || mockProgress
+
+  // Helper to safely handle numbers and prevent NaN
+  const safeNumber = (value: any, fallback: number = 0): number => {
+    const num = Number(value)
+    return isNaN(num) || !isFinite(num) ? fallback : num
+  }
 
   const getSkillBreakdown = (): SkillBreakdown[] => [
     {
@@ -90,9 +96,10 @@ export function PracticeProgressWidget() {
   }
 
   const questionsThisMonth = Math.floor(
-    data.questionsAnswered * 0.3 // Approximate for demo
+    safeNumber(data.questionsAnswered) * 0.3 // Approximate for demo
   )
-  const practiceHours = Math.floor(data.totalStudyTime)
+
+  const practiceHours = Math.floor(safeNumber(data.totalStudyTime))
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -111,10 +118,10 @@ export function PracticeProgressWidget() {
               <div className="rounded-lg border border-blue-100 bg-blue-50 p-3">
                 <p className="text-sm font-semibold text-blue-600">Questions</p>
                 <p className="mt-1 text-2xl font-bold text-blue-900">
-                  {questionsThisMonth}
+                  {safeNumber(questionsThisMonth)}
                 </p>
                 <p className="mt-1 text-xs text-blue-600">
-                  {Math.floor(questionsThisMonth / 4)} days active
+                  {safeNumber(Math.floor(questionsThisMonth / 4))} days active
                 </p>
               </div>
               <div className="rounded-lg border border-green-100 bg-green-50 p-3">
@@ -122,10 +129,10 @@ export function PracticeProgressWidget() {
                   Study Time
                 </p>
                 <p className="mt-1 text-2xl font-bold text-green-900">
-                  {practiceHours}h
+                  {safeNumber(practiceHours)}h
                 </p>
                 <p className="mt-1 text-xs text-green-600">
-                  ~{Math.floor(practiceHours / 4)}h per week
+                  ~{safeNumber(Math.floor(practiceHours / 4))}h per week
                 </p>
               </div>
             </div>
@@ -136,17 +143,17 @@ export function PracticeProgressWidget() {
                   Study Streak
                 </p>
                 <Badge variant="default" className="bg-orange-600">
-                  🔥 {data.studyStreak} days
+                  🔥 {safeNumber(data.studyStreak)} days
                 </Badge>
               </div>
               <div className="h-2 w-full rounded-full bg-orange-200">
                 <div
                   className="h-2 rounded-full bg-orange-600 transition-all duration-300"
                   style={{
-                    width: `${Math.min((data.studyStreak / 30) * 100, 100)}%`,
+                    width: `${Math.min(safeNumber((safeNumber(data.studyStreak) / 30) * 100), 100)}%`,
                   }}
                   role="progressbar"
-                  aria-valuenow={data.studyStreak}
+                  aria-valuenow={safeNumber(data.studyStreak)}
                   aria-valuemin={0}
                   aria-valuemax={30}
                 />
@@ -158,10 +165,10 @@ export function PracticeProgressWidget() {
                 Tests Completed
               </p>
               <p className="text-2xl font-bold text-purple-900">
-                {data.testsCompleted}
+                {safeNumber(data.testsCompleted)}
               </p>
               <p className="mt-1 text-xs text-purple-600">
-                Average {Math.floor(data.overallScore)} points
+                Average {Math.floor(safeNumber(data.overallScore))} points
               </p>
             </div>
           </div>
@@ -198,21 +205,21 @@ export function PracticeProgressWidget() {
                         {skill.skill}
                       </span>
                     </div>
-                    <Badge variant={getScoreBadgeVariant(skill.score)}>
-                      {skill.score}
+                    <Badge variant={getScoreBadgeVariant(safeNumber(skill.score))}>
+                      {safeNumber(skill.score)}
                     </Badge>
                   </div>
                   <div className="h-2 w-full rounded-full bg-gray-200">
                     <div
                       className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300"
                       style={{
-                        width: `${Math.min((skill.score / 90) * 100, 100)}%`,
+                        width: `${Math.min(safeNumber((safeNumber(skill.score) / 90) * 100), 100)}%`,
                       }}
                       role="progressbar"
-                      aria-valuenow={skill.score}
+                      aria-valuenow={safeNumber(skill.score)}
                       aria-valuemin={0}
                       aria-valuemax={90}
-                      aria-label={`${skill.skill} score: ${skill.score} out of 90`}
+                      aria-label={`${skill.skill} score: ${safeNumber(skill.score)} out of 90`}
                     />
                   </div>
                 </div>
@@ -231,17 +238,17 @@ export function PracticeProgressWidget() {
                 variant="default"
                 className="bg-indigo-600 px-3 py-1 text-lg text-white"
               >
-                {data.overallScore}
+                {safeNumber(data.overallScore)}
               </Badge>
             </div>
             <div className="h-2.5 w-full rounded-full bg-indigo-200">
               <div
                 className="h-2.5 rounded-full bg-gradient-to-r from-indigo-600 to-blue-600 transition-all duration-300"
                 style={{
-                  width: `${Math.min((data.overallScore / 90) * 100, 100)}%`,
+                  width: `${Math.min(safeNumber((safeNumber(data.overallScore) / 90) * 100), 100)}%`,
                 }}
                 role="progressbar"
-                aria-valuenow={data.overallScore}
+                aria-valuenow={safeNumber(data.overallScore)}
                 aria-valuemin={0}
                 aria-valuemax={90}
               />

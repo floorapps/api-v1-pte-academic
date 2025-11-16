@@ -10,7 +10,9 @@
       "Bash(node \"C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npx-cli.js\" @elevenlabs/cli@latest components add conversation-bar --yes)",
       "Bash(powershell -Command:*)",
       "Bash(pnpm db:generate:*)",
-      "Bash(pnpm db:migrate:*)"
+      "Bash(pnpm db:migrate:*)",
+      "Bash(pnpm add:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
