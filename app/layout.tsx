@@ -1,9 +1,8 @@
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import { Manrope } from 'next/font/google'
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import { ThemeProvider } from '@/components/theme-provider'
-import { RollbarProvider } from '@/components/providers/rollbar-provider'
+import { Suspense } from 'react'
+import { NonceWrapper } from '@/components/nonce-wrapper'
 
 export const metadata: Metadata = {
   title: 'PTE Learning LMS',
@@ -35,18 +34,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable}`} suppressHydrationWarning>
       <body className={`min-h-[100dvh] ${manrope.className} antialiased`}>
-        <RollbarProvider>
-          <NuqsAdapter>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
-          </NuqsAdapter>
-        </RollbarProvider>
+        <Suspense fallback={null}>
+          <NonceWrapper>
+            {children}
+          </NonceWrapper>
+        </Suspense>
       </body>
     </html>
   )

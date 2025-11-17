@@ -7,6 +7,7 @@ import type { NextRequest } from 'next/server'
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+
   // Disable seed routes in production
   if (process.env.NODE_ENV === 'production' && pathname.includes('/seed')) {
     console.warn(`[Security] Blocked access to seed route: ${pathname}`)

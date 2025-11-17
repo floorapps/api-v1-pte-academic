@@ -213,7 +213,9 @@ export async function GET(request: Request) {
       {
         items,
         count: total,
-      } as { items: SpeakingAttempt[]; count: number },
+        page,
+        pageSize,
+      } as { items: SpeakingAttempt[]; count: number; page: number; pageSize: number },
       { status: 200 }
     )
   } catch (e) {

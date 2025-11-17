@@ -5,9 +5,6 @@ import SpeakingAttempt from '@/components/pte/attempt/SpeakingAttempt'
 import { AcademicPracticeHeader } from '@/components/pte/practice-header'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { db } from '@/lib/db/drizzle'
-import { speakingQuestions } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
 
 type Params = {
   params: Promise<{ id: string }>
@@ -42,17 +39,13 @@ type SpeakingQuestion = {
 
 async function fetchQuestion(id: string): Promise<SpeakingQuestion | null> {
   try {
-    const result = await db
-      .select()
-      .from(speakingQuestions)
-      .where(eq(speakingQuestions.id, id))
-      .limit(1)
-
-    if (!result || result.length === 0) {
-      return null
+    const res = await fetch(`/api/speaking/questions/${id}`)
+    if (!res.ok) {
+      if (res.status === 404) return null
+      throw new Error(`Failed to fetch question: ${res.status}`)
     }
-
-    return result[0]
+    const data = await res.json()
+    return data.question
   } catch (error) {
     console.error('Error fetching question:', error)
     return null

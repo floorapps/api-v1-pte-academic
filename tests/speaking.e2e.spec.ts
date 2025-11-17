@@ -165,7 +165,7 @@ test.describe('UI: Speaking list pages render and link to detail', () => {
       test.skip(!resp || !resp.ok(), `Cannot reach list page: ${url}`)
       // Expect the table of questions to appear; assert at least one link to a speaking detail route
       const link = page.locator(
-        'a[href*="/academic/pte-practice-test/speaking/"][href*="/question/"]'
+        'a[href*="/pte/academic/practice/speaking/"][href*="/question/"]'
       )
       await expect(
         link.first(),

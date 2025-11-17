@@ -293,7 +293,7 @@ export default function MockTestResultPage() {
             </Link>
           </Button>
           <Button asChild>
-            <Link href="/academic/pte-practice-test">
+            <Link href="/pte/academic/practice">
               <TrendingUp className="mr-2 h-4 w-4" />
               Practice Again
             </Link>
@@ -618,7 +618,7 @@ export default function MockTestResultPage() {
                   Your speaking score was lower than other sections
                 </p>
                 <Button asChild className="w-full">
-                  <Link href="/academic/pte-practice-test/speaking">
+                  <Link href="/pte/academic/practice/speaking">
                     Practice Speaking
                   </Link>
                 </Button>

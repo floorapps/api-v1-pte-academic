@@ -37,6 +37,17 @@ const SECTION_META: Record<
   },
 }
 
+// Mapping from database codes to URL paths for speaking question types
+const speakingCodeToPath: Record<string, string> = {
+  s_read_aloud: 'read-aloud',
+  s_describe_image: 'describe-image',
+  s_repeat_sentence: 'repeat-sentence',
+  s_short_question: 'answer-short-question',
+  s_retell_lecture: 'retell-lecture',
+  s_respond_situation_academic: 'respond-to-situation',
+  s_summarize_group_discussion: 'summarize-group-discussion',
+}
+
 export function OnePTEDashboard() {
   const [activeSection, setActiveSection] = useState<SectionKey>('speaking')
 
@@ -148,8 +159,8 @@ export function OnePTEDashboard() {
                 <Link
                   key={q.id}
                   href={
-                    activeSection === 'speaking' && q.code === 's_read_aloud'
-                      ? '/pte/academic/practice/speaking/read-aloud'
+                    activeSection === 'speaking'
+                      ? `/pte/academic/practice/speaking/${speakingCodeToPath[q.code] || q.code}`
                       : `/pte/academic/practice/${activeSection}/${q.code}`
                   }
                   className="block"

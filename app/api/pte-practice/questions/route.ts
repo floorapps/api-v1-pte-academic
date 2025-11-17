@@ -6,9 +6,9 @@ import { pteQuestions } from '@/lib/db/schema'
 
 // Shared pagination type
 type Paginated<T> = {
-  data: T[]
+  items: T[]
   page: number
-  limit: number
+  pageSize: number
   total: number
 }
 
@@ -95,9 +95,9 @@ export async function GET(request: Request) {
       .offset((page - 1) * limit)
 
     const result: Paginated<(typeof rows)[number]> = {
-      data: rows,
+      items: rows,
       page,
-      limit,
+      pageSize: limit,
       total: Number(count || 0),
     }
 

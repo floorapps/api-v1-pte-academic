@@ -182,7 +182,7 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Link href="/academic/pte-practice-test">
+          <Link href="/pte/academic/practice">
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Practice
@@ -208,7 +208,7 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/academic/pte-practice-test">
+          <Link href="/pte/academic/practice">
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Practice

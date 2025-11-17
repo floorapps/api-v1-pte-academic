@@ -58,6 +58,9 @@ export const CacheTags = {
   PTE_ATTEMPTS: 'pte-attempts',
   PTE_HISTORY: 'pte-history',
 
+  // Writing questions
+  WRITING_QUESTIONS: 'writing-questions',
+
   // Community-related
   COMMUNITY_POSTS: 'community-posts',
   COMMUNITY_TRENDING: 'community-trending',

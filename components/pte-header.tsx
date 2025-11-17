@@ -32,7 +32,7 @@ export function PTEHeader() {
 
   const navItems = [
     { title: 'Dashboard', href: '/pte/dashboard', icon: BarChart3 },
-    { title: 'Practice', href: '/academic/pte-practice-test', icon: BookOpen },
+    { title: 'Practice', href: '/pte/academic/practice', icon: BookOpen },
     { title: 'Mock Tests', href: '/pte/mock-tests', icon: GraduationCap },
     { title: 'Analytics', href: '/pte/analytics', icon: BarChart3 },
     { title: 'AI Coach', href: '/pte/ai-coach', icon: Brain },
