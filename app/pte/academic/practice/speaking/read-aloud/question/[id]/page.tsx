@@ -59,7 +59,6 @@ async function fetchQuestion(id: string): Promise<SpeakingQuestion | null> {
   }
 }
 
-
 async function QuestionContent({ id }: { id: string }) {
   const question = await fetchQuestion(id)
 

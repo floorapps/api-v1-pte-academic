@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { AcademicPracticeHeader } from '@/components/pte/practice-header'
 import QuestionsTable, {
+
   QuestionsTableSkeleton,
 } from '@/components/pte/questions-table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'

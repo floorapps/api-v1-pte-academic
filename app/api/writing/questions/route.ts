@@ -27,6 +27,7 @@ export async function GET(request: Request) {
       Object.fromEntries(url.searchParams.entries())
     )
     if (!parsed.success) {
+      console.log('[DEBUG GET /api/writing/questions]', { requestId, validationError: parsed.error.issues })
       return error(
         400,
         parsed.error.issues.map((i) => i.message).join('; '),
@@ -36,6 +37,8 @@ export async function GET(request: Request) {
 
     const { type, page, pageSize, search = '', isActive = true } = parsed.data
     const difficulty = normalizeDifficulty(parsed.data.difficulty)
+
+    console.log('[DEBUG GET /api/writing/questions]', { requestId, type, page, pageSize, search, isActive, difficulty })
 
     const conditions: any[] = [eq(writingQuestions.type, type)]
     if (typeof isActive === 'boolean')
@@ -52,6 +55,8 @@ export async function GET(request: Request) {
 
     const whereExpr = conditions.length ? and(...conditions) : undefined
 
+    console.log('[DEBUG GET /api/writing/questions]', { requestId, conditions, whereExpr })
+
     const countRows = await (whereExpr
       ? db
           .select({ count: sql<number>`count(*)` })
@@ -60,11 +65,15 @@ export async function GET(request: Request) {
       : db.select({ count: sql<number>`count(*)` }).from(writingQuestions))
     const total = Number(countRows[0]?.count || 0)
 
+    console.log('[DEBUG GET /api/writing/questions]', { requestId, total })
+
     const baseSelect = db.select().from(writingQuestions)
     const items = await (whereExpr ? baseSelect.where(whereExpr) : baseSelect)
       .orderBy(desc(writingQuestions.createdAt), desc(writingQuestions.id))
       .limit(pageSize)
       .offset((page - 1) * pageSize)
+
+    console.log('[DEBUG GET /api/writing/questions]', { requestId, itemsCount: items.length })
 
     const res = NextResponse.json(
       {
@@ -81,7 +90,7 @@ export async function GET(request: Request) {
     )
     return res
   } catch (e) {
-    console.error('[GET /api/writing/questions]', { requestId, error: e })
+    console.error('[GET /api/writing/questions]', { requestId, error: e, stack: e?.stack })
     return error(500, 'Internal Server Error', 'INTERNAL_ERROR')
   }
 }

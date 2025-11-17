@@ -23,7 +23,6 @@ export async function generateStaticParams() {
   }
 }
 
-
 export default async function SummarizeWrittenTextQuestionPage({
   params,
 }: Props) {

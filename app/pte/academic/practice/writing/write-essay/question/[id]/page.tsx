@@ -23,7 +23,6 @@ export async function generateStaticParams() {
   }
 }
 
-
 async function fetchWritingQuestion(id: string) {
   try {
     const result = await db

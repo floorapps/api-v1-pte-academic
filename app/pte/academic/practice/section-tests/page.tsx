@@ -5,9 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { initialCategories } from '@/lib/pte/data'
 
-// Removed revalidate export - incompatible with cacheComponents in Next.js 16
-// Caching is now handled by Next.js 16's new cacheComponents feature
-
 export default function SectionTestsIndexPage() {
   const parentCategories = initialCategories.filter((c) => c.parent === null)
 

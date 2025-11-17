@@ -21,7 +21,6 @@ export async function generateStaticParams() {
   }
 }
 
-
 export default async function HighlightCorrectSummaryQuestionPage({
   params,
 }: Props) {
