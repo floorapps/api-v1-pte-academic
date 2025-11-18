@@ -71,50 +71,9 @@ export default function SpeakingRecorder({
 
   // UI state
   const [state, _setState] = useState<RecorderState>(() => {
-    if (typeof window === "undefined") {
-      console.log(
-        "[SpeakingRecorder] Browser support check: Server-side rendering, unsupported"
-      );
-      return "unsupported";
-    }
-    const hasMediaRecorder =
-      typeof (window as any).MediaRecorder !== "undefined";
-    console.log(
-      "[SpeakingRecorder] Browser support check: MediaRecorder available:",
-      hasMediaRecorder
-    );
-
-    if (hasMediaRecorder) {
-      // Log all supported MIME types
-      const supportedTypes = [
-        "audio/webm;codecs=opus",
-        "audio/webm",
-        "audio/mp4",
-        "audio/mpeg",
-        "audio/wav",
-        "audio/ogg;codecs=opus",
-        "audio/ogg",
-      ];
-      const supportedMimeTypes = supportedTypes.filter((type) =>
-        (window as any).MediaRecorder.isTypeSupported(type)
-      );
-      console.log(
-        "[SpeakingRecorder] Browser support check: Supported MIME types:",
-        supportedMimeTypes
-      );
-
-      const mimeSupported = (window as any).MediaRecorder.isTypeSupported
-        ? (window as any).MediaRecorder.isTypeSupported(MIME)
-        : true;
-      console.log(
-        "[SpeakingRecorder] Browser support check: Target MIME type supported:",
-        MIME,
-        mimeSupported
-      );
-      return mimeSupported ? "idle" : "unsupported";
-    } else {
-      return "unsupported";
-    }
+    // Always start with "idle" to prevent SSR hydration mismatch
+    // Browser support check will happen in useEffect
+    return "idle";
   });
 
   const onStateChangeRef = useRef(onStateChange);
@@ -192,7 +151,7 @@ export default function SpeakingRecorder({
 
   const resetAll = useCallback(() => {
     setError(null);
-    setPhase(typeof window === "undefined" ? "unsupported" : "idle");
+    setPhase("idle"); // Always reset to idle since we check support in useEffect
     setPrepRemainingMs(prepMs);
     setRecordElapsedMs(0);
     clearPrepInterval();
@@ -439,6 +398,50 @@ export default function SpeakingRecorder({
     };
   }, []);
 
+  // Check browser support on mount
+  useEffect(() => {
+    const hasMediaRecorder =
+      typeof (window as any).MediaRecorder !== "undefined";
+    console.log(
+      "[SpeakingRecorder] Browser support check on mount: MediaRecorder available:",
+      hasMediaRecorder
+    );
+
+    if (hasMediaRecorder) {
+      // Log all supported MIME types
+      const supportedTypes = [
+        "audio/webm;codecs=opus",
+        "audio/webm",
+        "audio/mp4",
+        "audio/mpeg",
+        "audio/wav",
+        "audio/ogg;codecs=opus",
+        "audio/ogg",
+      ];
+      const supportedMimeTypes = supportedTypes.filter((type) =>
+        (window as any).MediaRecorder.isTypeSupported(type)
+      );
+      console.log(
+        "[SpeakingRecorder] Browser support check on mount: Supported MIME types:",
+        supportedMimeTypes
+      );
+
+      const mimeSupported = (window as any).MediaRecorder.isTypeSupported
+        ? (window as any).MediaRecorder.isTypeSupported(MIME)
+        : true;
+      console.log(
+        "[SpeakingRecorder] Browser support check on mount: Target MIME type supported:",
+        MIME,
+        mimeSupported
+      );
+      if (!mimeSupported) {
+        setPhase("unsupported");
+      }
+    } else {
+      setPhase("unsupported");
+    }
+  }, [setPhase]);
+
   // NEW: Auto orchestration effect
   useEffect(() => {
     if (!auto) return;
@@ -602,6 +605,10 @@ export default function SpeakingRecorder({
       <div className="flex flex-col items-center text-center space-y-2">
         <span className="text-muted-foreground text-sm">
           Mode: {type.replaceAll("_", " ")}
+        {(() => {
+          console.log("[SpeakingRecorder] Render: state =", state, "window defined =", typeof window !== "undefined");
+          return null;
+        })()}
         </span>
         {state === "prepping" ? (
           <span aria-live="polite" className="text-sm font-medium">

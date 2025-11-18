@@ -41,13 +41,18 @@ export async function GET(
     }
 
     // 2) Compute prev/next within same type ordered by createdAt, id (ASC)
+    // Convert Date to ISO string for SQL comparison
+    const createdAtISO =
+      question.createdAt instanceof Date
+        ? question.createdAt.toISOString()
+        : question.createdAt
     const prevRow = await db
       .select({ id: readingQuestions.id })
       .from(readingQuestions)
       .where(
         and(
           eq(readingQuestions.type, question.type),
-          sql`(${readingQuestions.createdAt} < ${question.createdAt} OR (${readingQuestions.createdAt} = ${question.createdAt} AND ${readingQuestions.id} < ${question.id}))`
+          sql`(${readingQuestions.createdAt} < ${createdAtISO} OR (${readingQuestions.createdAt} = ${createdAtISO} AND ${readingQuestions.id} < ${question.id}))`
         )
       )
       .orderBy(desc(readingQuestions.createdAt), desc(readingQuestions.id))
@@ -59,7 +64,7 @@ export async function GET(
       .where(
         and(
           eq(readingQuestions.type, question.type),
-          sql`(${readingQuestions.createdAt} > ${question.createdAt} OR (${readingQuestions.createdAt} = ${question.createdAt} AND ${readingQuestions.id} > ${question.id}))`
+          sql`(${readingQuestions.createdAt} > ${createdAtISO} OR (${readingQuestions.createdAt} = ${createdAtISO} AND ${readingQuestions.id} > ${question.id}))`
         )
       )
       .orderBy(asc(readingQuestions.createdAt), asc(readingQuestions.id))

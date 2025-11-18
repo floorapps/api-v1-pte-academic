@@ -29,6 +29,7 @@ export async function GET(
     }
     const { id } = parsed.data
 
+    console.log(`[API] Fetching speaking question with ID: ${id}`)
     // 1) Fetch question
     const rows = await db
       .select()
@@ -37,8 +38,11 @@ export async function GET(
       .limit(1)
     const question = rows[0]
     if (!question) {
+      console.log(`[API] Question not found for ID: ${id}`)
       return error(404, 'Question not found', 'NOT_FOUND')
     }
+    console.log(`[API] Question found: ${question.id}, type: ${question.type}`)
+    console.log(`[API] Question isActive: ${question.isActive}`)
 
     // 2) Compute prev/next within same type ordered by createdAt, id (ASC)
     // Convert Date to ISO string for SQL comparison

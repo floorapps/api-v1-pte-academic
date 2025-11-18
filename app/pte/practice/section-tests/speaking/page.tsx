@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { use, useEffect, useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+import { use, useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import {
   ArrowLeft,
   CheckCircle,
@@ -10,54 +10,54 @@ import {
   RotateCcw,
   Volume2,
   XCircle,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { initialCategories } from '@/lib/pte/data'
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { initialCategories } from "@/lib/pte/data";
 
 // Define types for our speaking questions
 type SpeakingQuestion = {
-  id: string
-  title: string
-  description: string
-  instructions: string
-  example?: string
-  tips?: string[]
-  duration: number // in seconds
-  category: string
-  audioUrl?: string
-  imageUrl?: string
-}
+  id: string;
+  title: string;
+  description: string;
+  instructions: string;
+  example?: string;
+  tips?: string[];
+  duration: number; // in seconds
+  category: string;
+  audioUrl?: string;
+  imageUrl?: string;
+};
 
 type SpeakingTab = {
-  id: string
-  title: string
-  shortName: string
-  description: string
-  icon: string
-  color: string
-  question_count?: number
-  questions: SpeakingQuestion[]
-}
+  id: string;
+  title: string;
+  shortName: string;
+  description: string;
+  icon: string;
+  color: string;
+  question_count?: number;
+  questions: SpeakingQuestion[];
+};
 
 interface SpeakingPracticePageProps {
   params: Promise<{
-    category: string
-  }>
+    category: string;
+  }>;
 }
 
 export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
-  const params = use(props.params)
-  const { category } = params
-  const [activeTab, setActiveTab] = useState(category || 'read-aloud')
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [audioPlaying, setAudioPlaying] = useState(false)
-  const [recording, setRecording] = useState(false)
-  const [timer, setTimer] = useState(0)
-  const [timerActive, setTimerActive] = useState(false)
-  const [speakingData, setSpeakingData] = useState<SpeakingTab[]>([])
-  const [loading, setLoading] = useState(true)
+  const params = use(props.params);
+  const { category } = params;
+  const [activeTab, setActiveTab] = useState(category || "read-aloud");
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
+  const [speakingData, setSpeakingData] = useState<SpeakingTab[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Fetch and transform the speaking data from initialCategories
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
       // Get all speaking categories (where parent is 1 - the speaking parent)
       const speakingCategories = initialCategories.filter(
         (cat) => cat.parent === 1
-      )
+      );
 
       // Transform to the format expected by our component
       const transformedData: SpeakingTab[] = speakingCategories.map((cat) => ({
@@ -74,10 +74,10 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
         shortName: cat.short_name || cat.code.toUpperCase(),
         description: cat.description,
         icon: cat.icon,
-        color: cat.color || '#6366f1', // Default blue color if none provided
+        color: cat.color || "#6366f1", // Default blue color if none provided
         question_count: cat.question_count,
         questions: [], // For now, we'll use placeholder questions
-      }))
+      }));
 
       // For now, create some placeholder questions for each category
       const dataWithQuestions = transformedData.map((tab) => ({
@@ -86,70 +86,72 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
           id: `${tab.id}-${i + 1}`,
           title: `${tab.title} Practice Question ${i + 1}`,
           description: tab.description,
-          instructions: `Instructions for ${tab.title}. This is question ${i + 1} in the ${tab.title} category.`,
+          instructions: `Instructions for ${tab.title}. This is question ${
+            i + 1
+          } in the ${tab.title} category.`,
           example: `This is a sample ${tab.title} example`,
-          tips: ['Sample tip 1', 'Sample tip 2'],
-          duration: tab.id.includes('read-aloud')
+          tips: ["Sample tip 1", "Sample tip 2"],
+          duration: tab.id.includes("read-aloud")
             ? 40
-            : tab.id.includes('repeat-sentence')
-              ? 15
-              : tab.id.includes('describe-image')
-                ? 65
-                : tab.id.includes('retell-lecture')
-                  ? 50
-                  : tab.id.includes('answer-short-question')
-                    ? 10
-                    : 40,
+            : tab.id.includes("repeat-sentence")
+            ? 15
+            : tab.id.includes("describe-image")
+            ? 65
+            : tab.id.includes("retell-lecture")
+            ? 50
+            : tab.id.includes("answer-short-question")
+            ? 10
+            : 40,
           category: tab.id,
         })),
-      }))
+      }));
 
-      setSpeakingData(dataWithQuestions)
-      setLoading(false)
-    }
+      setSpeakingData(dataWithQuestions);
+      setLoading(false);
+    };
 
-    fetchSpeakingData()
-  }, [])
+    fetchSpeakingData();
+  }, []);
 
   // Get the current tab data
-  const currentTab = speakingData.find((tab) => tab.id === activeTab)
-  const currentQuestion = currentTab?.questions[currentQuestionIndex]
+  const currentTab = speakingData.find((tab) => tab.id === activeTab);
+  const currentQuestion = currentTab?.questions[currentQuestionIndex];
 
   // Handle starting the question
   const startQuestion = () => {
-    setTimerActive(true)
+    setTimerActive(true);
 
     // Start timer based on question duration
-    let timeLeft = currentQuestion?.duration || 40
-    setTimer(timeLeft)
+    let timeLeft = currentQuestion?.duration || 40;
+    setTimer(timeLeft);
 
     const timerInterval = setInterval(() => {
-      timeLeft -= 1
-      setTimer(timeLeft)
+      timeLeft -= 1;
+      setTimer(timeLeft);
 
       if (timeLeft <= 0) {
-        clearInterval(timerInterval)
-        setTimerActive(false)
+        clearInterval(timerInterval);
+        setTimerActive(false);
       }
-    }, 1000)
-  }
+    }, 1000);
+  };
 
   // Handle recording
   const toggleRecording = () => {
     if (!recording) {
-      startQuestion() // Start the timer when recording starts
+      startQuestion(); // Start the timer when recording starts
     }
-    setRecording(!recording)
-  }
+    setRecording(!recording);
+  };
 
   // Handle audio playback
   const playAudio = () => {
-    setAudioPlaying(true)
+    setAudioPlaying(true);
     // Simulate audio playback
     setTimeout(() => {
-      setAudioPlaying(false)
-    }, 2000)
-  }
+      setAudioPlaying(false);
+    }, 2000);
+  };
 
   // Navigate to next question
   const nextQuestion = () => {
@@ -157,26 +159,26 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
       currentQuestion &&
       currentQuestionIndex < currentTab!.questions.length - 1
     ) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1)
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
-  }
+  };
 
   // Navigate to previous question
   const prevQuestion = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1)
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
-  }
+  };
 
   // Reset timer when question changes
   useEffect(() => {
     if (currentQuestion) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset timer value on question change
-      setTimer(currentQuestion.duration)
+      setTimer(currentQuestion.duration);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset active flag on question change
-      setTimerActive(false)
+      setTimerActive(false);
     }
-  }, [currentQuestionIndex, currentQuestion])
+  }, [currentQuestionIndex, currentQuestion]);
 
   if (loading || !currentTab || !currentQuestion) {
     return (
@@ -200,7 +202,7 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -270,8 +272,8 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
                           key={question.id}
                           className={`cursor-pointer rounded p-3 transition-colors ${
                             index === currentQuestionIndex
-                              ? 'bg-primary/10 border-primary border'
-                              : 'hover:bg-muted'
+                              ? "bg-primary/10 border-primary border"
+                              : "hover:bg-muted"
                           }`}
                           onClick={() => setCurrentQuestionIndex(index)}
                         >
@@ -329,14 +331,14 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
                       )}
 
                       {/* Content based on question type */}
-                      {tab.id === 's_read_aloud' && (
+                      {tab.id === "s_read_aloud" && (
                         <div className="bg-muted rounded-md p-4 text-lg leading-relaxed">
                           {currentQuestion.example ||
-                            'Please read the text aloud as naturally as possible.'}
+                            "Please read the text aloud as naturally as possible."}
                         </div>
                       )}
 
-                      {tab.id === 's_describe_image' && (
+                      {tab.id === "s_describe_image" && (
                         <div className="flex flex-col items-center">
                           <div className="flex h-64 w-full items-center justify-center rounded-xl border-2 border-dashed bg-gray-200">
                             <span className="text-gray-500">
@@ -345,15 +347,15 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
                           </div>
                           <p className="text-muted-foreground mt-4 text-center">
                             {currentQuestion.example ||
-                              'Describe the image in detail.'}
+                              "Describe the image in detail."}
                           </p>
                         </div>
                       )}
 
-                      {(tab.id === 's_repeat_sentence' ||
-                        tab.id === 's_retell_lecture' ||
-                        tab.id === 's_short_question' ||
-                        tab.id === 's_respond_situation_academic') && (
+                      {(tab.id === "s_repeat_sentence" ||
+                        tab.id === "s_retell_lecture" ||
+                        tab.id === "s_short_question" ||
+                        tab.id === "s_respond_situation_academic") && (
                         <div className="flex flex-col items-center space-y-4">
                           <div className="flex h-32 w-full items-center justify-center rounded-xl border-2 border-dashed bg-gray-200">
                             <span className="text-gray-500">Audio Content</span>
@@ -392,7 +394,9 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
                           <div
                             className="bg-primary h-full transition-all duration-1000"
                             style={{
-                              width: `${(timer / currentQuestion.duration) * 100}%`,
+                              width: `${
+                                (timer / currentQuestion.duration) * 100
+                              }%`,
                               backgroundColor: tab.color,
                             }}
                           />
@@ -406,17 +410,19 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
                           disabled={audioPlaying}
                         >
                           <Volume2 className="mr-2 h-4 w-4" />
-                          {audioPlaying ? 'Playing...' : 'Listen'}
+                          {audioPlaying ? "Playing..." : "Listen"}
                         </Button>
 
                         <Button
                           onClick={toggleRecording}
-                          variant={recording ? 'destructive' : 'default'}
+                          variant={recording ? "destructive" : "default"}
                         >
                           <Mic
-                            className={`mr-2 h-4 w-4 ${recording ? 'animate-pulse' : ''}`}
+                            className={`mr-2 h-4 w-4 ${
+                              recording ? "animate-pulse" : ""
+                            }`}
                           />
-                          {recording ? 'Stop Recording' : 'Start Recording'}
+                          {recording ? "Stop Recording" : "Start Recording"}
                         </Button>
                       </div>
 
@@ -498,5 +504,5 @@ export default function SpeakingPracticePage(props: SpeakingPracticePageProps) {
         ))}
       </Tabs>
     </div>
-  )
+  );
 }

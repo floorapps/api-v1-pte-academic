@@ -1,4 +1,4 @@
-import { LoadingSkeleton } from '@/components/pte/loading-skeleton'
+import { LoadingSkeleton } from "@/components/pte/loading-skeleton";
 
 export default function Loading() {
   // Next 16: streaming fallback for dynamic segment to enable partial prefetch + instant nav
@@ -30,5 +30,5 @@ export default function Loading() {
         </div>
       </div>
     </div>
-  )
+  );
 }

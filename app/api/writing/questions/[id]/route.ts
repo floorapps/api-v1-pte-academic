@@ -41,32 +41,39 @@ export async function GET(
       return error(404, 'Question not found', 'NOT_FOUND')
     }
 
+    console.log('Fetched question:', { id: question.id, createdAt: question.createdAt, type: typeof question.createdAt })
+    const createdAtStr = question.createdAt.toISOString()
+    console.log('createdAtStr:', createdAtStr)
+
     // 2) Compute prev/next within same type ordered by createdAt, id
+    console.log('About to run prev query')
     const prevRow = await db
       .select({ id: writingQuestions.id })
       .from(writingQuestions)
       .where(
         and(
           eq(writingQuestions.type, question.type),
-          sql`(${writingQuestions.createdAt} < ${question.createdAt} OR (${writingQuestions.createdAt} = ${question.createdAt} AND ${writingQuestions.id} < ${question.id}))`
+          sql`(${writingQuestions.createdAt} < ${createdAtStr} OR (${writingQuestions.createdAt} = ${createdAtStr} AND ${writingQuestions.id} < ${question.id}))`
         )
       )
       .orderBy(desc(writingQuestions.createdAt), desc(writingQuestions.id))
       .limit(1)
 
-    const nextRow = await db
+   console.log('Prev query done, about to run next query')
+   const nextRow = await db
       .select({ id: writingQuestions.id })
       .from(writingQuestions)
       .where(
         and(
           eq(writingQuestions.type, question.type),
-          sql`(${writingQuestions.createdAt} > ${question.createdAt} OR (${writingQuestions.createdAt} = ${question.createdAt} AND ${writingQuestions.id} > ${question.id}))`
+          sql`(${writingQuestions.createdAt} > ${createdAtStr} OR (${writingQuestions.createdAt} = ${createdAtStr} AND ${writingQuestions.id} > ${question.id}))`
         )
       )
       .orderBy(asc(writingQuestions.createdAt), asc(writingQuestions.id))
       .limit(1)
 
-    const res = NextResponse.json(
+   console.log('Next query done, about to create response')
+   const res = NextResponse.json(
       {
         question,
         prevId: prevRow[0]?.id ?? null,

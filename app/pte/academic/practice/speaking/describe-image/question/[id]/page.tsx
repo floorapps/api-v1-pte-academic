@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { headers } from 'next/headers'
 import { db } from '@/lib/db/drizzle'
 import { speakingQuestions } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
@@ -8,6 +9,8 @@ import SpeakingAttempt from '@/components/pte/attempt/SpeakingAttempt'
 import { AcademicPracticeHeader } from '@/components/pte/practice-header'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+
+export const dynamic = 'force-dynamic'
 
 type Params = {
   params: Promise<{ id: string }>
@@ -49,7 +52,10 @@ type SpeakingQuestion = {
 
 async function fetchQuestion(id: string): Promise<SpeakingQuestion | null> {
   try {
-    const res = await fetch(`/api/speaking/questions/${id}`)
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
+    const host = (await headers()).get('host')
+    const url = `${protocol}://${host}/api/speaking/questions/${id}`
+    const res = await fetch(url)
     if (!res.ok) {
       if (res.status === 404) return null
       throw new Error(`Failed to fetch question: ${res.status}`)
