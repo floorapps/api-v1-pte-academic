@@ -3,6 +3,8 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { toast } from 'sonner'
 import {
   IconBook,
   IconBulb,
@@ -93,6 +95,15 @@ export default function DashboardPage() {
   const { data: featureStats } = useSWR('/api/dashboard/feature-stats', fetcher)
   const { data: studyToolsProgress } = useSWR('/api/dashboard/study-tools-progress', fetcher)
   const { data: user, error: userError } = useSWR<UIUser>('/api/user', fetcher)
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    if (searchParams.get('loggedin')) {
+      toast.success('Logged in successfully!')
+      // Remove the query param to avoid showing the toast on refresh.
+      window.history.replaceState(null, '', window.location.pathname)
+    }
+  }, [searchParams])
 
   if (userError) return <div>Failed to load dashboard data.</div>
   if (!user) return <div>Loading...</div>

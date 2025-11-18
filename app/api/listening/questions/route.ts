@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { and, desc, eq, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, sql } from 'drizzle-orm'
 import { db } from '@/lib/db/drizzle'
 import { listeningQuestions } from '@/lib/db/schema'
 import { ListeningListQuerySchema, normalizeDifficulty } from '../schemas'

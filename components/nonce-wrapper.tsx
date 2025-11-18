@@ -3,6 +3,7 @@ import { NonceProvider } from './nonce-provider'
 import { RollbarProvider } from './providers/rollbar-provider'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { ThemeProvider } from './theme-provider'
+import { ToastProvider } from './toast-provider'
 
 export async function NonceWrapper({
   children,
@@ -22,6 +23,7 @@ export async function NonceWrapper({
             disableTransitionOnChange
           >
             {children}
+            <ToastProvider />
           </ThemeProvider>
         </NuqsAdapter>
       </RollbarProvider>

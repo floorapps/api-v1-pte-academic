@@ -36,7 +36,7 @@ export async function signInAction(prevState: unknown, formData: FormData) {
       }
     }
 
-    redirect(redirectUrl)
+    redirect(`${redirectUrl}?loggedin=true`)
   } catch (error) {
     return {
       error: 'An error occurred during sign in. Please try again.',
@@ -79,7 +79,7 @@ export async function signUpAction(prevState: unknown, formData: FormData) {
       }
     }
 
-    redirect(redirectUrl)
+    redirect(`${redirectUrl}?loggedin=true`)
   } catch (error) {
     console.error('Sign up error:', error)
     return {

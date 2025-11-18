@@ -4,7 +4,7 @@
   "type": "module",
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": " next build",
     "start": "next start",
     "lint": "eslint",
@@ -28,11 +28,9 @@
     "postbuild": "echo '✅ Build completed successfully!'"
   },
   "dependencies": {
-    "@11labs/client": "^0.2.0",
     "@ai-sdk/openai": "^2.0.65",
     "@ai-sdk/react": "^2.0.93",
-    "@elevenlabs/client": "^0.11.0",
-    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@genkit-ai/mcp": "^1.23.0",
     "@neondatabase/serverless": "^1.0.2",
     "@polar-sh/nextjs": "^0.7.0",
     "@polar-sh/sdk": "^0.41.4",
@@ -61,7 +59,6 @@
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.43.1",
-    "elevenlabs": "^1.59.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "framer-motion": "^12.23.24",
@@ -83,6 +80,7 @@
     "resend": "^6.4.2",
     "rollbar": "^2.26.5",
     "server-only": "^0.0.1",
+    "sonner": "^2.0.7",
     "swr": "^2.3.3",
     "tailwind-merge": "^3.3.0",
     "zod": "^3.24.4",

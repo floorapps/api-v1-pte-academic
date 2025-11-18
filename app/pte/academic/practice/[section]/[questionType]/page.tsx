@@ -13,9 +13,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { initialCategories } from "@/lib/pte/data";
-
-
-
 import { Star } from "lucide-react";
 import {
   Pagination,
@@ -25,6 +22,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { SortableTableHeader } from "@/components/ui/sortable-table-header";
+import { BookmarkButton } from "@/components/ui/bookmark-button";
 
 function capitalize(s?: string | null) {
   if (!s) return "Medium";
@@ -52,28 +51,10 @@ function toKebab(v: string) {
   return v.replace(/_/g, "-");
 }
 
-export default async function PracticeListPage({ params, searchParams }: Params) {
-  const { section: rawSection, questionType } = await params;
-  const section = (rawSection ?? "").toLowerCase();
-
-  const page = Number(searchParams?.page || 1);
-
-  // Validate questionType exists in known categories
-  const typeCat = initialCategories.find((cat) => cat.code === questionType);
-  if (!typeCat) notFound();
-
-  // Validate parent mapping to section
-  const parentCat = initialCategories.find((cat) => cat.id === typeCat.parent);
-  if (!parentCat || parentCat.code !== section) notFound();
-
-import { SortableTableHeader } from "@/components/ui/sortable-table-header";
-import { BookmarkButton } from "@/components/ui/bookmark-button";
-
-// ... (imports)
-
-// ... (capitalize, Params, S_CODE_TO_SPEAKING, toKebab)
-
-export default async function PracticeListPage({ params, searchParams }: Params) {
+export default async function PracticeListPage({
+  params,
+  searchParams,
+}: Params) {
   const { section: rawSection, questionType } = await params;
   const section = (rawSection ?? "").toLowerCase();
 
@@ -685,7 +666,7 @@ export default async function PracticeListPage({ params, searchParams }: Params)
     );
   }
 
-    // Listening branch: use /api/listening/questions
+  // Listening branch: use /api/listening/questions
   if (section === "listening") {
     const listeningTypeMap: Record<string, string> = {
       l_summarize_text: "summarize_spoken_text",

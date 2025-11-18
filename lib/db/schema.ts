@@ -527,7 +527,9 @@ export const speakingTemplates = pgTable(
   },
   (table) => ({
     idxType: index('idx_speaking_templates_type').on(table.type),
-    idxRecommended: index('idx_speaking_templates_recommended').on(table.isRecommended),
+    idxRecommended: index('idx_speaking_templates_recommended').on(
+      table.isRecommended
+    ),
   })
 )
 
@@ -632,6 +634,22 @@ export const writingAttempts = pgTable(
 )
 
 // Listening system tables
+
+export const pteCategories = pgTable('pte_categories', {
+  id: integer('id').primaryKey(),
+  title: text('title').notNull(),
+  description: text('description'),
+  icon: text('icon'),
+  code: text('code').notNull(),
+  scoring_type: text('scoring_type'),
+  short_name: text('short_name'),
+  first_question_id: integer('first_question_id'),
+  color: text('color'),
+  parent: integer('parent'),
+  practice_count: integer('practice_count').default(0),
+  question_count: integer('question_count').default(0),
+  video_link: text('video_link'),
+})
 
 export const listeningQuestions = pgTable(
   'listening_questions',
@@ -837,7 +855,9 @@ export const conversationTurns = pgTable(
     createdAt: timestamp('created_at').defaultNow().notNull(),
   },
   (table) => ({
-    sessionIdIdx: index('idx_conversation_turns_session_id').on(table.sessionId),
+    sessionIdIdx: index('idx_conversation_turns_session_id').on(
+      table.sessionId
+    ),
     turnIndexIdx: index('idx_conversation_turns_turn_index').on(
       table.turnIndex
     ),
@@ -1072,19 +1092,16 @@ export const conversationAttemptLinksRelations = relations(
   })
 )
 
-export const aiCreditUsageRelations = relations(
-  aiCreditUsage,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [aiCreditUsage.userId],
-      references: [users.id],
-    }),
-    session: one(conversationSessions, {
-      fields: [aiCreditUsage.sessionId],
-      references: [conversationSessions.id],
-    }),
-  })
-)
+export const aiCreditUsageRelations = relations(aiCreditUsage, ({ one }) => ({
+  user: one(users, {
+    fields: [aiCreditUsage.userId],
+    references: [users.id],
+  }),
+  session: one(conversationSessions, {
+    fields: [aiCreditUsage.sessionId],
+    references: [conversationSessions.id],
+  }),
+}))
 
 export const pteTestsRelations = relations(pteTests, ({ many }) => ({
   questions: many(pteQuestions),

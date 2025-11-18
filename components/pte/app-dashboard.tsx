@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useTransition, useDeferredValue } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
@@ -14,12 +14,9 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { initialCategories } from '@/lib/pte/data'
-import {
-  getQuestionsBySection,
-  pteScoreBreakdown,
-} from '@/lib/pte/score-breakdown'
+import { pteScoreBreakdown } from '@/lib/pte/score-breakdown'
 
 type SectionKey = 'speaking' | 'writing' | 'reading' | 'listening'
 
@@ -50,11 +47,32 @@ const speakingCodeToPath: Record<string, string> = {
 
 export function OnePTEDashboard() {
   const [activeSection, setActiveSection] = useState<SectionKey>('speaking')
+  const [allCategories, setAllCategories] = useState<any[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isPending, startTransition] = useTransition()
+  const deferredSearchTerm = useDeferredValue(searchTerm)
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await fetch('/api/pte/categories')
+      const data = await res.json()
+      setAllCategories(data)
+    }
+    fetchCategories()
+  }, [])
 
   const items = useMemo(() => {
     const id = SECTION_META[activeSection].id
-    return initialCategories.filter((c) => c.parent === id)
-  }, [activeSection])
+    const sectionCategories = allCategories.filter((c) => c.parent === id)
+
+    if (!deferredSearchTerm) {
+      return sectionCategories
+    }
+
+    return sectionCategories.filter((c) =>
+      c.title.toLowerCase().includes(deferredSearchTerm.toLowerCase())
+    )
+  }, [activeSection, allCategories, deferredSearchTerm])
 
   // Get score breakdown for current section
   const getScoreInfo = (code: string, shortName?: string) => {
@@ -112,6 +130,12 @@ export function OnePTEDashboard() {
     })
   }
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    startTransition(() => {
+      setSearchTerm(e.target.value)
+    })
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="border-b border-gray-200 bg-white px-6 py-4">
@@ -153,8 +177,16 @@ export function OnePTEDashboard() {
             ))}
           </TabsList>
 
+          <div className="mb-6">
+            <Input
+              placeholder="Search for a question type..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </div>
+
           <TabsContent value={activeSection} className="space-y-6">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className={`grid grid-cols-1 gap-6 md:grid-cols-2 ${isPending ? 'opacity-50' : ''}`}>
               {items.map((q) => (
                 <Link
                   key={q.id}
