@@ -36,8 +36,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function BlogPostPage({ params }: PageProps) {
-  const { slug } = await params
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  const { slug } = params
   const post = await strapiClient.getBlogPostBySlug(slug)
 
   if (!post) {

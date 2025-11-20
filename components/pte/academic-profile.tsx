@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useOptimistic, useActionState } from 'react'
+import { useState, useOptimistic, useTransition } from 'react'
 import { useAuth } from '@/lib/auth/auth-client'
 import { updateProfile } from '@/lib/auth/profile-actions'
 import { Button } from '../ui/button'
@@ -37,34 +37,17 @@ export function AcademicProfile({
   const [displayTargetScore, addOptimisticTargetScore] = useOptimistic(targetScore)
   const [displayExamDate, addOptimisticExamDate] = useOptimistic(examDate)
 
-  const updateProfileAction = async (prevState: any, formData: FormData) => {
-    if (!user) {
-      return { error: 'You must be logged in to update your profile' }
-    }
+  const [isPending, startTransition] = useTransition()
 
-    formData.append('name', user.name || user.email.split('@')[0] || 'User')
-    formData.append('email', user.email || '')
-
-    const newTargetScore = formData.get('targetScore')
-    const newExamDate = formData.get('examDate')
-
-    addOptimisticTargetScore(newTargetScore)
-    addOptimisticExamDate(newExamDate)
-
-    const result = await updateProfile(prevState, formData)
-
-    if (result?.success) {
-      setTargetScore(newTargetScore)
-      setExamDate(newExamDate)
-    } else {
-      addOptimisticTargetScore(targetScore)
-      addOptimisticExamDate(examDate)
-    }
-
-    return result
+  const updateProfileAction = async (formData: FormData) => {
+    startTransition(async () => {
+      const result = await updateProfile(null, new FormData())
+      if (result?.error) {
+        // handle error
+      }
+    })
   }
 
-  const [result, action, isPending] = useActionState(updateProfileAction, null)
 
   return (
     <Card>
@@ -75,7 +58,7 @@ export function AcademicProfile({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={action} className="space-y-4">
+        <form action={updateProfileAction} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="targetScore">Target Score</Label>
             <Input
@@ -111,18 +94,6 @@ export function AcademicProfile({
             {isPending ? 'Updating...' : 'Update Profile'}
           </Button>
         </form>
-
-        {result?.success && (
-          <div className="mt-4 rounded-lg bg-green-50 p-4 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-400">
-            {result.success}
-          </div>
-        )}
-
-        {result?.error && (
-          <div className="mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
-            {result.error}
-          </div>
-        )}
       </CardContent>
     </Card>
   )

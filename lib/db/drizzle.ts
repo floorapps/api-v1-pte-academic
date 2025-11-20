@@ -18,7 +18,9 @@ if (!DATABASE_URL) {
 
 // Create a PostgreSQL client with the connection string
 export const client = postgres(DATABASE_URL, {
-  ssl: DATABASE_URL.includes('sslmode=require') ? 'require' : false,
+  ssl: DATABASE_URL.includes('sslmode=require')
+    ? { rejectUnauthorized: false }
+    : false,
   max: 10,
   idle_timeout: 20,
   connect_timeout: 10,

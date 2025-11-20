@@ -5,6 +5,7 @@ import Stats from "@/components/home/Stats";
 import TrustSection from "@/components/home/TrustSection";
 import Testimonials from "@/components/home/Testimonials";
 import PricingPreview from "@/components/home/PricingPreview";
+import BlogVideoCard from "@/components/home/BlogVideoCard";
 import FAQ from "@/components/home/FAQ";
 import CTA from "@/components/home/CTA";
 import Footer from "@/components/home/Footer";
@@ -19,6 +20,7 @@ export default function HomePage() {
       <TrustSection />
       <Testimonials />
       <PricingPreview />
+      <BlogVideoCard />
       <FAQ />
       <CTA />
       <Footer />

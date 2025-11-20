@@ -133,9 +133,8 @@ export async function generateMetadata(props: Params) {
   }
 }
 
-export default async function SummarizeGroupDiscussionQuestionPage(props: Params) {
-  const params = await props.params
-  const id = params.id
+export default async function QuestionPage({ params }: { params: { id: string } }) {
+  const { id } = params
 
   return (
     <div className="bg-background min-h-screen">

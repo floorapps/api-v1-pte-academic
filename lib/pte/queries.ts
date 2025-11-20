@@ -1,95 +1,32 @@
-import 'server-only'
+import { db } from '@/lib/db/drizzle';
+import { speakingQuestions, speakingAttempts, writingAttempts } from '@/lib/db/schema';
+import { eq, and, sql, count } from 'drizzle-orm';
+import { auth } from '@/lib/auth/lucia';
+import * as context from 'next/headers';
 
-import { and, count, eq } from 'drizzle-orm'
-import { db } from '../db/drizzle'
-import {
-  pteQuestions,
-  pteTests,
-  testAttempts,
-  users,
-} from '../db/schema'
-import { auth } from '../auth/auth'
-
-/**
- * Fetches the current authenticated user's session.
- * @returns The user object or null if not authenticated.
- */
-async function getSessionUser() {
-  const session = await auth.getsession()
-  if (!session?.user) {
-    return null
-  }
-  return session.user
+export async function getSpeakingQuestionById(id: string) {
+  const question = await db.select().from(speakingQuestions).where(eq(speakingQuestions.id, id));
+  return question[0];
 }
 
-/**
- * Fetches aggregated statistics for dashboard features.
- * This is a placeholder and should be expanded with real queries.
- */
+export async function listSpeakingAttemptsByUser(userId: string, { limit = 25, offset = 0, questionId }: { limit?: number, offset?: number, questionId?: string }) {
+  const where = questionId ? and(eq(speakingAttempts.userId, userId), eq(speakingAttempts.questionId, questionId)) : eq(speakingAttempts.userId, userId);
+  const attempts = await db.select().from(speakingAttempts).where(where).limit(limit).offset(offset);
+  const total = await db.select({ count: sql<number>`count(*)` }).from(speakingAttempts).where(where);
+  return { items: attempts, total: total[0].count };
+}
+
+export async function getUser() {
+  const session = await auth.getsession();
+  return session?.user;
+}
+
 export async function getFeatureStats() {
-  const user = await getSessionUser()
-  if (!user) {
-    throw new Error('User not authenticated')
-  }
+  const speakingCount = await db.select({ value: count() }).from(speakingAttempts);
+  const writingCount = await db.select({ value: count() }).from(writingAttempts);
 
-  const totalQuestionsQuery = db.select({ value: count() }).from(pteQuestions)
-  const totalMockTestsQuery = db
-    .select({ value: count() })
-    .from(pteTests)
-    .where(eq(pteTests.testType, 'mock'))
-
-  const [totalQuestionsResult, totalMockTestsResult] = await Promise.all([
-    totalQuestionsQuery,
-    totalMockTestsQuery,
-  ])
-
-  const totalQuestions = totalQuestionsResult[0].value
-  const totalMockTests = totalMockTestsResult[0].value
-
-  // The rest of the stats are still mock data.
-  // In a real implementation, these would also be database queries.
-  const featureStats = {
-    ptePractice: {
-      totalQuestions: totalQuestions,
-      sections: {
-        listening: 1200,
-        reading: 1500,
-        speaking: 1200,
-        writing: 1100,
-      },
-      lastUpdated: new Date().toISOString(),
-    },
-    mockTests: {
-      totalTests: totalMockTests,
-      completedByUser: 5,
-      averageScore: 68,
-      lastCompleted: new Date(
-        Date.now() - 7 * 24 * 60 * 60 * 1000
-      ).toISOString(),
-    },
-    templates: {
-      totalTemplates: 20,
-      categories: ['speaking', 'writing', 'reading'],
-      downloads: 150,
-    },
-    studyTools: {
-      vocabBooks: {
-        totalWords: 5000,
-        completedWords: 1200,
-        progress: 24,
-      },
-      shadowing: {
-        totalHours: 50,
-        completedHours: 12,
-        progress: 24,
-      },
-      mp3Files: {
-        totalFiles: 1000,
-        downloadedFiles: 150,
-        progress: 15,
-      },
-    },
-  }
-
-  return featureStats
+  return [
+    { name: 'Speaking', value: speakingCount[0].value },
+    { name: 'Writing', value: writingCount[0].value },
+  ];
 }

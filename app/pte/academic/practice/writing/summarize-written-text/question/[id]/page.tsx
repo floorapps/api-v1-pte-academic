@@ -4,29 +4,8 @@ import { db } from '@/lib/db/drizzle'
 import { writingQuestions } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 
-type Props = {
-  params: Promise<{ id: string }>
-}
-
-// Generate static params for all summarize_written_text questions at build time
-export async function generateStaticParams() {
-  try {
-    const questions = await db
-      .select({ id: writingQuestions.id })
-      .from(writingQuestions)
-      .where(eq(writingQuestions.type, 'summarize_written_text'))
-
-    return questions.map((q) => ({ id: q.id }))
-  } catch (error) {
-    console.error('Error generating static params:', error)
-    return []
-  }
-}
-
-export default async function SummarizeWrittenTextQuestionPage({
-  params,
-}: Props) {
-  const { id } = await params
+export default async function QuestionPage({ params }: { params: { id: string } }) {
+  const { id } = params
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -46,18 +46,8 @@ export default function ProfilePage() {
   const [profileData, setProfileData] = useState<Partial<UIUser>>({})
   const [optimisticUser, setOptimisticUser] = useOptimistic(
     user,
-    (state, update: Partial<UIUser>) => ({ ...state, ...update })
+    (state, update: Partial<UIUser>) => ({ ...state, ...update } as UIUser)
   )
-
-  const updateProfileData = useEffectEvent(() => {
-    if (user) {
-      setProfileData(user)
-    }
-  })
-
-  useEffect(() => {
-    updateProfileData()
-  }, [user])
 
   const saveProfile = async (prevState: any, newData: Partial<UIUser>) => {
     setOptimisticUser(newData)
@@ -73,7 +63,11 @@ export default function ProfilePage() {
       return { success: true }
     } catch (error) {
       console.error('Failed to save profile:', error)
-      setOptimisticUser(user)
+      if (user) {
+        if (user) {
+        setOptimisticUser(user)
+      }
+      }
       return { success: false, error }
     }
   }

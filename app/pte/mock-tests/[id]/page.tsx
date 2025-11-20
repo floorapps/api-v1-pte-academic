@@ -8,8 +8,7 @@ interface MockTestPageProps {
   }>
 }
 
-export default async function MockTestPage(props: MockTestPageProps) {
-  const params = await props.params
+export default async function MockTestPage({ params }: { params: { id: string } }) {
   return <MockTestContent params={params} />
 }
 

@@ -1,13 +1,42 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Menu } from 'lucide-react'
+import { ChevronDown, Menu, Search } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { UserNav } from '@/components/user-nav'
 
 export function HomeHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [query, setQuery] = useState('')
+  const [resultsOpen, setResultsOpen] = useState(false)
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const controllerRef = useRef<AbortController | null>(null)
+  const debouncedQuery = query
+  useEffect(() => {
+    if (!debouncedQuery) {
+      setSearchResults([])
+      setResultsOpen(false)
+      return
+    }
+    if (controllerRef.current) controllerRef.current.abort()
+    const c = new AbortController()
+    controllerRef.current = c
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?query=${encodeURIComponent(debouncedQuery)}`, {
+          signal: c.signal,
+        })
+        const data = await res.json()
+        setSearchResults(Array.isArray(data.results) ? data.results.slice(0, 6) : [])
+        setResultsOpen(true)
+      } catch {}
+    }, 250)
+    return () => clearTimeout(t)
+  }, [debouncedQuery])
 
   return (
     <header className="border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/60 fixed top-0 right-0 left-0 z-50 border-b backdrop-blur">
@@ -23,49 +52,88 @@ export function HomeHeader() {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden items-center gap-6 md:flex">
-            <Link
-              href="#features"
-              className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
-            >
-              Features
+            <Popover>
+              <PopoverTrigger className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors inline-flex items-center gap-1">
+                Explore
+                <ChevronDown className="h-4 w-4" />
+              </PopoverTrigger>
+              <PopoverContent align="start" className="w-[660px] p-0">
+                <div className="grid grid-cols-3 gap-0">
+                  <Link href="#features" className="hover:bg-accent flex flex-col gap-1 p-4">
+                    <span className="text-sm font-semibold">Features</span>
+                    <span className="text-muted-foreground text-xs">Practice, scoring, analytics</span>
+                  </Link>
+                  <Link href="#question-types" className="hover:bg-accent flex flex-col gap-1 p-4">
+                    <span className="text-sm font-semibold">Question Types</span>
+                    <span className="text-muted-foreground text-xs">Speaking, Writing, Reading</span>
+                  </Link>
+                  <Link href="/pricing" className="hover:bg-accent flex flex-col gap-1 p-4">
+                    <span className="text-sm font-semibold">Pricing</span>
+                    <span className="text-muted-foreground text-xs">Plans that fit you</span>
+                  </Link>
+                  <Link href="/blog" className="hover:bg-accent flex flex-col gap-1 p-4">
+                    <span className="text-sm font-semibold">Blog</span>
+                    <span className="text-muted-foreground text-xs">Guides and updates</span>
+                  </Link>
+                  <Link href="/contact" className="hover:bg-accent flex flex-col gap-1 p-4">
+                    <span className="text-sm font-semibold">Contact</span>
+                    <span className="text-muted-foreground text-xs">Get help fast</span>
+                  </Link>
+                  <Link href="/pte/dashboard" className="hover:bg-accent flex flex-col gap-1 p-4">
+                    <span className="text-sm font-semibold">Dashboard</span>
+                    <span className="text-muted-foreground text-xs">Start practicing</span>
+                  </Link>
+                </div>
+              </PopoverContent>
+            </Popover>
+            <Link href="/blog" className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors">
+              Blog
             </Link>
-            <Link
-              href="#question-types"
-              className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
-            >
-              Question Types
+            <Link href="/pricing" className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors">
+              Pricing
             </Link>
-            <Link
-              href="/pte/dashboard"
-              className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
-            >
-              Dashboard
+            <Link href="/contact" className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors">
+              Contact
             </Link>
           </div>
 
-          {/* Actions */}
           <div className="flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-2">
+              <div className="relative w-[340px]">
+                <Input
+                  placeholder="Search blog and practice"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => query && setResultsOpen(true)}
+                  onBlur={() => setTimeout(() => setResultsOpen(false), 200)}
+                  className="pl-8"
+                />
+                <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                {resultsOpen && searchResults.length > 0 && (
+                  <div className="border bg-popover text-popover-foreground absolute left-0 right-0 top-10 z-50 rounded-md shadow-md">
+                    <div className="flex flex-col p-2">
+                      {searchResults.map((r, i) => (
+                        <Link key={i} href={r.url || '/blog'} className="hover:bg-accent rounded-sm px-2 py-2 text-sm">
+                          {r.title || r.name || 'Result'}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
             <ThemeToggle />
             <div className="hidden items-center gap-2 sm:flex">
               <Button asChild variant="ghost" size="sm">
                 <Link href="/sign-in">Sign In</Link>
               </Button>
-              <Button
-                asChild
-                size="sm"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
+              <Button asChild size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 <Link href="/sign-up">Get Started</Link>
               </Button>
+              <UserNav />
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
+            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               <Menu className="h-5 w-5" />
             </Button>
           </div>

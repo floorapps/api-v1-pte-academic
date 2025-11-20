@@ -98,7 +98,13 @@ async function getDatabaseConnection() {
 
   logVerbose(`Connecting to database...`)
 
-  const client = postgres(DATABASE_URL)
+  const client = postgres(DATABASE_URL, {
+    ssl: DATABASE_URL.includes('sslmode=require')
+      ? { rejectUnauthorized: false }
+      : false,
+    max: 1,
+    prepare: false,
+  })
   const db = drizzle(client)
 
   return { client, db }

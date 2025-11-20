@@ -176,7 +176,7 @@ export function PracticeAttemptsClient() {
     fetchAttempts()
   }, [])
 
-  const saveProfile = useCallback(() => saveAction(), [saveAction])
+  const saveProfile = useCallback(() => saveAction({ questionId: '', questionType: '', bookmarked: false }), [saveAction])
 
   // Filter attempts
   const filteredAttempts = useMemo(() => {

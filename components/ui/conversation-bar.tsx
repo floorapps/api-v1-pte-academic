@@ -139,7 +139,7 @@ export function ConversationBar({
               )}
               style={{
                 opacity: isConnected ? Math.max(0.1, audioLevel) : 0.1,
-                transform: `scaleY(${isConnected ? 0.5 + audioLevel * Math.random() : 0.5})`,
+                transform: `scaleY(${isConnected ? 0.5 + audioLevel * (0.3 + 0.7 * Math.sin(i * 0.5 + audioLevel * 2)) : 0.5})`,
               }}
             />
           ))}

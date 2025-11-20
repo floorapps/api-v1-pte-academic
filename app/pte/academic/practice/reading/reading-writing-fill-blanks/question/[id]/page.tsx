@@ -23,10 +23,8 @@ export async function generateStaticParams() {
   }
 }
 
-export default async function ReadingWritingFillBlanksQuestionPage({
-  params,
-}: Props) {
-  const { id } = await params
+export default async function QuestionPage({ params }: { params: { id: string } }) {
+  const { id } = params
 
   return (
     <div className="min-h-screen bg-gray-50">

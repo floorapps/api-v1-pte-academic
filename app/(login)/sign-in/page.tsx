@@ -16,3 +16,15 @@ export default function LoginPage() {
     </div>
   )
 }
+export const metadata = {
+  title: "Sign In | Pedagogist's PTE",
+  description: 'Access your dashboard and continue your practice.',
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "Sign In | Pedagogist's PTE",
+    description: 'Access your dashboard and continue your practice.',
+    url: '/sign-in',
+    siteName: "Pedagogist's PTE",
+    type: 'website',
+  },
+}

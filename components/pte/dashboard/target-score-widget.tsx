@@ -160,7 +160,7 @@ export function TargetScoreWidget({ onUpdate }: TargetScoreWidgetProps) {
                 className="rounded bg-red-50 p-2 text-sm text-red-600"
                 role="alert"
               >
-                {error || useState.error}
+                {error}
               </div>
             )}
 

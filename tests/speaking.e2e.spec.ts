@@ -53,14 +53,14 @@ const SPEAKING_TYPES = [
 ] as const
 
 async function api() {
-  return await request.newContext({
+  return await pwRequest.newContext({
     baseURL: BASE_URL,
     extraHTTPHeaders: { Accept: 'application/json' },
   })
 }
 
 async function getFirstQuestionId(
-  ctx: request.APIRequestContext,
+  ctx: pwRequest.APIRequestContext,
   type: string
 ) {
   const res = await ctx.get(

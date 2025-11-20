@@ -162,13 +162,14 @@ const navigationSections: { title: string; items: NavItem[] }[] = [
 
 interface SidebarMenuItemProps {
   item: NavItem
-  isActive: boolean
   isMobile?: boolean
   onNavigate?: () => void
 }
 
-function SidebarMenuItem({ item, isActive, isMobile = false, onNavigate }: SidebarMenuItemProps) {
+function SidebarMenuItem({ item, isMobile = false, onNavigate }: SidebarMenuItemProps) {
+  const pathname = usePathname()
   const [isExpanded, setIsExpanded] = useState(false)
+  const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
 
   const handleToggle = () => {
     if (item.children) {
@@ -247,13 +248,6 @@ function SidebarMenuItem({ item, isActive, isMobile = false, onNavigate }: Sideb
             <SidebarMenuItem
               key={child.href}
               item={child}
-              'use client'
-import { usePathname } from 'next/navigation'
-// ... other imports
-// ... component code
-const pathname = usePathname()
-// ... later in the component
-isActive={pathname === child.href || pathname?.startsWith(child.href + '/')}
               isMobile={isMobile}
               onNavigate={onNavigate}
             />
@@ -270,8 +264,6 @@ interface DesktopSidebarProps {
 }
 
 function DesktopSidebar({ isCollapsed, onToggleCollapse }: DesktopSidebarProps) {
-  const pathname = usePathname()
-
   return (
     <div
       className={cn(
@@ -325,9 +317,6 @@ function DesktopSidebar({ isCollapsed, onToggleCollapse }: DesktopSidebarProps) 
                   <SidebarMenuItem
                     key={item.href}
                     item={item}
-                    isActive={
-                      pathname === item.href || pathname?.startsWith(item.href + '/')
-                    }
                   />
                 ))}
               </div>
@@ -356,8 +345,6 @@ interface MobileSidebarContentProps {
 }
 
 function MobileSidebarContent({ onNavigate }: MobileSidebarContentProps) {
-  const pathname = usePathname()
-
   return (
     <nav className="space-y-6 px-3 py-4">
       {navigationSections.map((section) => (
@@ -369,7 +356,6 @@ function MobileSidebarContent({ onNavigate }: MobileSidebarContentProps) {
             <SidebarMenuItem
               key={item.href}
               item={item}
-              isActive={pathname === item.href || pathname?.startsWith(item.href + '/')}
               isMobile={true}
               onNavigate={onNavigate}
             />

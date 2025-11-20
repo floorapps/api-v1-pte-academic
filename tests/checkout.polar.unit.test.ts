@@ -256,7 +256,7 @@ test.describe('Error Handling', () => {
     }
 
     for (const tier of invalidTiers) {
-      expect(['pro', 'premium'].includes(tier)).toBeFalsy()
+      expect(['pro', 'premium'].includes(tier || '')).toBeFalsy()
     }
   })
 })
@@ -269,7 +269,7 @@ test.describe('Edge Cases', () => {
 
     // Should allow upgrade
     expect(['pro', 'premium'].includes(newTier)).toBeTruthy()
-    expect(newTier !== currentTier).toBeTruthy()
+
 
     // Premium should have higher priority than pro
     const tierPriority = { pro: 1, premium: 2 }

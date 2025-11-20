@@ -15,13 +15,14 @@ interface CheckoutPageProps {
   }>
 }
 
-export default function CheckoutPage({ params }: CheckoutPageProps) {
-  const router = useRouter()
-  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'polar' | null>(null)
+export default async function CheckoutPage({
+  params,
+}: {
+  params: { tier: string };
+}) {
+  const { tier: tierParam } = params
   const [isLoading, setIsLoading] = useState(false)
-
-  // Unwrap params Promise using React.use()
-  const { tier: tierParam } = use(params)
+  const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
   const tier = tierParam as SubscriptionTier
 
   if (!['pro', 'premium'].includes(tier)) {
@@ -202,7 +203,7 @@ export default function CheckoutPage({ params }: CheckoutPageProps) {
 
               {/* Checkout Button */}
               <Button
-                onClick={() => selectedProvider && handleCheckout(selectedProvider)}
+                onClick={() => selectedProvider && handleCheckout(selectedProvider as 'stripe' | 'polar')}
                 disabled={!selectedProvider || isLoading}
                 className="w-full"
                 size="lg"

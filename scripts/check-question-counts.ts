@@ -72,7 +72,7 @@ async function checkQuestionCounts() {
     console.log('  No sync jobs found')
   } else {
     recentJobs.forEach(job => {
-      console.log(`  ${job.jobType} ${job.questionType}: ${job.status} (${job.createdAt})`)
+             console.log(`  ${job.jobType} ${job.questionType}: ${job.status} (${(job as any).createdAt})`);
       if (job.stats) {
         console.log(`    Stats: ${JSON.stringify(job.stats)}`)
       }

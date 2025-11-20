@@ -5,6 +5,30 @@ export const rollbarConfig = {
   environment: process.env.NODE_ENV || 'development',
   captureUncaught: true,
   captureUnhandledRejections: true,
+  checkIgnore: function (_isUncaught: boolean, _args: any, payload: any) {
+    try {
+      const msg =
+        payload?.body?.message?.body ||
+        payload?.body?.trace?.exception?.message ||
+        payload?.body?.trace_chain?.[0]?.exception?.message ||
+        ''
+      const name =
+        payload?.body?.trace?.exception?.class ||
+        payload?.body?.trace_chain?.[0]?.exception?.class ||
+        ''
+
+      const text = String(msg || name || '').toLowerCase()
+      if (
+        text.includes('aborterror') ||
+        text.includes('err_aborted') ||
+        text.includes('navigation aborted') ||
+        text.includes('the user aborted a request')
+      ) {
+        return true
+      }
+    } catch {}
+    return false
+  },
   payload: {
     client: {
       javascript: {

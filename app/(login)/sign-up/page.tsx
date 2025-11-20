@@ -9,3 +9,15 @@ export default function SignupPage() {
     </div>
   )
 }
+export const metadata = {
+  title: "Sign Up | Pedagogist's PTE",
+  description: 'Create your account and start practicing with AI scoring.',
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "Sign Up | Pedagogist's PTE",
+    description: 'Create your account and start practicing with AI scoring.',
+    url: '/sign-up',
+    siteName: "Pedagogist's PTE",
+    type: 'website',
+  },
+}

@@ -42,7 +42,7 @@ async function fetchWritingQuestion(id: string) {
   }
 }
 
-export default async function WriteEssayQuestionPage({ params }: Props) {
+export default async function QuestionPage({ params }: { params: { id: string } }) {
   const { id } = await params
   const q = await fetchWritingQuestion(id)
 

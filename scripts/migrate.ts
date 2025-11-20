@@ -16,7 +16,13 @@ async function main() {
   }
 
   // Single connection for migrations
-  const client = postgres(DATABASE_URL, { max: 1, prepare: false })
+  const client = postgres(DATABASE_URL, {
+    max: 1,
+    prepare: false,
+    ssl: DATABASE_URL.includes('sslmode=require')
+      ? { rejectUnauthorized: false }
+      : false,
+  })
   const db = drizzle(client)
 
   // Resolve absolute path to migrations folder

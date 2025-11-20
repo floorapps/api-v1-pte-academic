@@ -1,4 +1,5 @@
 import { questionListingCache } from '@/lib/parsers'
+import { headers } from 'next/headers'
 
 type Section = 'speaking' | 'reading' | 'writing' | 'listening'
 
@@ -14,7 +15,16 @@ export async function fetchListingQuestions(
   const { page, pageSize, difficulty, search, isActive } =
     questionListingCache.parse(searchParams)
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_APP_URL}/api/${section}/questions`)
+  const h = headers()
+  const proto = h.get('x-forwarded-proto') ?? 'http'
+  const host = h.get('x-forwarded-host') ?? h.get('host')
+  const base =
+    process.env.NEXT_PUBLIC_APP_URL && /^https?:\/\/.+/.test(process.env.NEXT_PUBLIC_APP_URL)
+      ? process.env.NEXT_PUBLIC_APP_URL
+      : host
+        ? `${proto}://${host}`
+        : `http://localhost:${process.env.PORT ?? 3000}`
+  const url = new URL(`/api/${section}/questions`, base)
   url.searchParams.set('type', questionType)
   url.searchParams.set('page', page.toString())
   url.searchParams.set('pageSize', pageSize.toString())
