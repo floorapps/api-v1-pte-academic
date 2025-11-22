@@ -75,7 +75,7 @@ export const clientCookies = {
         const expiryDate = new Date()
         expiryDate.setDate(expiryDate.getDate() + COOKIE_CONSENT_EXPIRY)
 
-        document.cookie = `${COOKIE_CONSENT_NAME}=${encodeURIComponent(JSON.parse(consent))}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`
+        document.cookie = `${COOKIE_CONSENT_NAME}=${encodeURIComponent(JSON.stringify(consent))}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`
     },
 
     hasConsent(category: keyof CookieConsent): boolean {

@@ -10,12 +10,14 @@ export type ScoringResult = {
 
 export type ProviderMetadata = {
   provider:
-    | 'openai'
-    | 'gemini'
-    | 'vercel'
-    | 'deterministic'
-    | 'heuristic'
-    | 'unknown'
+  | 'openai'
+  | 'gemini'
+  | 'vercel'
+  | 'google-genai'
+  | 'groq'
+  | 'deterministic'
+  | 'heuristic'
+  | 'unknown'
   model?: string
   latencyMs?: number
   requestId?: string
@@ -192,11 +194,11 @@ export function mergeProviderScores(
     const overall =
       overallCandidates.length > 0
         ? clampTo90(
-            overallCandidates.reduce(
-              (a, b) => a + (b > 90 ? scaleTo90(b, 0, 100) : b),
-              0
-            ) / overallCandidates.length
-          )
+          overallCandidates.reduce(
+            (a, b) => a + (b > 90 ? scaleTo90(b, 0, 100) : b),
+            0
+          ) / overallCandidates.length
+        )
         : 0
     return {
       overall,

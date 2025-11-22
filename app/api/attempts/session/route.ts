@@ -35,7 +35,7 @@ const decoder = new TextDecoder()
 function getSecret(): string {
   const s = process.env.AUTH_SECRET || process.env.BETTER_AUTH_SECRET || ''
   if (!s) {
-    // eslint-disable-next-line no-console
+     
     console.warn(
       '[attempts/session] Missing AUTH_SECRET. Falling back to non-secret dev key.'
     )
@@ -211,7 +211,7 @@ export async function POST(request: Request) {
       { status: 201 }
     )
   } catch (e) {
-    // eslint-disable-next-line no-console
+     
     console.error('[POST /api/attempts/session]', { requestId, error: e })
     return error(500, 'Internal Server Error', 'INTERNAL_ERROR')
   }
@@ -260,7 +260,7 @@ export async function GET(request: Request) {
       { status: 200 }
     )
   } catch (e) {
-    // eslint-disable-next-line no-console
+     
     console.error('[GET /api/attempts/session]', { requestId, error: e })
     return error(500, 'Internal Server Error', 'INTERNAL_ERROR')
   }
@@ -274,7 +274,7 @@ export async function GET(request: Request) {
  * - Validates that serverNow is within [startAt, endAt]
  * - Optional graceMs to allow submission within small grace period
  */
-export async function validateTimingFromRequest(
+async function validateTimingFromRequest(
   request: Request,
   opts?: { graceMs?: number }
 ): Promise<

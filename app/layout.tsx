@@ -6,7 +6,7 @@ import { NonceWrapper } from '@/components/nonce-wrapper'
 import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
-  title: 'PTE Learning LMS',
+  title: 'Pedagogists PTE',
   description:
     'PTE Academic preparation platform with AI-powered practice and scoring.',
 }
@@ -34,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${manrope.variable}`} suppressHydrationWarning>
-      <body className={`min-h-[100dvh] ${manrope.className} antialiased`}>
+      <body className={`min-h-[100dvh] ${manrope.className} antialiased`} suppressHydrationWarning>
         <Suspense fallback={null}>
           <NonceWrapper>
             {children}

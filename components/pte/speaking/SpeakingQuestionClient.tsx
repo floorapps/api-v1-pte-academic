@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import AttemptsList from '@/components/pte/speaking/AttemptsList'
+import SpeakingBoards from '@/components/pte/speaking/SpeakingBoards'
 import QuestionPrompt from '@/components/pte/speaking/QuestionPrompt'
 import ScoreDetailsDialog from '@/components/pte/speaking/ScoreDetailsDialog'
 import SpeakingRecorder from '@/components/pte/speaking/SpeakingRecorder'
@@ -50,6 +51,7 @@ export default function SpeakingQuestionClient({
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [lastAttempt, setLastAttempt] = useState<any | null>(null)
+  const [tick, setTick] = useState<{ state?: string; prepRemainingMs?: number; recordElapsedMs?: number }>({})
 
   const [attemptsKey, setAttemptsKey] = useState(0)
   const [recorderKey, setRecorderKey] = useState(0)
@@ -197,6 +199,24 @@ export default function SpeakingQuestionClient({
       {/* Prompt */}
       <QuestionPrompt question={q || null} />
 
+      {/* External time label */}
+      <p className="text-sm">Time: {(() => {
+        const s = tick.state
+        if (s === 'prepping') {
+          const rem = Math.ceil((tick.prepRemainingMs || 0) / 1000)
+          const mm = Math.floor(rem / 60).toString().padStart(2, '0')
+          const ss = (rem % 60).toString().padStart(2, '0')
+          return `${mm}:${ss}`
+        }
+        if (s === 'recording') {
+          const left = Math.max(0, Math.ceil(((timers.recordMs || 0) - (tick.recordElapsedMs || 0)) / 1000))
+          const mm = Math.floor(left / 60).toString().padStart(2, '0')
+          const ss = (left % 60).toString().padStart(2, '0')
+          return `${mm}:${ss}`
+        }
+        return '00:00'
+      })()}</p>
+
       {/* Recorder */}
       <div className="space-y-3 rounded-md border p-4">
         <SpeakingRecorder
@@ -204,6 +224,8 @@ export default function SpeakingQuestionClient({
           type={questionType}
           timers={timers}
           onRecorded={onRecorded}
+          auto={{ active: true }}
+          onTick={(t) => setTick(t)}
         />
 
         {/* Action buttons */}
@@ -260,7 +282,35 @@ export default function SpeakingQuestionClient({
 
       {/* Attempts list */}
       <div className="rounded-md border p-4">
-        <AttemptsList key={attemptsKey} questionId={questionId} />
+        <AttemptsList
+          key={attemptsKey}
+          questionId={questionId}
+          onSelectAttempt={(a) => {
+            setLastAttempt(a)
+            setDialogOpen(true)
+          }}
+        />
+      </div>
+
+      {/* Search + Navigation */}
+      <div className="flex items-center gap-2">
+        <input aria-label="Question" placeholder="Question..." className="border rounded-md h-9 px-2" />
+        <Button aria-label="Search">Search</Button>
+        {payload?.prevId ? (
+          <a href={`/pte/academic/practice/speaking/${questionType.replaceAll('_','-')}/question/${payload.prevId}`}>
+            <Button>Previous</Button>
+          </a>
+        ) : null}
+        {payload?.nextId ? (
+          <a href={`/pte/academic/practice/speaking/${questionType.replaceAll('_','-')}/question/${payload.nextId}`}>
+            <Button>Next</Button>
+          </a>
+        ) : null}
+      </div>
+
+      {/* Discussion Boards */}
+      <div className="mt-6">
+        <SpeakingBoards questionId={questionId} questionType={questionType} />
       </div>
 
       {/* Score dialog */}

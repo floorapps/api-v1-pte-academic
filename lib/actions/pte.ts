@@ -1,229 +1,301 @@
 'use server'
 
-import { db } from '@/lib/db/drizzle'
+import { db } from '@/lib/db'
 import {
-    speakingQuestions,
-    writingQuestions,
-    readingQuestions,
-    listeningQuestions,
-    speakingAttempts,
-    writingAttempts,
-    readingAttempts,
-    listeningAttempts,
+  speakingQuestions,
+  speakingAttempts,
+  users,
+  readingQuestions,
+  writingQuestions,
+  listeningQuestions,
 } from '@/lib/db/schema'
-import { eq, and, desc, sql, ilike } from 'drizzle-orm'
-import { revalidatePath } from 'next/cache'
-import { auth } from '@/lib/auth' // Assuming auth is set up
+import { scoreReadAloud } from '@/lib/ai/scoring'
+import { eq, and, desc, sql } from 'drizzle-orm'
+import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 
-// Helper to get user (replace with actual auth logic if different)
-async function getUser() {
-    const session = await auth.api.getSession({
-        headers: await headers(),
+export async function getQuestions(options: {
+  category: 'speaking' | 'reading' | 'writing' | 'listening'
+  type?: string
+  page?: number
+  limit?: number
+  difficulty?: string
+}) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session?.user) {
+    throw new Error('Unauthorized')
+  }
+
+  const { category, type, page = 1, limit = 20, difficulty } = options
+  const offset = (page - 1) * limit
+
+  if (category === 'speaking') {
+    const whereClauses = and(
+      eq(speakingQuestions.isActive, true),
+      type ? eq(speakingQuestions.type, type as any) : undefined,
+      difficulty ? eq(speakingQuestions.difficulty, difficulty as any) : undefined
+    )
+
+    const [{ count }] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(speakingQuestions)
+      .where(whereClauses)
+
+    const rows = await db
+      .select({
+        id: speakingQuestions.id,
+        type: speakingQuestions.type,
+        title: speakingQuestions.title,
+        difficulty: speakingQuestions.difficulty,
+        isActive: speakingQuestions.isActive,
+        createdAt: speakingQuestions.createdAt,
+      })
+      .from(speakingQuestions)
+      .where(whereClauses)
+      .limit(limit)
+      .offset(offset)
+      .orderBy(speakingQuestions.createdAt)
+
+    return { data: rows, total: count, limit }
+  }
+
+  if (category === 'reading') {
+    const whereClauses = and(
+      eq(readingQuestions.isActive, true),
+      type ? eq(readingQuestions.type, type as any) : undefined,
+      difficulty ? eq(readingQuestions.difficulty, difficulty as any) : undefined
+    )
+
+    const [{ count }] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(readingQuestions)
+      .where(whereClauses)
+
+    const rows = await db
+      .select({
+        id: readingQuestions.id,
+        type: readingQuestions.type,
+        title: readingQuestions.title,
+        difficulty: readingQuestions.difficulty,
+        isActive: readingQuestions.isActive,
+        createdAt: readingQuestions.createdAt,
+      })
+      .from(readingQuestions)
+      .where(whereClauses)
+      .limit(limit)
+      .offset(offset)
+      .orderBy(readingQuestions.createdAt)
+
+    return { data: rows, total: count, limit }
+  }
+
+  if (category === 'writing') {
+    const whereClauses = and(
+      eq(writingQuestions.isActive, true),
+      type ? eq(writingQuestions.type, type as any) : undefined,
+      difficulty ? eq(writingQuestions.difficulty, difficulty as any) : undefined
+    )
+
+    const [{ count }] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(writingQuestions)
+      .where(whereClauses)
+
+    const rows = await db
+      .select({
+        id: writingQuestions.id,
+        type: writingQuestions.type,
+        title: writingQuestions.title,
+        difficulty: writingQuestions.difficulty,
+        isActive: writingQuestions.isActive,
+        createdAt: writingQuestions.createdAt,
+      })
+      .from(writingQuestions)
+      .where(whereClauses)
+      .limit(limit)
+      .offset(offset)
+      .orderBy(writingQuestions.createdAt)
+
+    return { data: rows, total: count, limit }
+  }
+
+  if (category === 'listening') {
+    const whereClauses = and(
+      eq(listeningQuestions.isActive, true),
+      type ? eq(listeningQuestions.type, type as any) : undefined,
+      difficulty ? eq(listeningQuestions.difficulty, difficulty as any) : undefined
+    )
+
+    const [{ count }] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(listeningQuestions)
+      .where(whereClauses)
+
+    const rows = await db
+      .select({
+        id: listeningQuestions.id,
+        type: listeningQuestions.type,
+        title: listeningQuestions.title,
+        difficulty: listeningQuestions.difficulty,
+        isActive: listeningQuestions.isActive,
+        createdAt: listeningQuestions.createdAt,
+      })
+      .from(listeningQuestions)
+      .where(whereClauses)
+      .limit(limit)
+      .offset(offset)
+      .orderBy(listeningQuestions.createdAt)
+
+    return { data: rows, total: count, limit }
+  }
+
+  return { data: [], total: 0, limit }
+}
+
+export async function submitAttempt(data: {
+  questionId: string
+  questionType: string
+  audioUrl: string
+  transcript: string
+  durationMs: number
+}) {
+  console.log('[submitAttempt] Starting submission:', { questionId: data.questionId, type: data.questionType })
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session?.user) {
+    console.error('[submitAttempt] No user session found')
+    throw new Error('Unauthorized')
+  }
+
+  // Check AI credits
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, session.user.id),
+  })
+
+  if (!user) {
+    console.error('[submitAttempt] User not found in DB:', session.user.id)
+    throw new Error('User not found')
+  }
+
+  // Check if user has AI credits
+  if (user.aiCreditsUsed >= user.dailyAiCredits) {
+    console.warn('[submitAttempt] Credits exhausted for user:', user.email)
+    throw new Error('Daily AI credits exhausted. Upgrade to VIP for unlimited scoring.')
+  }
+
+  // Get question details
+  const question = await db.query.speakingQuestions.findFirst({
+    where: eq(speakingQuestions.id, data.questionId),
+  })
+
+  if (!question) {
+    console.error('[submitAttempt] Question not found:', data.questionId)
+    throw new Error('Question not found')
+  }
+
+  let aiScore;
+  try {
+    console.log('[submitAttempt] Calling AI scoring...')
+    aiScore = await scoreReadAloud(
+      question.promptText || question.title,
+      data.transcript,
+      data.durationMs
+    )
+    console.log('[submitAttempt] AI scoring successful')
+  } catch (error) {
+    console.error('[submitAttempt] AI scoring failed:', error)
+    throw new Error('AI scoring failed. Please try again.')
+  }
+
+  // Save attempt
+  const [attempt] = await db
+    .insert(speakingAttempts)
+    .values({
+      userId: session.user.id,
+      questionId: data.questionId,
+      type: data.questionType as any,
+      audioUrl: data.audioUrl,
+      transcript: data.transcript,
+      scores: aiScore,
+      durationMs: data.durationMs,
+      timings: {
+        prepTime: 0,
+        recordTime: data.durationMs,
+      },
     })
-    return session?.user
+    .returning()
+
+  // Update user AI credits
+  await db
+    .update(users)
+    .set({
+      aiCreditsUsed: sql`${users.aiCreditsUsed} + 1`,
+    })
+    .where(eq(users.id, session.user.id))
+
+  console.log('[submitAttempt] Submission complete. Credits remaining:', user.dailyAiCredits - user.aiCreditsUsed - 1)
+
+  return {
+    attempt,
+    score: aiScore,
+    creditsRemaining: user.dailyAiCredits - user.aiCreditsUsed - 1,
+  }
 }
 
-// ----------------------------------------------------------------------
-// Generic Helpers
-// ----------------------------------------------------------------------
+export async function getUserAttempts(questionId: string) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
 
-const TABLE_MAP = {
-    speaking: speakingQuestions,
-    writing: writingQuestions,
-    reading: readingQuestions,
-    listening: listeningQuestions,
+  if (!session?.user) {
+    throw new Error('Unauthorized')
+  }
+
+  const attempts = await db.query.speakingAttempts.findMany({
+    where: and(
+      eq(speakingAttempts.questionId, questionId),
+      eq(speakingAttempts.userId, session.user.id)
+    ),
+    orderBy: [desc(speakingAttempts.createdAt)],
+    limit: 10,
+  })
+
+  return attempts
 }
 
-const ATTEMPT_MAP = {
-    speaking: speakingAttempts,
-    writing: writingAttempts,
-    reading: readingAttempts,
-    listening: listeningAttempts,
-}
+export async function getQuestionById(options: { id: string; category: 'speaking' | 'reading' | 'writing' | 'listening' }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
 
-// ----------------------------------------------------------------------
-// Fetch Questions
-// ----------------------------------------------------------------------
+  if (!session?.user) {
+    throw new Error('Unauthorized')
+  }
 
-export async function getQuestions({
-    type,
-    category, // 'speaking', 'writing', etc.
-    page = 1,
-    limit = 10,
-    difficulty,
-    status, // 'all', 'completed', 'new'
-}: {
-    type?: string
-    category: 'speaking' | 'writing' | 'reading' | 'listening'
-    page?: number
-    limit?: number
-    difficulty?: string
-    status?: string
-}) {
-    const table = TABLE_MAP[category]
-    if (!table) throw new Error('Invalid category')
+  const { id, category } = options
 
-    const offset = (page - 1) * limit
-    const conditions = [eq(table.isActive, true)]
+  if (category === 'speaking') {
+    const row = await db.query.speakingQuestions.findFirst({ where: eq(speakingQuestions.id, id) })
+    return row || null
+  }
+  if (category === 'reading') {
+    const row = await db.query.readingQuestions.findFirst({ where: eq(readingQuestions.id, id) })
+    return row || null
+  }
+  if (category === 'writing') {
+    const row = await db.query.writingQuestions.findFirst({ where: eq(writingQuestions.id, id) })
+    return row || null
+  }
+  if (category === 'listening') {
+    const row = await db.query.listeningQuestions.findFirst({ where: eq(listeningQuestions.id, id) })
+    return row || null
+  }
 
-    if (type) {
-        conditions.push(eq(table.type, type as any))
-    }
-
-    if (difficulty && difficulty !== 'all') {
-        conditions.push(eq(table.difficulty, difficulty as any))
-    }
-
-    // TODO: Filter by status (requires joining with attempts)
-    // For now, we just return questions
-
-    const data = await db
-        .select()
-        .from(table)
-        .where(and(...conditions))
-        .limit(limit)
-        .offset(offset)
-        .orderBy(desc(table.createdAt))
-
-    // Get total count for pagination
-    const [countResult] = await db
-        .select({ count: sql<number>`count(*)` })
-        .from(table)
-        .where(and(...conditions))
-
-    return {
-        data,
-        total: Number(countResult.count),
-        page,
-        limit,
-        totalPages: Math.ceil(Number(countResult.count) / limit),
-    }
-}
-
-export async function getQuestionById({
-    id,
-    category,
-}: {
-    id: string
-    category: 'speaking' | 'writing' | 'reading' | 'listening'
-}) {
-    const table = TABLE_MAP[category]
-    if (!table) throw new Error('Invalid category')
-
-    const [question] = await db
-        .select()
-        .from(table)
-        .where(eq(table.id, id))
-        .limit(1)
-
-    return question
-}
-
-// ----------------------------------------------------------------------
-// Submit Attempt
-// ----------------------------------------------------------------------
-
-export async function submitAttempt({
-    category,
-    questionId,
-    data,
-}: {
-    category: 'speaking' | 'writing' | 'reading' | 'listening'
-    questionId: string
-    data: any
-}) {
-    const user = await getUser()
-    if (!user) throw new Error('Unauthorized')
-
-    const table = ATTEMPT_MAP[category]
-    if (!table) throw new Error('Invalid category')
-
-    // Import dynamically to avoid circular dependencies
-    const { scoreWithOrchestrator } = await import('@/lib/ai/orchestrator')
-    const { TestSection } = await import('@/lib/pte/types')
-
-    let scoringResult
-    try {
-        // Map category to TestSection
-        const sectionMap: Record<string, any> = {
-            speaking: TestSection.SPEAKING,
-            writing: TestSection.WRITING,
-            reading: TestSection.READING,
-            listening: TestSection.LISTENING,
-        }
-
-        const section = sectionMap[category]
-        if (!section) throw new Error(`Invalid category: ${category}`)
-
-        // Build payload based on category
-        let payload: any = {}
-        let questionType = data.type || 'unknown'
-
-        if (category === 'speaking') {
-            payload = {
-                transcript: data.transcript || '',
-                audioUrl: data.audioUrl || '',
-                referenceText: data.referenceText,
-            }
-        } else if (category === 'writing') {
-            payload = {
-                text: data.userResponse || data.text || '',
-                prompt: data.prompt || data.promptText,
-            }
-        } else if (category === 'reading') {
-            payload = {
-                selectedOption: data.selectedOption,
-                selectedOptions: data.selectedOptions,
-                correctOption: data.correctOption,
-                correctOptions: data.correctOptions,
-                answers: data.answers,
-                correct: data.correct,
-                order: data.order,
-                userOrder: data.userOrder,
-                correctOrder: data.correctOrder,
-            }
-        } else if (category === 'listening') {
-            payload = {
-                targetText: data.targetText,
-                userText: data.userText || data.userResponse,
-                transcript: data.transcript,
-            }
-        }
-
-        // Call the orchestrator with a rationale
-        scoringResult = await scoreWithOrchestrator({
-            section,
-            questionType,
-            payload,
-            includeRationale: true,
-            timeoutMs: 10000,
-        })
-    } catch (error) {
-        console.error('AI Scoring failed, using fallback:', error)
-        // Fallback to zero score on error
-        scoringResult = {
-            overall: 0,
-            subscores: {},
-            rationale: 'Scoring failed. Please try again.',
-        }
-    }
-
-    const attemptData = {
-        userId: user.id,
-        questionId,
-        ...data,
-        scores: scoringResult, // Store full scoring result
-        createdAt: new Date(),
-    }
-
-    await db.insert(table).values(attemptData)
-
-    revalidatePath(`/pte/practice/${category}`)
-    return {
-        success: true,
-        score: scoringResult.overall,
-        subscores: scoringResult.subscores,
-        rationale: scoringResult.rationale,
-    }
+  return null
 }

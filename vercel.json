@@ -10,8 +10,8 @@
       "memory": 1024,
       "maxDuration": 30
     },
-    "api/speaking/attempts.func": { "maxDuration": 60, "memory": 1024 },
-    "api/uploads/audio.func": { "maxDuration": 60, "memory": 1024 }
+    "app/api/speaking/attempts/**/*.ts": { "maxDuration": 60, "memory": 1024 },
+    "app/api/uploads/audio/**/*.ts": { "maxDuration": 60, "memory": 1024 }
   },
   "headers": [
     {

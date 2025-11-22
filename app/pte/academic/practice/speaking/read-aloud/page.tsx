@@ -1,7 +1,6 @@
 import * as React from "react";
 import { AcademicPracticeHeader } from "@/components/pte/practice-header";
 import QuestionsTable, {
-
   QuestionsTableSkeleton,
 } from "@/components/pte/questions-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +9,8 @@ import {
   fetchListingQuestions,
   getCurrentMonthName,
 } from "@/lib/pte/listing-helpers";
+
+export const dynamic = 'force-dynamic';
 
 async function ReadAloudSections({
   searchParams,
@@ -71,13 +72,12 @@ export default async function ReadAloudPracticePage(
   }
 ) {
   const searchParams = await props.searchParams;
-  const params = await searchParams
 
   return (
     <>
       <AcademicPracticeHeader section="speaking" showFilters={true} />
       <React.Suspense fallback={<QuestionsTableSkeleton />}>
-        <ReadAloudSections searchParams={params} />
+        <ReadAloudSections searchParams={searchParams} />
       </React.Suspense>
     </>
   );

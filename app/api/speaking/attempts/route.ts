@@ -1,8 +1,8 @@
 import 'server-only'
 import { NextResponse } from 'next/server'
-import { validateTimingFromRequest } from '@/app/api/attempts/session/route'
+import { validateTimingFromRequest } from '@/app/api/attempts/session/utils'
 import { and, desc, eq, sql } from 'drizzle-orm'
-import { getSession } from '@/lib/auth/session'
+import { getSession } from '@/lib/auth/server'
 import { db } from '@/lib/db/drizzle'
 import {
   speakingAttempts,

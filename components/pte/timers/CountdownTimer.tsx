@@ -97,7 +97,7 @@ export default function CountdownTimer({
       try {
         onExpire?.()
       } catch (e) {
-        // eslint-disable-next-line no-console
+         
         console.error('[CountdownTimer] onExpire error', e)
       }
     } else {
@@ -116,7 +116,7 @@ export default function CountdownTimer({
       // Drift telemetry: positive means client ahead of earlier reading
       const drift = newNow - now
       if (Math.abs(drift) > 1500) {
-        // eslint-disable-next-line no-console
+         
         console.log(
           '[CountdownTimer] visibilitychange re-sync, drift(ms)=',
           drift

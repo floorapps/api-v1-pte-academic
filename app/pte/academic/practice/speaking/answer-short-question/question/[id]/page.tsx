@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import SpeakingAttempt from '@/components/pte/attempt/SpeakingAttempt'
+import SpeakingQuestionClient from '@/components/pte/speaking/SpeakingQuestionClient'
 import { AcademicPracticeHeader } from '@/components/pte/practice-header'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from "@/components/ui/skeleton";
@@ -47,6 +47,10 @@ async function fetchQuestion(id: string): Promise<SpeakingQuestion | null> {
 }
 
 async function QuestionContent({ id }: { id: string }) {
+  if (!id) {
+    notFound()
+  }
+
   const question = await fetchQuestion(id)
 
   if (!question || !question.isActive || question.type !== 'answer_short_question') {
@@ -58,7 +62,7 @@ async function QuestionContent({ id }: { id: string }) {
       {/* Question title */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Answer Short Question Practice — Question {id.slice(0, 8)}
+          Answer Short Question Practice — Question {id?.slice(0, 8) || 'Unknown'}
         </h1>
         {question.difficulty && (
           <p className="text-muted-foreground mt-1 text-sm">
@@ -70,17 +74,7 @@ async function QuestionContent({ id }: { id: string }) {
         )}
       </div>
 
-      {/* Attempt interface */}
-      <SpeakingAttempt
-        questionId={id}
-        questionType="answer_short_question"
-        prompt={{
-          title: question.title,
-          promptText: question.promptText ?? undefined,
-          promptMediaUrl: question.promptMediaUrl ?? undefined,
-          difficulty: question.difficulty ?? undefined,
-        }}
-      />
+      <SpeakingQuestionClient questionId={id} questionType="answer_short_question" />
 
       {/* Navigation buttons */}
       <div className="flex items-center justify-between gap-3 border-t pt-6">
@@ -95,7 +89,7 @@ async function QuestionContent({ id }: { id: string }) {
         <div className="flex items-center gap-2">
           <Button asChild variant="outline">
             <Link
-              href={`/pte/academic/practice/speaking/answer-short-question/question/${id}`}
+              href={`/pte/academic/practice/speaking/answer-short-question/question/${id || ''}`}
             >
               Redo
             </Link>
@@ -122,17 +116,16 @@ function LoadingSkeleton() {
   )
 }
 
-export async function generateMetadata(props: Params) {
-  const params = await props.params
-  const id = params.id
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return {
-    title: `Answer Short Question Practice — Question ${id.slice(0, 8)}`,
+    title: `Answer Short Question Practice — Question ${id?.slice(0, 8) || 'Unknown'}`,
     description: 'Practice PTE Academic Answer Short Question with AI scoring',
   }
 }
 
-export default async function QuestionPage({ params }: { params: { id: string } }) {
-  const { id } = params
+export default async function QuestionPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
 
   return (
     <div className="bg-background min-h-screen">
@@ -165,7 +158,7 @@ export default async function QuestionPage({ params }: { params: { id: string } 
           </Link>
           <span>/</span>
           <span className="text-foreground font-medium">
-            Question {id.slice(0, 8)}
+            Question {id?.slice(0, 8) || 'Unknown'}
           </span>
         </nav>
 

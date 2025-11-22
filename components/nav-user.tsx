@@ -41,11 +41,11 @@ export function NavUser() {
     fetch("/api/user")
       .then((res) => res.json())
       .then((data) => {
-        if (data.user) {
+        if (data && !data.error) {
           setUser({
-            name: data.user.name || "PTE Student",
-            email: data.user.email || "student@pte.com",
-            image: data.user.image || "",
+            name: data.name || "PTE Student",
+            email: data.email || "student@pte.com",
+            image: data.image || "",
           })
         }
       })

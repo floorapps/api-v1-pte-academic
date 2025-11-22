@@ -3,7 +3,7 @@ import { mediaKindFromUrl } from '@/lib/pte/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { AudioPlayer } from '@/components/ui/audio-player'
-import { SpeakingQuestion } from '@/lib/db/schema/speaking'
+// import removed: use central schema types if needed from '@/lib/db/schema'
 import { getFileUrl } from '@/lib/db/storage'
 
 type Prompt = {
@@ -43,16 +43,8 @@ export default function QuestionPrompt({ question }: Props) {
       {promptMediaUrl ? (
         kind === 'audio' ? (
           <div className="space-y-2">
-            <label className="text-sm font-medium" htmlFor="prompt-audio">
-              Prompt Audio
-            </label>
-            <audio
-              id="prompt-audio"
-              className="w-full"
-              controls
-              preload="none"
-              src={promptMediaUrl}
-            />
+            <label className="text-sm font-medium">Prompt Audio</label>
+            <AudioPlayer src={promptMediaUrl} />
           </div>
         ) : kind === 'image' ? (
           <div className="space-y-2">

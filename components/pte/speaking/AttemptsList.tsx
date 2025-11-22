@@ -21,6 +21,7 @@ type Attempt = {
 
 type Props = {
   questionId: string
+  onSelectAttempt?: (attempt: Attempt) => void
 }
 
 function fmtDate(s?: string) {
@@ -33,7 +34,7 @@ function fmtDate(s?: string) {
   }
 }
 
-export default function AttemptsList({ questionId }: Props) {
+export default function AttemptsList({ questionId, onSelectAttempt }: Props) {
   const [items, setItems] = useState<Attempt[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -149,6 +150,25 @@ export default function AttemptsList({ questionId }: Props) {
                   >
                     Total: {s.total ?? '—'}
                   </Badge>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => onSelectAttempt?.(a)}
+                    aria-label="Score Info"
+                  >
+                    <span className="text-primary pe-1">Score Info</span>
+                    {s.total ?? '—'}/90
+                  </Button>
+                  {s?.meta?.wordsPerMinute ? (
+                    <Badge variant="outline" aria-label={`WPM ${s.meta.wordsPerMinute}`}>
+                      WPM: {s.meta.wordsPerMinute}
+                    </Badge>
+                  ) : null}
+                  {s?.meta?.fillerRate ? (
+                    <Badge variant="outline" aria-label={`Filler rate ${s.meta.fillerRate}`}>
+                      Fillers: {s.meta.fillerRate}
+                    </Badge>
+                  ) : null}
                 </div>
               </div>
             </li>

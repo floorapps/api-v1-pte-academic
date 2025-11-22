@@ -45,10 +45,9 @@ export function proxy(request: NextRequest) {
   return response
 }
 
-// Configure proxy to run on API routes
 export const config = {
   matcher: [
-    '/api/:path*',
-    // Optionally add other protected paths
+    // Exclude API routes, static files, image optimizations, and .png files
+    '/((?!api|_next/static|_next/image|.*\\.png$).*)',
   ],
 }

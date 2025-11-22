@@ -8,7 +8,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export function ExamCountdownMini() {
   const [mounted, setMounted] = useState(false)
-  const { data: examDates } = useSWR('/api/user/exam-dates', fetcher)
+  const { data: examDatesResponse } = useSWR('/api/user/exam-dates', fetcher)
   const { data: targetScoreData } = useSWR('/api/user/target-score', fetcher)
 
   useEffect(() => {
@@ -17,16 +17,21 @@ export function ExamCountdownMini() {
 
   if (!mounted) return null
 
-  const primaryExam = examDates?.find((d: any) => d.isPrimary) || examDates?.[0]
+  // Handle different response structures - API returns { examDates: [...] }
+  const examDates = Array.isArray(examDatesResponse)
+    ? examDatesResponse
+    : examDatesResponse?.examDates || []
+
+  const primaryExam = examDates.find((d: any) => d.isPrimary) || examDates[0]
   const targetScore = targetScoreData?.targetScore
 
   if (!primaryExam && !targetScore) return null
 
   const daysUntilExam = primaryExam
     ? Math.ceil(
-        (new Date(primaryExam.examDate).getTime() - new Date().getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
+      (new Date(primaryExam.examDate).getTime() - new Date().getTime()) /
+      (1000 * 60 * 60 * 24)
+    )
     : null
 
   return (

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
-import { and, asc, desc, eq, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, sql, getTableColumns } from 'drizzle-orm'
 import { db } from '@/lib/db/drizzle'
-import { speakingQuestions } from '@/lib/db/schema'
+import { speakingQuestions, speakingAttempts } from '@/lib/db/schema'
 import { normalizeDifficulty, SpeakingListQuerySchema } from '../schemas'
+import { getSession } from '@/lib/auth/server'
 
 type JsonError = { error: string; code?: string }
 
@@ -16,6 +17,9 @@ export async function GET(request: Request) {
   const requestId = request.headers.get('x-request-id') || crypto.randomUUID()
 
   try {
+    const session = await getSession()
+    const userId = session?.user?.id
+
     const parsed = SpeakingListQuerySchema.safeParse(
       Object.fromEntries(url.searchParams.entries())
     )
@@ -56,9 +60,9 @@ export async function GET(request: Request) {
 
     const countRows = await (whereExpr
       ? db
-          .select({ count: sql<number>`count(*)` })
-          .from(speakingQuestions)
-          .where(whereExpr)
+        .select({ count: sql<number>`count(*)` })
+        .from(speakingQuestions)
+        .where(whereExpr)
       : db.select({ count: sql<number>`count(*)` }).from(speakingQuestions))
     const total = Number(countRows[0]?.count || 0)
 
@@ -67,7 +71,21 @@ export async function GET(request: Request) {
         ? asc(speakingQuestions[sortBy])
         : desc(speakingQuestions[sortBy])
 
-    const baseSelect = db.select().from(speakingQuestions)
+    // Select all columns plus the practiced count subquery
+    const baseSelect = db
+      .select({
+        ...getTableColumns(speakingQuestions),
+        practicedCount: userId
+          ? sql<number>`(
+              SELECT count(*) 
+              FROM ${speakingAttempts} 
+              WHERE ${speakingAttempts.questionId} = ${speakingQuestions.id} 
+              AND ${speakingAttempts.userId} = ${userId}
+            )`.mapWith(Number)
+          : sql<number>`0`.mapWith(Number),
+      })
+      .from(speakingQuestions)
+
     const items = await (whereExpr ? baseSelect.where(whereExpr) : baseSelect)
       .orderBy(orderBy)
       .limit(pageSize)
@@ -82,9 +100,10 @@ export async function GET(request: Request) {
       },
       { status: 200 }
     )
+    // Reduce cache time since practiced status is user-specific
     res.headers.set(
       'Cache-Control',
-      'public, s-maxage=60, stale-while-revalidate=600'
+      'private, max-age=0, no-cache, no-store, must-revalidate'
     )
     return res
   } catch (e) {

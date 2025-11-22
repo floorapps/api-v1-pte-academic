@@ -126,12 +126,12 @@ export function PTEAppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/pte/dashboard">
-                <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <BookOpen className="size-4" />
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <img src="/assets/pedagogist-logo.png" alt="Pedagogist" className="size-8 object-contain" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">PTE Academic</span>
-                  <span className="truncate text-xs">Test Preparation</span>
+                  <span className="truncate font-semibold">Pedagogist</span>
+                  <span className="truncate text-xs">AI Learning Platform</span>
                 </div>
               </Link>
             </SidebarMenuButton>

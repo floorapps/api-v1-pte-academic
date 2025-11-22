@@ -1,5 +1,5 @@
 import 'server-only'
-import { scoreWithOrchestrator } from '@/lib/ai/orchestrator'
+import { scoreSpeakingAction } from '@/lib/actions/score'
 import {
   QuestionType,
   TestSection,
@@ -35,48 +35,41 @@ export async function scoreAttempt(params: {
     fillerRate,
   }
 
-  // Try AI scoring via orchestrator
+  // Try AI scoring via server action
   try {
-    const orchestratorResult = await scoreWithOrchestrator({
-      section: TestSection.SPEAKING,
-      questionType: type,
-      payload: {
-        transcript,
-        referenceText: question?.promptText || undefined,
-        audioUrl: params.audioUrl,
-      },
-      includeRationale: true,
-      timeoutMs: 10000,
+    const aiResult = await scoreSpeakingAction({
+      type,
+      transcript,
+      promptText: question?.promptText || undefined,
+      situation: type === 'respond_to_a_situation' ? question?.promptText : undefined,
     })
 
-    // Extract provider metadata
-    const providerMeta = orchestratorResult.metadata?.providers?.[0]
     meta.ai = {
-      provider: providerMeta?.provider || 'orchestrator',
-      latencyMs: providerMeta?.latencyMs,
+      provider: 'google-genai', // Hardcoded as we're using Google directly now
+      model: 'gemini-1.5-pro-latest',
     }
 
-    // Convert orchestrator subscores (0-90) to PTE 0-5 scale
+    // Convert subscores (0-90) to PTE 0-5 scale
     const pronunciation = clamp0to5(
-      convertTo5Scale(orchestratorResult.subscores?.pronunciation ?? roughPronunciation(wordsPerMinute, fillerRate))
+      convertTo5Scale(aiResult.subscores.pronunciation ?? roughPronunciation(wordsPerMinute, fillerRate))
     )
     const fluency = clamp0to5(
-      convertTo5Scale(orchestratorResult.subscores?.fluency ?? roughFluency(wordsPerMinute, fillerRate))
+      convertTo5Scale(aiResult.subscores.fluency ?? roughFluency(wordsPerMinute, fillerRate))
     )
     const content = clamp0to5(
-      convertTo5Scale(orchestratorResult.subscores?.content ?? roughContent(wordCount, durationMs, type))
+      convertTo5Scale(aiResult.subscores.content ?? roughContent(wordCount, durationMs, type))
     )
 
-    // Use orchestrator overall score or calculate from subscores
-    const total = orchestratorResult.overall || calculateTotalScore(content, pronunciation, fluency)
+    // Use overall score or calculate from subscores
+    const total = aiResult.overall || calculateTotalScore(content, pronunciation, fluency)
 
     const rubric = {
-      contentNotes: orchestratorResult.rationale || 'AI scoring completed',
+      contentNotes: aiResult.rationale || 'AI scoring completed',
       fluencyNotes: `Fluency score: ${fluency}/5`,
       pronunciationNotes: `Pronunciation score: ${pronunciation}/5`,
       details: {
-        provider: providerMeta?.provider,
-        rationale: orchestratorResult.rationale,
+        provider: 'google-genai',
+        rationale: aiResult.rationale,
       },
     }
 
@@ -87,14 +80,15 @@ export async function scoreAttempt(params: {
       total,
       rubric,
       feedback: {
-        rationale: orchestratorResult.rationale,
-        subscores: orchestratorResult.subscores,
+        rationale: aiResult.rationale,
+        subscores: aiResult.subscores,
+        suggestions: aiResult.suggestions,
       },
       meta,
     }
   } catch (err) {
     // Fall back to heuristics
-    meta.aiError = err instanceof Error ? err.message : 'orchestrator_failed'
+    meta.aiError = err instanceof Error ? err.message : 'ai_scoring_failed'
 
     const pronunciation = clamp0to5(
       convertTo5Scale(roughPronunciation(wordsPerMinute, fillerRate))

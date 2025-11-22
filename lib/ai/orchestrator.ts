@@ -1,6 +1,8 @@
 import 'server-only'
 import { GeminiProvider } from '@/lib/ai/providers/gemini'
 import { OpenAIProvider } from '@/lib/ai/providers/openai'
+import { GroqProvider } from '@/lib/ai/providers/groq'
+import { GoogleGenAIProvider } from '@/lib/ai/providers/google-genai'
 import type { AIProvider, ProviderRawScore } from '@/lib/ai/providers/types'
 import { VercelAIProvider } from '@/lib/ai/providers/vercel'
 import {
@@ -128,24 +130,24 @@ export async function scoreWithOrchestrator(
 function getProviderPriority(
   section: TestSection,
   override?: string[]
-): ('openai' | 'gemini' | 'vercel' | 'heuristic')[] {
-  // From env: e.g. "openai,gemini,vercel,heuristic"
+): ('openai' | 'gemini' | 'groq' | 'google-genai' | 'vercel' | 'heuristic')[] {
+  // From env: e.g. "openai,gemini,groq,google-genai,vercel,heuristic"
   const envRaw = (process.env.PTE_SCORING_PROVIDER_PRIORITY || '').trim()
   const envList = envRaw
     ? envRaw.split(',').map((s) => s.trim().toLowerCase())
     : null
 
-  const base: ('openai' | 'gemini' | 'vercel' | 'heuristic')[] =
+  const base: ('openai' | 'gemini' | 'groq' | 'google-genai' | 'vercel' | 'heuristic')[] =
     section === TestSection.SPEAKING || section === TestSection.WRITING
-      ? ['openai', 'gemini', 'vercel', 'heuristic']
-      : // Reading/Listening non-deterministic: prefer Gemini for fast extraction
-        ['gemini', 'openai', 'vercel', 'heuristic']
+      ? ['google-genai', 'openai', 'gemini', 'groq', 'vercel', 'heuristic']
+      : // Reading/Listening non-deterministic: prefer Google GenAI for advanced analysis
+      ['google-genai', 'gemini', 'groq', 'openai', 'vercel', 'heuristic']
 
   const apply = (arr?: string[] | null) => {
     if (!arr || !arr.length) return base
     const filtered = arr.filter(
-      (p): p is 'openai' | 'gemini' | 'vercel' | 'heuristic' =>
-        p === 'openai' || p === 'gemini' || p === 'vercel' || p === 'heuristic'
+      (p): p is 'openai' | 'gemini' | 'groq' | 'google-genai' | 'vercel' | 'heuristic' =>
+        p === 'openai' || p === 'gemini' || p === 'groq' || p === 'google-genai' || p === 'vercel' || p === 'heuristic'
     )
     return filtered.length ? filtered : base
   }
@@ -154,13 +156,15 @@ function getProviderPriority(
 }
 
 function initProviders(
-  order: ('openai' | 'gemini' | 'vercel' | 'heuristic')[]
+  order: ('openai' | 'gemini' | 'groq' | 'google-genai' | 'vercel' | 'heuristic')[]
 ): AIProvider[] {
   const out: AIProvider[] = []
   for (const p of order) {
-    if (p === 'openai') out.push(new OpenAIProvider())
-    if (p === 'gemini') out.push(new GeminiProvider())
-    if (p === 'vercel') out.push(new VercelAIProvider())
+    if (p === 'openai') out.push(OpenAIProvider)
+    if (p === 'gemini') out.push(GeminiProvider)
+    if (p === 'groq') out.push(GroqProvider)
+    if (p === 'google-genai') out.push(GoogleGenAIProvider)
+    if (p === 'vercel') out.push(VercelAIProvider)
     // 'heuristic' is not a real provider; its role is handled by deterministic/heuristic paths
   }
   return out
@@ -190,6 +194,17 @@ async function callProvider(
         // ignore transcription failure; provider prompt can still run with no transcript
       }
     }
+
+    if (input.questionType === 'respond_to_a_situation' && provider.scoreDialog) {
+      return await provider.scoreDialog({
+        section: TestSection.SPEAKING,
+        questionType: 'respond_to_a_situation',
+        transcript: String(payload.transcript || ''),
+        situation: payload.referenceText ? String(payload.referenceText) : '',
+        ...common,
+      })
+    }
+
     return await provider.scoreSpeaking({
       section: TestSection.SPEAKING,
       ...common,

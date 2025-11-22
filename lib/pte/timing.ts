@@ -162,7 +162,7 @@ function loadOverrides(): DeepPartial<TimingConfig> | null {
     const parsed = JSON.parse(raw)
     return parsed as DeepPartial<TimingConfig>
   } catch (e) {
-    // eslint-disable-next-line no-console
+     
     console.warn(
       '[timing] Failed to parse timing overrides JSON. Using defaults.',
       e
@@ -193,7 +193,7 @@ export function timingFor(
       const key = String(type || '').toLowerCase() as SpeakingType
       const t = (TIMING.speaking as Record<string, SpeakingTiming>)[key]
       if (!t) {
-        // eslint-disable-next-line no-console
+         
         console.warn(
           '[timing] Unknown speaking type; falling back to read_aloud defaults.',
           { type }

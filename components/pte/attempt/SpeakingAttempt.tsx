@@ -1,27 +1,26 @@
 'use client'
-
 import React, { useCallback, useMemo, useState } from 'react'
 import AttemptController from '@/components/pte/attempt/AttemptController'
 import QuestionPrompt from '@/components/pte/speaking/QuestionPrompt'
 import SpeakingRecorder from '@/components/pte/speaking/SpeakingRecorder'
+import { ScoreDetailsModal } from '@/components/pte/attempt/ScoreDetailsModal'
 import { Button } from '@/components/ui/button'
 import {
   enqueueSubmission,
   getDefaultTimings,
   initQueueAutoRetry,
-  submitSpeakingAttempt,
   type StartSessionResponse,
 } from '@/lib/pte/attempts'
+import { submitSpeakingAttempt } from '@/app/actions/speaking'
 import { uploadAudioWithFallback } from '@/lib/pte/blob-upload'
 import type { SpeakingTimings, SpeakingType } from '@/lib/pte/types'
-
+import SpeakingBoards from '@/components/pte/speaking/SpeakingBoards'
 type PromptLike = {
   title?: string | null
   promptText?: string | null
   promptMediaUrl?: string | null
   difficulty?: string | null
 }
-
 type Props = {
   questionId: string
   questionType: SpeakingType
@@ -29,14 +28,6 @@ type Props = {
   onSubmitted?: (attemptId?: string) => void
   className?: string
 }
-
-/**
- * SpeakingAttempt
- * - Orchestrates a complete PTE-speaking attempt with authentic timings
- * - Uses AttemptController to drive phases and auto-submit on expiry
- * - Integrates SpeakingRecorder with auto-start/stop during "answering"
- * - Uploads audio and POSTs to /api/speaking/attempts with server-validated timing token
- */
 export default function SpeakingAttempt({
   questionId,
   questionType,
@@ -52,23 +43,23 @@ export default function SpeakingAttempt({
       answerMs: t.answerMs || 40_000,
     }
   }, [questionType])
-
   const [recorded, setRecorded] = useState<{
     blob: Blob
     durationMs: number
     timings: SpeakingTimings
   } | null>(null)
-
   const [error, setError] = useState<string | null>(null)
   const [lastAttemptId, setLastAttemptId] = useState<string | undefined>(
     undefined
   )
-
+  // Score modal state
+  const [scoreData, setScoreData] = useState<any>(null)
+  const [showScoreModal, setShowScoreModal] = useState(false)
+  const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined)
   // Ensure offline queue auto-retry is initialized once on first mount
   React.useEffect(() => {
     initQueueAutoRetry()
   }, [])
-
   const handleRecorded = useCallback(
     (data: { blob: Blob; durationMs: number; timings: SpeakingTimings }) => {
       setError(null)
@@ -76,7 +67,6 @@ export default function SpeakingAttempt({
     },
     []
   )
-
   const doSubmit = useCallback(
     async (ctx: {
       token: string
@@ -92,8 +82,9 @@ export default function SpeakingAttempt({
         // We exit early; AttemptController will show done/error state accordingly.
         return
       }
-
       try {
+        // Create FormData for server action
+        const formData = new FormData()
         // Wrap blob into File for upload
         const file = new File(
           [recorded.blob],
@@ -103,74 +94,33 @@ export default function SpeakingAttempt({
           }
         )
 
-        // Upload to blob storage (presigned or server fallback)
-        const { blobUrl } = await uploadAudioWithFallback(file, {
-          type: questionType,
-          questionId,
-        })
-
-        // POST attempt with timing token
-        const res = await submitSpeakingAttempt({
-          token: ctx.token,
-          questionId,
-          type: questionType,
-          audioUrl: blobUrl,
-          durationMs: recorded.durationMs,
-          timings: recorded.timings as any,
-        })
-
-        if (res.ok) {
-          // Success path
-          const json = await res.json().catch(() => null)
-          const attemptId: string | undefined = json?.attempt?.id
-          setLastAttemptId(attemptId)
-          onSubmitted?.(attemptId)
-          return
+        formData.append('questionId', questionId)
+        formData.append('type', questionType)
+        formData.append('audio', file)
+        if (recorded.timings) {
+          formData.append('timings', JSON.stringify(recorded.timings))
         }
 
-        // Non-OK: decide to enqueue or surface error
-        const text = await res.text().catch(() => '')
-        const message =
-          tryParseError(text) || `Submission failed (${res.status})`
-        // For 5xx: enqueue; For 4xx: surface error
-        if (res.status >= 500) {
-          enqueueSubmission({
-            url: '/api/speaking/attempts',
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-session-token': ctx.token,
-            },
-            body: {
-              questionId,
-              type: questionType,
-              audioUrl: blobUrl,
-              durationMs: recorded.durationMs,
-              timings: recorded.timings || {},
-            },
+        // Call server action
+        const attempt = await submitSpeakingAttempt(formData)
+        // Success path
+        setAudioUrl(attempt.audioUrl)
+        setLastAttemptId(attempt.id)
+        if (attempt.score !== undefined && attempt.score !== null) {
+          setScoreData({
+            total: attempt.score,
+            breakdown: attempt.subscores,
+            feedback: attempt.feedback,
           })
-        } else {
-          setError(message)
+          setShowScoreModal(true)
         }
+
+        onSubmitted?.(attempt.id)
+        return
       } catch (e: any) {
-        // Network error -> enqueue
-        enqueueSubmission({
-          url: '/api/speaking/attempts',
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-session-token': ctx.token,
-          },
-          body: {
-            questionId,
-            type: questionType,
-            // Without a successful upload we cannot provide audioUrl; retrying requires re-upload.
-            // To keep it simple, attempt upload again on next processQueue tick by re-running the same flow.
-            // Here, we surface an error and do not enqueue broken payload without blobUrl.
-          },
-        })
+        // Server action error -> surface error
         setError(
-          e?.message || 'Submission failed. We will retry when back online.'
+          e?.message || 'Submission failed. Please try again.'
         )
       }
     },
@@ -253,13 +203,49 @@ export default function SpeakingAttempt({
             )}
 
             {lastAttemptId ? (
-              <p className="text-xs text-emerald-600">
-                Attempt submitted. ID: {lastAttemptId}
-              </p>
+              <div className="flex items-center gap-4">
+                <p className="text-xs text-emerald-600">
+                  Attempt submitted.
+                </p>
+                {scoreData && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs"
+                    onClick={() => setShowScoreModal(true)}
+                  >
+                    View Score
+                  </Button>
+                )}
+              </div>
             ) : null}
           </div>
         )}
       </AttemptController>
+
+      {/* Score Details Modal */}
+      {scoreData && (
+        <ScoreDetailsModal
+          isOpen={showScoreModal}
+          onClose={() => setShowScoreModal(false)}
+          score={{
+            content: scoreData.content || 0,
+            pronunciation: scoreData.pronunciation || 0,
+            fluency: scoreData.fluency || 0,
+            total: scoreData.total || 0
+          }}
+          feedback={{
+            transcript: scoreData.feedback?.transcript || scoreData.meta?.transcript,
+            suggestion: scoreData.feedback?.rationale
+          }}
+          audioUrl={audioUrl}
+        />
+      )}
+
+      {/* Boards: Discussion | Board | Me */}
+      <div className="mt-6">
+        <SpeakingBoards questionId={questionId} questionType={questionType} />
+      </div>
     </div>
   )
 }

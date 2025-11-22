@@ -15,7 +15,7 @@ export async function fetchListingQuestions(
   const { page, pageSize, difficulty, search, isActive } =
     questionListingCache.parse(searchParams)
 
-  const h = headers()
+  const h = await headers()
   const proto = h.get('x-forwarded-proto') ?? 'http'
   const host = h.get('x-forwarded-host') ?? h.get('host')
   const base =

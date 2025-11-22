@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { notFound } from "next/navigation";
-import SpeakingAttempt from "@/components/pte/attempt/SpeakingAttempt";
+import SpeakingQuestionClient from "@/components/pte/speaking/SpeakingQuestionClient";
 import { AcademicPracticeHeader } from "@/components/pte/practice-header";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -60,7 +60,7 @@ async function QuestionContent({ id }: { id: string }) {
       {/* Question title */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Repeat Sentence Practice — Question {id.slice(0, 8)}
+          Repeat Sentence Practice — Question {id?.slice(0, 8) || 'Unknown'}
         </h1>
         {question.difficulty && (
           <p className="text-muted-foreground mt-1 text-sm">
@@ -72,17 +72,7 @@ async function QuestionContent({ id }: { id: string }) {
         )}
       </div>
 
-      {/* Attempt interface */}
-      <SpeakingAttempt
-        questionId={id}
-        questionType="repeat_sentence"
-        prompt={{
-          title: question.title,
-          promptText: question.promptText ?? undefined,
-          promptMediaUrl: question.promptMediaUrl ?? undefined,
-          difficulty: question.difficulty ?? undefined,
-        }}
-      />
+      <SpeakingQuestionClient questionId={id} questionType="repeat_sentence" />
 
       {/* Navigation buttons */}
       <div className="flex items-center justify-between gap-3 border-t pt-6">
@@ -128,13 +118,13 @@ export async function generateMetadata(props: Params) {
   const params = await props.params
   const id = params.id
   return {
-    title: `Repeat Sentence Practice — Question ${id.slice(0, 8)}`,
+    title: `Repeat Sentence Practice — Question ${id?.slice(0, 8) || 'Unknown'}`,
     description: 'Practice PTE Academic Repeat Sentence with AI scoring',
   }
 }
 
-export default async function QuestionPage({ params }: { params: { id: string } }) {
-  const { id } = params
+export default async function QuestionPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
 
   return (
     <div className="bg-background min-h-screen">
@@ -167,7 +157,7 @@ export default async function QuestionPage({ params }: { params: { id: string } 
           </Link>
           <span>/</span>
           <span className="text-foreground font-medium">
-            Question {id.slice(0, 8)}
+            Question {id?.slice(0, 8) || 'Unknown'}
           </span>
         </nav>
 

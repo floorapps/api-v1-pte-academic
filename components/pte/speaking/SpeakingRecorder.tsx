@@ -40,6 +40,8 @@ export type SpeakingRecorderProps = {
   // NEW: Notify parent on state changes (for orchestration/telemetry)
   onStateChange?: (state: RecorderState) => void;
 
+  onTick?: (tick: { state: RecorderState; prepRemainingMs: number; recordElapsedMs: number }) => void;
+
   // NEW: Allow file uploads instead of recording
   allowFileUpload?: boolean;
 };
@@ -53,6 +55,7 @@ export default function SpeakingRecorder({
   onRecorded,
   auto,
   onStateChange,
+  onTick,
   allowFileUpload = true,
 }: SpeakingRecorderProps) {
   const { prepMs = 0, recordMs } = timers;
@@ -85,7 +88,10 @@ export default function SpeakingRecorder({
     _setState(next);
     try {
       onStateChangeRef.current?.(next);
-    } catch {}
+    } catch { }
+    try {
+      onTick?.({ state: next, prepRemainingMs, recordElapsedMs });
+    } catch { }
   }, []);
 
   const [error, setError] = useState<string | null>(null);
@@ -134,7 +140,7 @@ export default function SpeakingRecorder({
     if (audioContextRef.current) {
       try {
         audioContextRef.current.close();
-      } catch {}
+      } catch { }
       audioContextRef.current = null;
       analyserRef.current = null;
     }
@@ -142,12 +148,34 @@ export default function SpeakingRecorder({
       for (const track of mediaStreamRef.current.getTracks()) {
         try {
           track.stop();
-        } catch {}
+        } catch { }
       }
       mediaStreamRef.current = null;
     }
     setAudioLevel(0);
   };
+
+  const playBeep = useCallback((durationMs: number = 400, frequency: number = 1000, volume: number = 0.2) => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(volume, ctx.currentTime + 0.01);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + durationMs / 1000);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      setTimeout(() => {
+        try {
+          osc.stop();
+          ctx.close();
+        } catch { }
+      }, durationMs + 50);
+    } catch { }
+  }, []);
 
   const resetAll = useCallback(() => {
     setError(null);
@@ -166,7 +194,7 @@ export default function SpeakingRecorder({
         recorderRef.current.ondataavailable = null as any;
         recorderRef.current.onstop = null as any;
         recorderRef.current.onerror = null as any;
-      } catch {}
+      } catch { }
       recorderRef.current = null;
     }
   }, [prepMs, setPhase]);
@@ -296,6 +324,8 @@ export default function SpeakingRecorder({
         cleanupStream();
       };
 
+      playBeep();
+
       // Begin recording
       rec.start(250); // gather data in ~250ms chunks
       setPhase("recording");
@@ -305,7 +335,9 @@ export default function SpeakingRecorder({
       clearRecordInterval();
       const startedAtMs = Date.now();
       recordTimerRef.current = setInterval(() => {
-        setRecordElapsedMs(Date.now() - startedAtMs);
+        const elapsed = Date.now() - startedAtMs;
+        setRecordElapsedMs(elapsed);
+        try { onTick?.({ state: 'recording', prepRemainingMs, recordElapsedMs: elapsed }); } catch { }
       }, 50);
 
       // Schedule auto-stop at recordMs
@@ -318,7 +350,7 @@ export default function SpeakingRecorder({
           ) {
             recorderRef.current.stop();
           }
-        } catch {}
+        } catch { }
       }, recordMs);
     } catch (err: any) {
       // Permissions/unsupported
@@ -359,13 +391,18 @@ export default function SpeakingRecorder({
         const elapsed = Date.now() - started;
         const remain = Math.max(0, prepMs - elapsed);
         setPrepRemainingMs(remain);
+        try { onTick?.({ state, prepRemainingMs: remain, recordElapsedMs }); } catch { }
         if (remain <= 0) {
           clearPrepInterval();
+          playBeep();
+
           // Auto transition to recording
           startRecording();
         }
       }, 50);
     } else {
+      playBeep();
+
       // No prep - start recording immediately
       startRecording();
     }
@@ -376,7 +413,7 @@ export default function SpeakingRecorder({
       if (recorderRef.current && recorderRef.current.state === "recording") {
         recorderRef.current.stop();
       }
-    } catch {}
+    } catch { }
   }, []);
 
   const redo = useCallback(() => {
@@ -390,7 +427,7 @@ export default function SpeakingRecorder({
         if (recorderRef.current && recorderRef.current.state === "recording") {
           recorderRef.current.stop();
         }
-      } catch {}
+      } catch { }
       clearPrepInterval();
       clearRecordInterval();
       clearAutoStop();
@@ -596,25 +633,6 @@ export default function SpeakingRecorder({
 
   return (
     <div className="w-full space-y-6">
-      <div
-        className={
-          [
-            'h-1 w-full rounded-full',
-            state === 'recording'
-              ? 'bg-red-500 animate-pulse'
-              : state === 'prepping'
-              ? 'bg-yellow-500'
-              : state === 'processing'
-              ? 'bg-blue-500'
-              : state === 'finished'
-              ? 'bg-emerald-500'
-              : state === 'error' || state === 'denied' || state === 'unsupported'
-              ? 'bg-red-600'
-              : 'bg-muted'
-          ].join(' ')
-        }
-        aria-hidden="true"
-      />
       {/* Microphone Selector */}
       <div className="flex justify-center">
         <MicSelector onDeviceChange={setSelectedMicId} />
@@ -624,18 +642,14 @@ export default function SpeakingRecorder({
       <div className="flex flex-col items-center text-center space-y-2">
         <span className="text-muted-foreground text-sm">
           Mode: {type.replaceAll("_", " ")}
-        {(() => {
-          console.log("[SpeakingRecorder] Render: state =", state, "window defined =", typeof window !== "undefined");
-          return null;
-        })()}
         </span>
         {state === "prepping" ? (
           <span aria-live="polite" className="text-sm font-medium">
-            Preparation: {Math.ceil(prepRemainingMs / 1000)}s
+            Preparation: {Math.floor(prepRemainingMs / 1000 / 60)}:{(Math.ceil(prepRemainingMs / 1000) % 60).toString().padStart(2, '0')}
           </span>
         ) : state === "recording" ? (
           <span aria-live="polite" className="text-sm font-medium text-red-600">
-            Recording... {Math.ceil((recordMs - recordElapsedMs) / 1000)}s left
+            Recording... {Math.floor((recordMs - recordElapsedMs) / 1000 / 60)}:{(Math.ceil((recordMs - recordElapsedMs) / 1000) % 60).toString().padStart(2, '0')} left
           </span>
         ) : state === "processing" ? (
           <span aria-live="polite" className="text-sm font-medium text-blue-600">
@@ -722,14 +736,10 @@ export default function SpeakingRecorder({
           <div className="mb-1 flex items-center justify-between">
             <span className="text-muted-foreground text-xs">Preparation</span>
             <span className="text-xs">
-              {Math.ceil(prepRemainingMs / 1000)}s
+              {Math.floor(prepRemainingMs / 1000 / 60)}:{(Math.ceil(prepRemainingMs / 1000) % 60).toString().padStart(2, '0')}
             </span>
           </div>
-          <Progress
-            value={prepProgress}
-            aria-label="Preparation progress"
-            className="h-2 bg-yellow-100"
-          />
+          <Progress value={prepProgress} aria-label="Preparation progress" />
         </div>
       )}
 
@@ -738,14 +748,10 @@ export default function SpeakingRecorder({
           <div className="mb-1 flex items-center justify-between">
             <span className="text-muted-foreground text-xs">Recording</span>
             <span className="text-xs">
-              {Math.ceil((recordMs - recordElapsedMs) / 1000)}s
+              {Math.floor((recordMs - recordElapsedMs) / 1000 / 60)}:{(Math.ceil((recordMs - recordElapsedMs) / 1000) % 60).toString().padStart(2, '0')}
             </span>
           </div>
-          <Progress
-            value={recordProgress}
-            aria-label="Recording progress"
-            className="h-2 bg-red-100"
-          />
+          <Progress value={recordProgress} aria-label="Recording progress" />
         </div>
       )}
 

@@ -215,7 +215,7 @@ export async function syncSpeakingType(type: SpeakingTypeCode): Promise<{
       } catch (e) {
         // Keep syncing other items
         stats.errors++
-        // eslint-disable-next-line no-console
+         
         console.error(
           `[syncSpeakingType] Failed upsert for ${type} externalId=${it.id}`,
           e

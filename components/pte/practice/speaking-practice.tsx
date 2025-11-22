@@ -72,13 +72,11 @@ export function SpeakingPractice({ question, category }: SpeakingPracticeProps) 
             const fakeAudioUrl = `blob:${Date.now()}`
 
             const res = await submitAttempt({
-                category,
                 questionId: question.id,
-                data: {
-                    audioUrl: fakeAudioUrl,
-                    durationMs: 10000, // Mock duration
-                    // ... other data
-                }
+                questionType: question.type,
+                audioUrl: fakeAudioUrl,
+                transcript: 'Mock transcript for testing',
+                durationMs: 10000, // Mock duration
             })
 
             setResult(res)

@@ -47,23 +47,26 @@ export default function ScoreDetailsDialog({
     setAiLoading(true)
     ;(async () => {
       try {
-        const res = await fetch('/api/ai-scoring/speaking', {
+        const res = await fetch('/api/score/speaking', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            questionType: attempt?.type,
-            payload: {
-              transcript: transcript || '',
-            },
-            includeRationale: true,
+            type: attempt?.type,
+            transcript: transcript || '',
+            promptText: attempt?.promptText || undefined,
           }),
         })
         if (!res.ok) {
           const msg = (await res.json().catch(() => null))?.error || 'Failed to fetch AI details'
           throw new Error(msg)
         }
-        const json = await res.json()
-        setAiDetails(json?.result || null)
+        const result = await res.json()
+        setAiDetails({
+          overall: result.overall,
+          subscores: result.subscores,
+          rationale: result.rationale,
+          metadata: { provider: 'google-genai', model: 'gemini-1.5-pro-latest' },
+        })
       } catch (e: any) {
         setAiError(e?.message || 'Failed to fetch AI details')
         setAiDetails(null)
@@ -82,6 +85,10 @@ export default function ScoreDetailsDialog({
       grammar: asNumber(s?.grammar),
       vocabulary: asNumber(s?.vocabulary),
     }
+  }, [aiDetails])
+  const providerMeta = useMemo(() => {
+    const m = (aiDetails?.metadata?.providers?.[0] as any) || (aiDetails?.metadata as any) || {}
+    return { provider: m?.provider, model: m?.model, latencyMs: m?.latencyMs }
   }, [aiDetails])
 
   return (
@@ -251,6 +258,11 @@ export default function ScoreDetailsDialog({
                 </div>
                 {aiDetails?.rationale ? (
                   <div className="rounded-md border p-3 text-sm">{aiDetails.rationale}</div>
+                ) : null}
+                {(providerMeta.provider || providerMeta.model) ? (
+                  <div className="text-muted-foreground text-xs">
+                    Provider: {providerMeta.provider || '—'} · Model: {providerMeta.model || '—'} · Latency: {providerMeta.latencyMs ?? '—'}ms
+                  </div>
                 ) : null}
               </div>
             ) : null}

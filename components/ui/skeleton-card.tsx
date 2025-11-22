@@ -18,7 +18,7 @@ export function SkeletonCard({ className, lines = 3, showImage = false }: Skelet
                     <div
                         key={i}
                         className="h-3 rounded bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%] animate-shimmer"
-                        style={{ width: `${Math.random() * 40 + 60}%` }}
+                        style={{ width: `${60 + ((i * 13) % 40)}%` }}
                     />
                 ))}
             </div>

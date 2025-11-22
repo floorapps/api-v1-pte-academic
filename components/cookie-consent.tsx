@@ -5,7 +5,8 @@ import { X, Cookie, Shield, BarChart3, Target, Settings2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
-import { clientCookies, type CookieConsent } from '@/lib/cookies'
+import { clientCookies, type CookieConsent } from '@/lib/cookies-client'
+import { acceptAllCookies, rejectAllCookies, saveCookiePreferences } from '@/lib/actions/cookies'
 
 export function CookieConsentBanner() {
     const [showBanner, setShowBanner] = useState(false)
@@ -25,30 +26,18 @@ export function CookieConsentBanner() {
         }
     }, [])
 
-    const handleAcceptAll = () => {
-        const consent: CookieConsent = {
-            necessary: true,
-            analytics: true,
-            marketing: true,
-            preferences: true,
-        }
-        clientCookies.setConsent(consent)
+    const handleAcceptAll = async () => {
+        await acceptAllCookies()
         setShowBanner(false)
     }
 
-    const handleRejectAll = () => {
-        const consent: CookieConsent = {
-            necessary: true,
-            analytics: false,
-            marketing: false,
-            preferences: false,
-        }
-        clientCookies.setConsent(consent)
+    const handleRejectAll = async () => {
+        await rejectAllCookies()
         setShowBanner(false)
     }
 
-    const handleSavePreferences = () => {
-        clientCookies.setConsent({ ...preferences, necessary: true })
+    const handleSavePreferences = async () => {
+        await saveCookiePreferences({ ...preferences, necessary: true })
         setShowBanner(false)
         setShowSettings(false)
     }
@@ -135,7 +124,7 @@ export function CookieConsentBanner() {
                                         <h4 className="font-medium text-gray-900">Analytics</h4>
                                         <Switch
                                             checked={preferences.analytics}
-                                            onCheckedChange={(checked) =>
+                                            onCheckedChange={(checked: boolean) =>
                                                 setPreferences({ ...preferences, analytics: checked })
                                             }
                                         />
@@ -154,7 +143,7 @@ export function CookieConsentBanner() {
                                         <h4 className="font-medium text-gray-900">Marketing</h4>
                                         <Switch
                                             checked={preferences.marketing}
-                                            onCheckedChange={(checked) =>
+                                            onCheckedChange={(checked: boolean) =>
                                                 setPreferences({ ...preferences, marketing: checked })
                                             }
                                         />
@@ -173,7 +162,7 @@ export function CookieConsentBanner() {
                                         <h4 className="font-medium text-gray-900">Preferences</h4>
                                         <Switch
                                             checked={preferences.preferences}
-                                            onCheckedChange={(checked) =>
+                                            onCheckedChange={(checked: boolean) =>
                                                 setPreferences({ ...preferences, preferences: checked })
                                             }
                                         />

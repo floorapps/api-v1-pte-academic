@@ -1,0 +1,426 @@
+Starting media generation...
+Processing retell_lecture from E:\saas-starter\lib\db\seeds\speaking.retell_lecture.json...
+Checking item 0: Retell Lecture #1, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 1/Retell Lecture_Question 1_P.mp3, promptText: No
+Checking item 1: Retell Lecture #2, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 2/Retell Lecture_Question 2_P.mp3, promptText: No
+Checking item 2: Retell Lecture #3, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 3/Retell Lecture_Question 3_P.mp3, promptText: No
+Checking item 3: Retell Lecture #4, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 1/Retell Lecture_Question 1_P.mp3, promptText: Yes
+Checking item 4: Retell Lecture #5, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 2/Retell Lecture_Question 2_P.mp3, promptText: Yes
+Checking item 5: Retell Lecture #6, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 3/Retell Lecture_Question 3_P.mp3, promptText: Yes
+Checking item 6: Retell Lecture #7, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 1/Retell Lecture_Question 1_P.mp3, promptText: No
+Checking item 7: Retell Lecture #8, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 2/Retell Lecture_Question 2_P.mp3, promptText: No
+Checking item 8: Retell Lecture #9, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 3/Retell Lecture_Question 3_P.mp3, promptText: No
+Checking item 9: Retell Lecture #10, promptMediaUrl: /asset/Offline_Practice_Test Pearson Model/Part 1_Speaking and Writing_PTE Academic Offline Practice Test/Prompts & Sample Responses/Prompts/2 Retell Lecture/Retell Lecture_Question 2/Retell Lecture_Question 2_P.mp3, promptText: Yes
+No changes for E:\saas-starter\lib\db\seeds\speaking.retell_lecture.json
+Processing answer_short_question from E:\saas-starter\lib\db\seeds\speaking.answer_short_question.json...
+Checking item 0: ASQ ΓÇö Baby Cat, promptMediaUrl: null, promptText: Yes
+Generating audio for: ASQ ΓÇö Baby Cat
+Checking item 1: ASQ ΓÇö Opposite of Cold, promptMediaUrl: null, promptText: Yes
+Failed to generate audio for ASQ ΓÇö Baby Cat: Error: Google TTS API failed: {
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "containerInfo": "912946351465",
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+          "service": "texttospeech.googleapis.com",
+          "serviceTitle": "Cloud Text-to-Speech API",
+          "consumer": "projects/912946351465"
+        }
+Generating audio for: ASQ ΓÇö Opposite of Cold
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)
+Failed to generate audio for ASQ ΓÇö Opposite of Cold: Error: Google TTS API failed: {
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/912946351465",
+          "containerInfo": "912946351465",
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+          "service": "texttospeech.googleapis.com",
+          "serviceTitle": "Cloud Text-to-Speech API"
+Checking item 2: ASQ ΓÇö Planet We Live On, promptMediaUrl: null, promptText: Yes
+Generating audio for: ASQ ΓÇö Planet We Live On
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)
+Failed to generate audio for ASQ ΓÇö Planet We Live On: Error: Google TTS API failed: {
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "serviceTitle": "Cloud Text-to-Speech API",
+          "consumer": "projects/912946351465",
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+          "service": "texttospeech.googleapis.com",
+          "containerInfo": "912946351465"
+Checking item 3: ASQ ΓÇö Tool for Cutting Paper, promptMediaUrl: null, promptText: Yes
+Generating audio for: ASQ ΓÇö Tool for Cutting Paper
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)
+Failed to generate audio for ASQ ΓÇö Tool for Cutting Paper: Error: Google TTS API failed: {
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "containerInfo": "912946351465",
+          "serviceTitle": "Cloud Text-to-Speech API",
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+Checking item 4: ASQ ΓÇö Study of Weather, promptMediaUrl: null, promptText: Yes
+          "service": "texttospeech.googleapis.com",
+Generating audio for: ASQ ΓÇö Study of Weather
+          "consumer": "projects/912946351465"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)
+Failed to generate audio for ASQ ΓÇö Study of Weather: Error: Google TTS API failed: {
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "containerInfo": "912946351465",
+          "serviceTitle": "Cloud Text-to-Speech API",
+          "consumer": "projects/912946351465",
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+          "service": "texttospeech.googleapis.com"
+Checking item 5: ASQ ΓÇö Longest Bone, promptMediaUrl: null, promptText: Yes
+Generating audio for: ASQ ΓÇö Longest Bone
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)
+Failed to generate audio for ASQ ΓÇö Longest Bone: Error: Google TTS API failed: {
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+          "service": "texttospeech.googleapis.com",
+          "serviceTitle": "Cloud Text-to-Speech API",
+          "consumer": "projects/912946351465",
+          "containerInfo": "912946351465"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+Checking item 6: ASQ ΓÇö Currency of Japan, promptMediaUrl: null, promptText: Yes
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)
+Generating audio for: ASQ ΓÇö Currency of Japan
+Failed to generate audio for ASQ ΓÇö Currency of Japan: Error: Google TTS API failed: {
+Checking item 7: ASQ ΓÇö Device to Measure Temperature, promptMediaUrl: null, promptText: Yes
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "containerInfo": "912946351465",
+          "service": "texttospeech.googleapis.com",
+          "consumer": "projects/912946351465",
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+          "serviceTitle": "Cloud Text-to-Speech API"
+Generating audio for: ASQ ΓÇö Device to Measure Temperature
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)
+Failed to generate audio for ASQ ΓÇö Device to Measure Temperature: Error: Google TTS API failed: {
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/912946351465",
+          "containerInfo": "912946351465",
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+          "service": "texttospeech.googleapis.com",
+Checking item 8: ASQ ΓÇö Process of Water Turning to Gas, promptMediaUrl: null, promptText: Yes
+Generating audio for: ASQ ΓÇö Process of Water Turning to Gas
+          "serviceTitle": "Cloud Text-to-Speech API"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)
+Failed to generate audio for ASQ ΓÇö Process of Water Turning to Gas: Error: Google TTS API failed: {
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+          "containerInfo": "912946351465",
+          "consumer": "projects/912946351465",
+          "service": "texttospeech.googleapis.com",
+Checking item 9: ASQ ΓÇö Largest Ocean, promptMediaUrl: null, promptText: Yes
+Generating audio for: ASQ ΓÇö Largest Ocean
+          "serviceTitle": "Cloud Text-to-Speech API"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)
+Failed to generate audio for ASQ ΓÇö Largest Ocean: Error: Google TTS API failed: {
+  "error": {
+    "code": 403,
+    "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/912946351465",
+          "serviceTitle": "Cloud Text-to-Speech API",
+          "activationUrl": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465",
+          "containerInfo": "912946351465",
+          "service": "texttospeech.googleapis.com"
+No changes for E:\saas-starter\lib\db\seeds\speaking.answer_short_question.json
+Media generation complete!
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Cloud Text-to-Speech API has not been used in project 912946351465 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=912946351465"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+    at processSeedFile (E:\saas-starter\scripts\generate-media.ts:100:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (E:\saas-starter\scripts\generate-media.ts:28:5)

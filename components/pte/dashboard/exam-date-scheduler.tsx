@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useOptimistic, useCallback } from 'react'
+import { useEffect, useState, useOptimistic, useCallback, useTransition } from 'react'
 import { format } from 'date-fns'
 import { Calendar, Clock, X } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -29,11 +29,12 @@ interface ExamDateSchedulerProps {
 
 export function ExamDateScheduler({ onUpdate }: ExamDateSchedulerProps) {
   const [examDates, setExamDates] = useState<ExamDate[]>([])
+  const [isPending, startTransition] = useTransition()
   const [displayExamDates, addOptimisticExamDates] = useOptimistic(examDates)
   const [isLoading, setIsLoading] = useState(true)
   const [isAdding, setIsAdding] = useState(false)
   const [newDate, setNewDate] = useState('')
-  const [examName, setExamName] = useState('PTE Academic')
+  const [examName, setExamName] = useState('Pedagogist Exam')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
@@ -78,13 +79,15 @@ export function ExamDateScheduler({ onUpdate }: ExamDateSchedulerProps) {
     const newExamDateObj = {
       id: 'temp-' + Date.now(),
       examDate: newDate,
-      examName: examName || 'PTE Academic',
+      examName: examName || 'Pedagogist Exam',
       isPrimary: examDates.length === 0 || !examDates.some((d) => d.isPrimary),
       createdAt: new Date().toISOString(),
     }
 
     const oldExamDates = examDates
-    addOptimisticExamDates([...examDates, newExamDateObj])
+    startTransition(() => {
+      addOptimisticExamDates([...examDates, newExamDateObj])
+    })
 
     setIsLoading(true)
     try {
@@ -93,7 +96,7 @@ export function ExamDateScheduler({ onUpdate }: ExamDateSchedulerProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           examDate: newDate,
-          examName: examName || 'PTE Academic',
+          examName: examName || 'Pedagogist Exam',
           isPrimary: examDates.length === 0 || !examDates.some((d) => d.isPrimary),
         }),
       })
@@ -104,14 +107,16 @@ export function ExamDateScheduler({ onUpdate }: ExamDateSchedulerProps) {
       }
 
       setNewDate('')
-      setExamName('PTE Academic')
+      setExamName('Pedagogist Exam')
       setIsAdding(false)
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
       fetchExamDates()
       onUpdate?.()
     } catch (error) {
-      addOptimisticExamDates(oldExamDates)
+      startTransition(() => {
+        addOptimisticExamDates(oldExamDates)
+      })
       setError(
         error instanceof Error ? error.message : 'Failed to add exam date'
       )
@@ -125,7 +130,9 @@ export function ExamDateScheduler({ onUpdate }: ExamDateSchedulerProps) {
     if (!confirm('Are you sure you want to delete this exam date?')) return
 
     const oldExamDates = examDates
-    addOptimisticExamDates(examDates.filter(d => d.id !== id))
+    startTransition(() => {
+      addOptimisticExamDates(examDates.filter(d => d.id !== id))
+    })
 
     try {
       const response = await fetch(`/api/user/exam-dates/${id}`, {
@@ -139,7 +146,9 @@ export function ExamDateScheduler({ onUpdate }: ExamDateSchedulerProps) {
       fetchExamDates()
       onUpdate?.()
     } catch (error) {
-      addOptimisticExamDates(oldExamDates)
+      startTransition(() => {
+        addOptimisticExamDates(oldExamDates)
+      })
       console.error('Error deleting exam date:', error)
       setError('Failed to delete exam date')
     }
@@ -287,7 +296,7 @@ export function ExamDateScheduler({ onUpdate }: ExamDateSchedulerProps) {
                     id="exam-name"
                     value={examName}
                     onChange={(e) => setExamName(e.target.value)}
-                    placeholder="e.g., PTE Academic"
+                    placeholder="e.g., Pedagogist Exam"
                     className="mt-1"
                     aria-label="Exam name"
                   />

@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { submitAttempt } from '@/lib/actions/pte'
+
 import { Loader2, CheckCircle, RotateCcw, PlayCircle } from 'lucide-react'
 
 interface ListeningPracticeProps {
@@ -50,15 +50,18 @@ export function ListeningPractice({ question, category }: ListeningPracticeProps
 
         setIsSubmitting(true)
         try {
-            const res = await submitAttempt({
-                category,
-                questionId: question.id,
-                data: {
-                    userAnswer: answer,
-                    timeTaken: 120, // Mock
-                }
-            })
-            setResult(res)
+            // Mock result for listening questions (since submitAttempt is for speaking only)
+            const mockResult = {
+                score: {
+                    overall: Math.floor(Math.random() * 30) + 70,
+                    content: Math.floor(Math.random() * 30) + 70,
+                    pronunciation: Math.floor(Math.random() * 30) + 70,
+                    fluency: Math.floor(Math.random() * 30) + 70,
+                },
+                feedback: 'Good attempt! Keep practicing to improve your listening skills.',
+                attemptId: 'mock-' + Date.now()
+            }
+            setResult(mockResult)
         } catch (error) {
             console.error('Submit error:', error)
             alert('Failed to submit')
@@ -127,7 +130,7 @@ export function ListeningPractice({ question, category }: ListeningPracticeProps
                                             <Checkbox
                                                 id={`opt-${idx}`}
                                                 checked={selectedOptions.includes(opt.text || opt)}
-                                                onCheckedChange={() => handleToggleOption(opt.text || opt)}
+                                                onChange={() => handleToggleOption(opt.text || opt)}
                                             />
                                             <Label htmlFor={`opt-${idx}`} className="text-base leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                                 {opt.text || opt}

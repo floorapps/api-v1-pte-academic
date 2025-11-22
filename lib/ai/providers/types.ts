@@ -51,18 +51,29 @@ export type ListeningInput = {
   timeoutMs?: number
 }
 
+export type DialogInput = {
+  section: TestSection.SPEAKING
+  questionType: 'respond_to_a_situation'
+  transcript: string
+  situation: string
+  includeRationale?: boolean
+  timeoutMs?: number
+}
+
 export type AnyProviderInput =
   | SpeakingInput
   | WritingInput
   | ReadingInput
   | ListeningInput
+  | DialogInput
 
 export interface AIProvider {
-  name: 'openai' | 'gemini' | 'vercel'
+  name: 'openai' | 'gemini' | 'vercel' | 'google-genai' | 'groq'
   scoreSpeaking(input: SpeakingInput): Promise<ProviderRawScore>
   scoreWriting(input: WritingInput): Promise<ProviderRawScore>
   scoreReading(input: ReadingInput): Promise<ProviderRawScore>
   scoreListening(input: ListeningInput): Promise<ProviderRawScore>
+  scoreDialog?(input: DialogInput): Promise<ProviderRawScore>
   health(): Promise<HealthStatus>
 }
 
@@ -81,7 +92,7 @@ export async function withTimeout<T>(
     timeoutHandle = setTimeout(() => {
       try {
         onTimeout?.()
-      } catch {}
+      } catch { }
       reject(new Error(`timeout_after_${ms}ms`))
     }, ms)
   })
