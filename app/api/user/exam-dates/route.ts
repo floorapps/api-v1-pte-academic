@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
       await db
         .update(userScheduledExamDates)
         .set({ isPrimary: false })
-        .where(eq(userScheduledExamDates.userId, user.id));
+        .where(eq(userScheduledExamDates.userId, user.id))
+        .returning();
     }
 
     const newExamDate = await db
@@ -68,6 +69,13 @@ export async function POST(request: NextRequest) {
         isPrimary: isPrimary ?? true,
       })
       .returning();
+
+    if (!newExamDate || newExamDate.length === 0) {
+      return NextResponse.json(
+        { error: "Failed to create exam date" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true, examDate: newExamDate[0] });
   } catch (error) {

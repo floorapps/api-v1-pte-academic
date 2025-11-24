@@ -7,8 +7,17 @@ const nextConfig: NextConfig = {
   // Enable React Compiler for automatic memoization
   reactCompiler: true,
 
-  // Enable source maps for error tracking in production
-  productionBrowserSourceMaps: true,
+  // Enable source maps for error tracking in production (disable for faster builds if needed)
+  productionBrowserSourceMaps: process.env.ANALYZE === 'true',
+
+  // Optimize output for production
+  output: 'standalone',
+
+  // Compress responses (improves load times)
+  compress: true,
+
+  // Power off x-powered-by header
+  poweredByHeader: false,
 
   // Allow remote icons/assets used by PTE data
   images: {
@@ -27,6 +36,11 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "www.gravatar.com" },
       { protocol: "https", hostname: "pedagogistspte.com" },
     ],
+    // Optimize images
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
   // Content Security Policy headers
@@ -46,7 +60,28 @@ const nextConfig: NextConfig = {
     // Faster dev restarts for large apps
     turbopackFileSystemCacheForDev: true,
     browserDebugInfoInTerminal: true,
+
+    // Optimize CSS
+    optimizeCss: true,
+
+    // Optimize package imports
+    optimizePackageImports: [
+      '@radix-ui/react-icons',
+      '@tabler/icons-react',
+      'lucide-react',
+      'recharts',
+      'framer-motion'
+    ],
+
+    // Enable web workers
+    webVitalsAttribution: ['CLS', 'FCP', 'FID', 'LCP', 'TTFB'],
+
+    // Faster middleware
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
+
   logging: {
     fetches: {
       fullUrl: true,
@@ -54,16 +89,52 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Custom webpack config for Rollbar
-  webpack: (config, { isServer, webpack }) => {
+  // Custom webpack config for optimizations
+  webpack: (config, { isServer, webpack, dev }) => {
+    // Fallbacks for browser
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         net: false,
         tls: false,
+        crypto: false,
+        stream: false,
+        url: false,
+        zlib: false,
+        http: false,
+        https: false,
+        assert: false,
+        os: false,
+        path: false,
       };
     }
+
+    // Production optimizations
+    if (!dev) {
+      // Enable tree shaking
+      config.optimization = {
+        ...config.optimization,
+        usedExports: true,
+        sideEffects: true,
+        minimize: true,
+      };
+    }
+
+    // Bundle analyzer (when ANALYZE=true)
+    if (process.env.ANALYZE === 'true') {
+      const { BundleAnalyzerPlugin } = require('@next/bundle-analyzer')({
+        enabled: true,
+      });
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          reportFilename: isServer ? '../analyze/server.html' : './analyze/client.html',
+          openAnalyzer: true,
+        })
+      );
+    }
+
     return config;
   },
 };

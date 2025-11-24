@@ -37,16 +37,21 @@ export async function updateProfile(prevState: unknown, formData: FormData) {
 
   try {
     // Update basic user fields
-    await db
+    const userUpdateResult = await db
       .update(users)
       .set({
         name,
         email,
       })
       .where(eq(users.id, user.id))
+      .returning()
+
+    if (!userUpdateResult || userUpdateResult.length === 0) {
+      return { error: 'Failed to update user. User not found.' }
+    }
 
     // Upsert profile-specific fields (targetScore, examDate)
-    await db
+    const profileResult = await db
       .insert(userProfiles)
       .values({
         userId: user.id,
@@ -61,6 +66,11 @@ export async function updateProfile(prevState: unknown, formData: FormData) {
           examDate: examDate ? new Date(examDate) : null,
         },
       })
+      .returning()
+
+    if (!profileResult || profileResult.length === 0) {
+      return { error: 'Failed to update profile settings.' }
+    }
 
     return {
       success: 'Profile updated successfully.',

@@ -1,0 +1,51 @@
+# pnpm Configuration for Optimized Performance on Windows
+
+# Use hardlinks instead of symlinks (faster on Windows)
+node-linker=hoisted
+
+# Increase concurrency for faster installs
+child-concurrency=10
+
+# Network configuration
+network-concurrency=16
+fetch-retries=3
+fetch-retry-mintimeout=10000
+fetch-retry-maxtimeout=60000
+
+# Store configuration
+store-dir=~/.pnpm-store
+modules-dir=node_modules
+package-import-method=auto
+
+# Strict peer dependencies (set to false for flexibility)
+strict-peer-dependencies=false
+auto-install-peers=true
+
+# Lifecycle scripts
+enable-pre-post-scripts=true
+
+# Hoisting
+shamefully-hoist=false
+public-hoist-pattern[]=*types*
+public-hoist-pattern[]=*eslint*
+public-hoist-pattern[]=@types/*
+
+# Cache and Performance
+prefer-frozen-lockfile=false
+prefer-offline=false
+
+# Workspace configuration
+link-workspace-packages=true
+shared-workspace-lockfile=true
+
+# Save exact versions
+save-exact=false
+
+# Progress display
+reporter=default
+
+# Node version management
+use-node-version=22.11.0
+
+# Windows-specific optimizations
+symlink=false

@@ -59,15 +59,33 @@ export async function POST(request: NextRequest) {
       .limit(1)
 
     if (existingProfile.length) {
-      await db
+      const updateResult = await db
         .update(userProfiles)
         .set({ targetScore })
         .where(eq(userProfiles.userId, user.id))
+        .returning()
+
+      if (!updateResult || updateResult.length === 0) {
+        return NextResponse.json(
+          { error: 'Failed to update target score' },
+          { status: 500 }
+        )
+      }
     } else {
-      await db.insert(userProfiles).values({
-        userId: user.id,
-        targetScore,
-      })
+      const insertResult = await db
+        .insert(userProfiles)
+        .values({
+          userId: user.id,
+          targetScore,
+        })
+        .returning()
+
+      if (!insertResult || insertResult.length === 0) {
+        return NextResponse.json(
+          { error: 'Failed to create profile with target score' },
+          { status: 500 }
+        )
+      }
     }
 
     return NextResponse.json({ success: true, targetScore })

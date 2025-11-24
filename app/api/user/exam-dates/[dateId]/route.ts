@@ -35,9 +35,17 @@ export async function DELETE(
       )
     }
 
-    await db
+    const deleteResult = await db
       .delete(userScheduledExamDates)
       .where(eq(userScheduledExamDates.id, dateId))
+      .returning()
+
+    if (!deleteResult || deleteResult.length === 0) {
+      return NextResponse.json(
+        { error: 'Failed to delete exam date' },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

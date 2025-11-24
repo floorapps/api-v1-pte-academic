@@ -24,7 +24,15 @@
       "Bash(railway status:*)",
       "Bash(node get-railway-vars.js:*)",
       "Bash(node get-db-vars.js:*)",
-      "Bash(node test-db-connection.js:*)"
+      "Bash(node test-db-connection.js:*)",
+      "Bash(git remote add:*)",
+      "Bash(E:.env)",
+      "Bash(E:saas-starter.env)",
+      "Bash(E:saas-startermotia-backendlibdbindex.ts)",
+      "Bash(pnpm run clean:all:*)",
+      "Bash(nul)",
+      "Bash(powershell -ExecutionPolicy Bypass -File cleanup.ps1)",
+      "Bash(dir node_modules* /B 2)"
     ],
     "deny": [],
     "ask": []

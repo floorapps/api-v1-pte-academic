@@ -52,3 +52,5 @@ public/asset/Offline_Practice_Test*
 asset/Offline_Practice_Test*
 asset/*.lnk
 asset/*.zip
+.pnpm-store/
+node_modules.old_backup/

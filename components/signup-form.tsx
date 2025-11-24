@@ -15,12 +15,15 @@ import { Input } from '@/components/ui/input'
 import { signUpAction } from '@/lib/auth/actions'
 import { authClient } from '@/lib/auth/auth-client'
 import { cn } from '@/lib/utils'
+import { Loader2 } from 'lucide-react'
+import Image from 'next/image'
 
 // Submit button component using useFormStatus (React 19)
 function SubmitButton() {
   const { pending } = useFormStatus()
   return (
     <Button type="submit" disabled={pending} className="w-full">
+      {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
       {pending ? 'Creating account...' : 'Create Account'}
     </Button>
   )
@@ -36,25 +39,33 @@ export function SignupForm({
   const [confirmPassword, setConfirmPassword] = useState('')
   const [localError, setLocalError] = useState('')
 
+  const [socialLoading, setSocialLoading] = useState<string | null>(null)
+
   const handleGoogleSignUp = async () => {
     try {
+      setSocialLoading('google')
       await authClient.signIn.social({
         provider: 'google',
         callbackURL: '/pte/dashboard',
       })
     } catch (err: unknown) {
       console.error('Google sign up error:', err)
+    } finally {
+      setSocialLoading(null)
     }
   }
 
   const handleAppleSignUp = async () => {
     try {
+      setSocialLoading('apple')
       await authClient.signIn.social({
         provider: 'apple',
         callbackURL: '/pte/dashboard',
       })
     } catch (err: unknown) {
       console.error('Apple sign up error:', err)
+    } finally {
+      setSocialLoading(null)
     }
   }
 
@@ -171,7 +182,11 @@ export function SignupForm({
                   variant="outline"
                   type="button"
                   onClick={handleAppleSignUp}
+                  disabled={!!socialLoading}
                 >
+                  {socialLoading === 'apple' && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -188,7 +203,11 @@ export function SignupForm({
                   variant="outline"
                   type="button"
                   onClick={handleGoogleSignUp}
+                  disabled={!!socialLoading}
                 >
+                  {socialLoading === 'google' && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -212,10 +231,13 @@ export function SignupForm({
             </FieldGroup>
           </form>
           <div className="bg-muted relative hidden md:block">
-            <img
+            <Image
               src="/placeholder.svg"
               alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="absolute inset-0 object-cover dark:brightness-[0.2] dark:grayscale"
+              priority
             />
           </div>
         </CardContent>

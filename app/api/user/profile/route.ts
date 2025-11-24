@@ -59,6 +59,13 @@ export async function PATCH(request: NextRequest) {
         .where(eq(userProfiles.userId, session.user.id))
         .returning()
 
+      if (!updated || updated.length === 0) {
+        return NextResponse.json(
+          { error: 'Failed to update profile' },
+          { status: 500 }
+        )
+      }
+
       return NextResponse.json(updated[0])
     } else {
       // Create new profile
@@ -70,6 +77,13 @@ export async function PATCH(request: NextRequest) {
           targetScore: targetScore || null,
         })
         .returning()
+
+      if (!created || created.length === 0) {
+        return NextResponse.json(
+          { error: 'Failed to create profile' },
+          { status: 500 }
+        )
+      }
 
       return NextResponse.json(created[0])
     }

@@ -342,16 +342,24 @@ export function ReadAloudPractice({ question }: ReadAloudPracticeProps) {
                                     </div>
 
                                     {/* Controls */}
-                                    <div className="flex gap-4">
+                                    <div className="flex flex-col gap-6 w-full max-w-md mx-auto">
                                         {phase === 'idle' && (
-                                            <Button
-                                                size="lg"
-                                                onClick={startPractice}
-                                                className="h-14 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
-                                            >
-                                                <Mic className="mr-2 h-5 w-5" />
-                                                Start Recording
-                                            </Button>
+                                            <div className="space-y-4 w-full">
+                                                <div className="flex justify-center">
+                                                    <MicSelector
+                                                        value={selectedDeviceId}
+                                                        onValueChange={setSelectedDeviceId}
+                                                    />
+                                                </div>
+                                                <Button
+                                                    size="lg"
+                                                    onClick={startPractice}
+                                                    className="w-full h-14 rounded-full text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
+                                                >
+                                                    <Mic className="mr-2 h-5 w-5" />
+                                                    Start Recording
+                                                </Button>
+                                            </div>
                                         )}
 
                                         {phase === 'recording' && (
@@ -359,7 +367,7 @@ export function ReadAloudPractice({ question }: ReadAloudPracticeProps) {
                                                 size="lg"
                                                 variant="destructive"
                                                 onClick={stopRecording}
-                                                className="h-14 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
+                                                className="w-full h-14 rounded-full text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
                                             >
                                                 <Square className="mr-2 h-5 w-5 fill-current" />
                                                 Stop
@@ -367,14 +375,27 @@ export function ReadAloudPractice({ question }: ReadAloudPracticeProps) {
                                         )}
 
                                         {phase === 'finished' && audioUrl && (
-                                            <div className="flex flex-col items-center gap-4 w-full">
-                                                <audio controls src={audioUrl} className="w-full max-w-xs" />
-                                                <div className="flex gap-3">
-                                                    <Button variant="outline" onClick={handleReset} className="rounded-full">
+                                            <div className="flex flex-col items-center gap-6 w-full">
+                                                <Card className="w-full border-border/50 bg-muted/30">
+                                                    <CardContent className="p-4">
+                                                        <AudioPlayerProvider>
+                                                            <div className="flex items-center gap-4">
+                                                                <AudioPlayerButton item={{ id: 'recording', src: audioUrl }} />
+                                                                <AudioPlayerTime />
+                                                                <AudioPlayerProgress className="flex-1" />
+                                                                <AudioPlayerDuration />
+                                                                <AudioPlayerSpeed />
+                                                            </div>
+                                                        </AudioPlayerProvider>
+                                                    </CardContent>
+                                                </Card>
+
+                                                <div className="flex gap-3 w-full">
+                                                    <Button variant="outline" onClick={handleReset} className="flex-1 rounded-full h-12">
                                                         <RotateCcw className="mr-2 h-4 w-4" />
                                                         Retry
                                                     </Button>
-                                                    <Button onClick={handleSubmit} disabled={isSubmitting} className="rounded-full">
+                                                    <Button onClick={handleSubmit} disabled={isSubmitting} className="flex-1 rounded-full h-12">
                                                         {isSubmitting ? (
                                                             <>
                                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

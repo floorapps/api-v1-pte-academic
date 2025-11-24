@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,12 +15,14 @@ import { Label } from '@/components/ui/label'
 import { signInAction } from '@/lib/auth/actions'
 import { authClient } from '@/lib/auth/auth-client'
 import { cn } from '@/lib/utils'
+import { Loader2 } from 'lucide-react'
 
 // Submit button component using useFormStatus (React 19.2)
 function SubmitButton() {
   const { pending } = useFormStatus()
   return (
     <Button type="submit" className="w-full" disabled={pending}>
+      {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
       {pending ? 'Signing in...' : 'Login'}
     </Button>
   )
@@ -32,26 +34,33 @@ export function LoginForm({
 }: React.ComponentPropsWithoutRef<'div'>) {
   // Use useActionState hook (React 19.2) for form state management
   const [state, formAction] = useActionState(signInAction, null)
+  const [socialLoading, setSocialLoading] = useState<string | null>(null)
 
   const handleGoogleSignIn = async () => {
     try {
+      setSocialLoading('google')
       await authClient.signIn.social({
         provider: 'google',
         callbackURL: '/pte/dashboard',
       })
     } catch (err: unknown) {
       console.error('Google sign in error:', err)
+    } finally {
+      setSocialLoading(null)
     }
   }
 
   const handleAppleSignIn = async () => {
     try {
+      setSocialLoading('apple')
       await authClient.signIn.social({
         provider: 'apple',
         callbackURL: '/pte/dashboard',
       })
     } catch (err: unknown) {
       console.error('Apple sign in error:', err)
+    } finally {
+      setSocialLoading(null)
     }
   }
 
@@ -118,7 +127,11 @@ export function LoginForm({
                   variant="outline"
                   type="button"
                   onClick={handleAppleSignIn}
+                  disabled={!!socialLoading}
                 >
+                  {socialLoading === 'apple' && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -135,7 +148,11 @@ export function LoginForm({
                   variant="outline"
                   type="button"
                   onClick={handleGoogleSignIn}
+                  disabled={!!socialLoading}
                 >
+                  {socialLoading === 'google' && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -162,3 +179,4 @@ export function LoginForm({
     </div>
   )
 }
+

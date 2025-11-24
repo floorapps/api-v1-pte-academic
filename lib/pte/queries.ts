@@ -1,8 +1,8 @@
 import { db } from '@/lib/db/drizzle';
 import { speakingQuestions, speakingAttempts, writingAttempts } from '@/lib/db/schema';
 import { eq, and, sql, count } from 'drizzle-orm';
-import { auth } from '@/lib/auth/lucia';
-import * as context from 'next/headers';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export async function getSpeakingQuestionById(id: string) {
   const question = await db.select().from(speakingQuestions).where(eq(speakingQuestions.id, id));
@@ -17,7 +17,9 @@ export async function listSpeakingAttemptsByUser(userId: string, { limit = 25, o
 }
 
 export async function getUser() {
-  const session = await auth.getsession();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   return session?.user;
 }
 

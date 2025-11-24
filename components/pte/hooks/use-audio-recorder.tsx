@@ -22,9 +22,12 @@ export function useAudioRecorder({
     const timerRef = useRef<NodeJS.Timeout | null>(null)
     const startTimeRef = useRef<number>(0)
 
-    const startRecording = async () => {
+    const startRecording = async (deviceId?: string) => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+            const constraints = {
+                audio: deviceId ? { deviceId: { exact: deviceId } } : true
+            }
+            const stream = await navigator.mediaDevices.getUserMedia(constraints)
             const mediaRecorder = new MediaRecorder(stream, {
                 mimeType: 'audio/webm',
             })

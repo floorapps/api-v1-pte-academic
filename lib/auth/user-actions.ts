@@ -28,9 +28,22 @@ export async function updateAccount(prevState: unknown, formData: FormData) {
 
   const { name, email } = result.data
 
-  await db.update(users).set({ name, email }).where(eq(users.id, user.id))
+  try {
+    const updateResult = await db
+      .update(users)
+      .set({ name, email })
+      .where(eq(users.id, user.id))
+      .returning()
 
-  return { name, success: 'Account updated successfully.' }
+    if (!updateResult || updateResult.length === 0) {
+      return { error: 'Failed to update account. User not found.' }
+    }
+
+    return { name, success: 'Account updated successfully.' }
+  } catch (error) {
+    console.error('Error updating account:', error)
+    return { error: 'Failed to update account. Please try again.' }
+  }
 }
 
 const updatePasswordSchema = z.object({
@@ -101,13 +114,25 @@ export async function deleteAccount(prevState: unknown, formData: FormData) {
     return { error: result.error.errors[0].message }
   }
 
-  // Delete the user account
-  await db.delete(users).where(eq(users.id, user.id))
+  try {
+    // Delete the user account
+    const deleteResult = await db
+      .delete(users)
+      .where(eq(users.id, user.id))
+      .returning()
 
-  // Sign out using Better Auth
-  await auth.api.signOut({
-    headers: await headers(),
-  })
+    if (!deleteResult || deleteResult.length === 0) {
+      return { error: 'Failed to delete account. User not found.' }
+    }
 
-  redirect('/sign-in')
+    // Sign out using Better Auth
+    await auth.api.signOut({
+      headers: await headers(),
+    })
+
+    redirect('/sign-in')
+  } catch (error) {
+    console.error('Error deleting account:', error)
+    return { error: 'Failed to delete account. Please try again.' }
+  }
 }
