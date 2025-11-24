@@ -5,16 +5,16 @@ import Link from 'next/link'
 
 const STEPS = [
   {
-    title: 'Practice by Section',
-    desc: 'Choose Speaking, Reading, Listening, or Writing and practice official-like question types.',
+    title: 'Choose Your Practice Module',
+    desc: 'Select from Speaking, Writing, Reading, or Listening sections. Each module contains official-style questions tailored to real PTE exam patterns.',
   },
   {
-    title: 'Get Instant AI Feedback',
-    desc: 'Receive scoring and tips on pronunciation, fluency, grammar, vocabulary, and content.',
+    title: 'Get Instant AI-Powered Feedback',
+    desc: 'Receive detailed scoring and personalized tips on pronunciation, fluency, grammar, vocabulary, and content quality—powered by advanced AI technology.',
   },
   {
-    title: 'Improve with Analytics',
-    desc: 'Track trends, discover weak areas, and follow guided paths to reach your target score.',
+    title: 'Track Progress & Improve',
+    desc: 'Monitor your performance with comprehensive analytics. Identify weak areas, track score improvements, and follow personalized learning paths to achieve your target score.',
   },
 ]
 
@@ -27,41 +27,41 @@ export default function HowItWorks() {
     >
       <div className="mx-auto max-w-2xl text-center">
         <h2 id="how-heading" className="text-3xl font-bold tracking-tight sm:text-4xl">
-          How it works
+          Your Path to PTE Success
         </h2>
         <p className="text-muted-foreground mt-3 text-base sm:text-lg">
-          A simple loop to accelerate your PTE preparation.
+          Three simple steps to transform your PTE preparation and achieve your desired score.
         </p>
       </div>
 
       <ol className="mt-10 grid grid-cols-1 gap-6 sm:mt-16 sm:grid-cols-3">
         {STEPS.map((step, i) => (
           <li key={step.title} className="relative">
-            <Card className="h-full">
+            <Card className="h-full border-2 hover:border-primary/50 transition-colors">
               <CardHeader className="flex flex-row items-start gap-3">
                 <span
                   aria-hidden="true"
-                  className="bg-primary text-primary-foreground inline-flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white inline-flex h-10 w-10 items-center justify-center rounded-full text-base font-bold shadow-lg"
                 >
                   {i + 1}
                 </span>
                 <div>
                   <CardTitle className="text-lg">{step.title}</CardTitle>
-                  <CardDescription className="mt-1">{step.desc}</CardDescription>
+                  <CardDescription className="mt-2 text-sm leading-relaxed">{step.desc}</CardDescription>
                 </div>
               </CardHeader>
               <CardContent className="pt-0">
                 {i === 0 && (
                   <Button asChild variant="outline" size="sm" aria-label="Start practicing">
-                    <Link href="/pte/academic/practice">Start practicing</Link>
+                    <Link href="/pte/academic/practice">Start Practicing →</Link>
                   </Button>
                 )}
                 {i === 1 && (
-                  <p className="text-muted-foreground text-sm">AI feedback appears right after each attempt.</p>
+                  <p className="text-muted-foreground text-sm font-medium">✓ Instant feedback after each attempt</p>
                 )}
                 {i === 2 && (
                   <Button asChild size="sm" aria-label="View analytics">
-                    <Link href="/pte/analytics">View analytics</Link>
+                    <Link href="/pte/analytics">View Analytics →</Link>
                   </Button>
                 )}
               </CardContent>
