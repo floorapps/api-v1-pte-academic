@@ -50,9 +50,9 @@ export function HeroSection() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
               >
-                <span className="block">Master PTE Academic with</span>
+                <span className="block">Achieve Your Dream PTE Score</span>
                 <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-shimmer">
-                  AI-Powered Excellence
+                  with AI-Powered Precision
                 </span>
               </motion.h1>
 
@@ -63,8 +63,8 @@ export function HeroSection() {
                 transition={{ duration: 0.8, delay: 0.5 }}
                 className="text-muted-foreground mt-6 text-lg leading-8 sm:text-xl"
               >
-                Join 25,000+ students achieving their desired scores with our
-                AI-powered practice tests, instant feedback, and personalized study plans.
+                Transform your PTE preparation with intelligent AI scoring, 50,000+ authentic practice questions,
+                and personalized learning paths. Join 25,000+ students who improved their scores by an average of +12 points.
               </motion.p>
 
               {/* CTA Buttons */}
